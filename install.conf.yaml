@@ -4,15 +4,6 @@
 
 - clean: ['~']
 
-- link:
-        ~/.dotfiles: ''
-        ~/.tmux.conf: tmux.conf
-        ~/.gitconfig: gitconfig
-        ~/.vimrc: vimrc
-        ~/.bash_it/custom/:
-                glob: true
-                path: bash_it_customs/*
-
 - shell:
         - [git submodule update --init --recursive, Installing submodules]
         - command: 'sh ./bash_it_setup.sh'
@@ -25,8 +16,24 @@
           stdout: true
           stderr: true
 
-        - command: 'sudo apt-get install tmux -y'
+        - command: 'sh ./apt_install.sh tmux'
           stdin: true
           stdout: true
           stderr: true
+
+        - command: 'sh ./apt_install.sh vim'
+          stdin: true
+          stdout: true
+          stderr: true
+
+
+- link:
+        ~/.dotfiles: ''
+        ~/.tmux.conf: tmux.conf
+        ~/.gitconfig: gitconfig
+        ~/.vimrc: vimrc
+        ~/.bash_it/custom/:
+                glob: true
+                path: bash_it_customs/*
+
 
