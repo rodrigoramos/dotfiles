@@ -15,3 +15,18 @@
 
 - shell:
         - [git submodule update --init --recursive, Installing submodules]
+        - command: 'sh ./bash_it_setup.sh'
+          stdin: true
+          stderr: true
+          stdout: true
+
+        - command: 'sh ./powerline_fonts_setup.sh'
+          stdin: true
+          stdout: true
+          stderr: true
+
+        - command: 'sudo apt-get install tmux -y'
+          stdin: true
+          stdout: true
+          stderr: true
+
