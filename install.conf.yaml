@@ -30,6 +30,7 @@
 - link:
         ~/.dotfiles: ''
         ~/.tmux.conf: tmux.conf
+        ~/.vim: vim
         ~/.vimrc: vimrc
         ~/.bash_it/custom/:
                 glob: true

@@ -15,3 +15,5 @@ set nocompatible                " no compatibility legacy v1
 syntax enable
 set encoding=utf-8
 
+set background=dark
+colorscheme gruvbox
