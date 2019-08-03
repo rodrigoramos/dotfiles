@@ -26,12 +26,23 @@
           stdout: true
           stderr: true
 
+        - command: 'mkdir ~/bin'
+          stdin: true
+          stdout: true
+          stderr: true
+
+        - command: 'PATH=$PATH:~/bin'
+          stdin: true
+          stdout: true
+          stderr: true
+
 
 - link:
         ~/.dotfiles: ''
         ~/.tmux.conf: tmux.conf
         ~/.vim: vim
         ~/.vimrc: vimrc
+        ~/bin/lock: lock
         ~/.bash_it/custom/:
                 glob: true
                 path: bash_it_customs/*
