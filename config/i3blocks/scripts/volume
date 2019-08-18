@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+while getopts u:d:m option
+do
+  case "${option}"
+    in
+    u) $(pactl set-sink-volume 0 +${OPTARG}%);;
+    d) $(pactl set-sink-volume 0 -${OPTARG}%);;
+    m) $(pactl set-sink-mute 0 toggle);;
+  esac
+done
+
+MUTED=$(pactl list sinks | grep Mudo | awk '
+  BEGIN{FS=":"}
+  {gsub(/^[ \t]+/, "", $2); print $2}'
+)
+
+VOLUME=$(pactl list sinks | grep Volume | sed ':a;N;$!ba;s/\n/+/g' | awk '
+  BEGIN{FS="/"}{print ($2+$4)/2}'
+)
+
+if [ $MUTED = 'sim' ]
+  then
+    echo "<span color='#868686'>婢</span>"
+  else
+    echo "<span color='#868686'>墳</span><span> $VOLUME%</span>"
+fi

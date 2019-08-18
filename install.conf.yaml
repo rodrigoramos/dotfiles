@@ -31,6 +31,20 @@
           stdout: true
           stderr: true
 
+        - command: 'mkdir ~/.config/i3'
+          stdin: true
+          stdout: true
+          stderr: true
+
+        - command: 'mkdir ~/.config/terminator'
+          stdin: true
+          stdout: true
+          stderr: true
+
+        - command: 'mkdir ~/.config/i3blocks'
+          stdin: true
+          stdout: true
+          stderr: true
 
 - link:
         ~/.dotfiles: ''
@@ -38,8 +52,16 @@
         ~/.vim: vim
         ~/.vimrc: vimrc
         ~/bin/lock: lock
+        ~/.config/compton.conf: config/compton.conf
+        ~/.config/i3:
+                glob: true
+                path: config/i3/*
+        ~/.config/i3blocks:
+                glob: true
+                path: config/i3blocks/*
+        ~/.config/terminator:
+                glob: true
+                path: config/terminator/*
         ~/.bash_it/custom/:
                 glob: true
                 path: bash_it_customs/*
-
-
