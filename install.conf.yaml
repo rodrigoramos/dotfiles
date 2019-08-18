@@ -21,11 +21,6 @@
           stdout: true
           stderr: true
 
-        - command: 'sh ./apt_install.sh vim'
-          stdin: true
-          stdout: true
-          stderr: true
-
         - command: 'mkdir ~/bin'
           stdin: true
           stdout: true
