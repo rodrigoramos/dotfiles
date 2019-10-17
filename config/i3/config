@@ -12,14 +12,52 @@
 new_window pixel 
 
 # class                 border  backgr. text    indicator child_border
-client.focused #fcbd30 #fcbd30 #ffffff #2e9ef4     #080808
-client.focused_inactive #333333 #5f676a #ffffff #484e50   #6c6c6c
-client.unfocused        #333333 #222222 #888888 #292d2e   #767676
-client.urgent           #2f343a #900000 #ffffff #900000   #900000
-client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c
+#client.focused          #fcbd30 #fcbd30 #ffffff #2e9ef4   #080808
+#client.focused_inactive #333333 #5f676a #ffffff #484e50   #6c6c6c
+#client.unfocused        #333333 #222222 #888888 #292d2e   #767676
+#client.urgent           #2f343a #900000 #ffffff #900000   #900000
+#client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c
 
 client.background       #ffffff
 
+# set primary gruvbox colorscheme colors
+set $bg #282828
+set $red #cc241d
+set $green #98971a
+set $yellow #d79921
+set $blue #458588
+set $purple #b16286
+set $aqua #689d68
+set $gray #a89984
+set $darkgray #1d2021
+
+# yellow gruvbox
+# class                 border  backgr. text    indicator child_border
+#client.focused          $yellow $yellow $darkgray $purple $yellow
+#client.focused_inactive $darkgray $darkgray $yellow $purple $darkgray
+#client.unfocused        $darkgray $darkgray $yellow $purple $darkgray
+#client.urgent           $red $red $white $red $red
+
+# black gruvbox
+# class                 border  backgr. text    indicator child_border
+client.focused          $darkgray $darkgray $yellow $purple $gray
+client.focused_inactive $gray $gray $darkgray $purple $gray
+client.unfocused        $yellow $yellow $darkgray $purple $yellow
+client.urgent           $red $red $white $red $red
+
+# green gruvbox
+# class                 border|backgr|text|indicator|child_border
+#client.focused          $green $green $darkgray $purple $darkgray
+#client.focused_inactive $darkgray $darkgray $yellow $purple $darkgray
+#client.unfocused        $darkgray $darkgray $yellow $purple $darkgray
+#client.urgent           $red $red $white $red $red
+
+# blue gruvbox
+# class                 border|backgr|text|indicator|child_border
+#client.focused          $blue $blue $darkgray $purple $darkgray
+#client.focused_inactive $darkgray $darkgray $yellow $purple $darkgray
+#client.unfocused        $darkgray $darkgray $yellow $purple $darkgray
+#client.urgent $red $red $white $red $red
 
 
 set $mod Mod4
@@ -56,22 +94,16 @@ bindsym $mod+d exec dmenu_run
 # bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
 
 # change focus
-bindsym $mod+j focus down
-bindsym $mod+k focus up
-bindsym $mod+l focus right
-bindsym $mod+h focus left
+bindsym $mod+l workspace next
+bindsym $mod+h workspace prev
+bindsym $mod+j workspace next
+bindsym $mod+k workspace prev
 
-# alternatively, you can use the cursor keys:
+# change focus
 bindsym $mod+Left focus left
 bindsym $mod+Down focus down
 bindsym $mod+Up focus up
 bindsym $mod+Right focus right
-
-# move focused window
-bindsym $mod+Shift+j move left
-bindsym $mod+Shift+k move down
-bindsym $mod+Shift+l move up
-bindsym $mod+Shift+ccedilla move right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
@@ -107,15 +139,15 @@ bindsym $mod+a focus parent
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
-set $ws1 "1"
-set $ws2 "2"
-set $ws3 "3"
+set $ws1 "1: Console"
+set $ws2 "2: IDEs"
+set $ws3 "3: Browser"
 set $ws4 "4"
 set $ws5 "5"
 set $ws6 "6"
 set $ws7 "7"
 set $ws8 "8"
-set $ws9 "9"
+set $ws9 "9: Spotify"
 set $ws10 "10"
 
 # switch to workspace
@@ -141,6 +173,14 @@ bindsym $mod+Shift+7 move container to workspace $ws7
 bindsym $mod+Shift+8 move container to workspace $ws8
 bindsym $mod+Shift+9 move container to workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws10
+
+
+# assign programs to certain workspaces
+assign [class="(?i)firefox"] $ws3
+assign [class="(?i)code"] $ws2
+assign [class="(?i)rider"] $ws2
+assign [class="(?i)unj-gravador-audiencia-frontend"] $ws5
+for_window [class="(?i)spotify"] move to workspace $ws9
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -194,9 +234,9 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-# Mode Setup Monitors
-set $mode_monitor (d)efault, (m)irroing, (n)otebook only, (e)xtend 1080
-mode "$mode_monitor" {
+# Mode Setup Video
+set $mode_video (d)efault, (m)irroing, (n)otebook only, (e)xtend 1080
+mode "$mode_video" {
         bindsym d exec --no-startup-id xrandr --output HDMI-1 --auto --above eDP-1, mode "default"
         bindsym m exec --no-startup-id xrandr --output HDMI-1 --auto --mode 1920x1080 --same-as eDP-1, mode "default"
         bindsym n exec --no-startup-id xrandr --output HDMI-1 --off, mode "default"
@@ -207,7 +247,24 @@ mode "$mode_monitor" {
         bindsym Escape mode "default"
 }
 
-bindsym $mod+m mode "$mode_monitor"
+bindsym $mod+v mode "$mode_video"
+
+set $mode_move_workspaces_monitor Move Current Workspace to: (h)HDMI, (n)notebook, Vim arrows
+mode "$mode_move_workspaces_monitor" {
+        bindsym h move workspace to output HDMI-1, mode "default"
+        bindsym n move workspace to output eDP-1, mode "default"
+
+        bindsym j move workspace to output down, mode "default"
+        bindsym k move workspace to output up, mode "default"
+        bindsym h move workspace to output left, mode "default"
+        bindsym l move workspace to output right, mode "default"
+
+        # exit system mode: "Enter" or "Escape"
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+bindsym $mod+m mode "$mode_move_workspaces_monitor"
 
 # Setup Audio Output
 set $mode_output_audio (S)ink Toggle, (A)nalog, (H)dmi, 
