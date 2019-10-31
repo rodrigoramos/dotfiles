@@ -40,9 +40,9 @@ set $darkgray #1d2021
 
 # black gruvbox
 # class                 border  backgr. text    indicator child_border
-client.focused          $darkgray $darkgray $yellow $purple $gray
-client.focused_inactive $gray $gray $darkgray $purple $gray
-client.unfocused        $yellow $yellow $darkgray $purple $yellow
+client.focused          $darkgray $darkgray $yellow $bg $blue
+client.focused_inactive $gray $gray $darkgray $gray $gray
+client.unfocused        $darkgray $yellow $darkgray $purple $gray
 client.urgent           $red $red $white $red $red
 
 # green gruvbox
