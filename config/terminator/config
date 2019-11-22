@@ -9,7 +9,7 @@
     background_darkness = 0.85
     background_type = transparent
     cursor_color = "#aaaaaa"
-    font = Ubuntu Mono derivative Powerline 12
+    font = Fira Mono for Powerline Medium 11
     foreground_color = "#ffffff"
     show_titlebar = False
     scrollbar_position = hidden

@@ -30,6 +30,7 @@ set $purple #b16286
 set $aqua #689d68
 set $gray #a89984
 set $darkgray #1d2021
+set $white #000000
 
 # yellow gruvbox
 # class                 border  backgr. text    indicator child_border
@@ -292,7 +293,7 @@ bar {
     mode dock
     position top
     workspace_buttons no 
-    font pango:Ubuntu Mono derivative Powerline Bold 11 
+    font pango:Fira Mono for Powerline Medium 10
     status_command i3blocks -c ~/.config/i3blocks/config
 }
 
@@ -300,7 +301,7 @@ bar {
     mode dock
     position bottom
     status_command ~/git/bumblebee-status/bumblebee-status -m cpu memory nic pasink pasource time battery -t gruvbox-powerline
-    font pango:Ubuntu Mono derivative Powerline 11
+    font pango:Fira Mono for Powerline Medium 10
     colors {
       background #32302f
     }
