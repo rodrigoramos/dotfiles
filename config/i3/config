@@ -187,9 +187,13 @@ bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 
+# Switch between keyboards layouts
+bindsym $mod+Shift+k exec $HOME/.config/i3/scripts/alternate-keyboard.sh
+
 # Set shut down, restart and locking features
 bindsym $mod+Escape mode "$mode_system"
 bindsym $mod+apostrophe mode "$mode_system"
+
 
 set $mode_system (l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown
 
