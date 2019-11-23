@@ -370,4 +370,5 @@ mode "$mode_gaps_outer" {
 focus_follows_mouse no
 
 exec_always compton -b --config ~/.config/compton.conf
+exec --no-startup-id systemd-run -S | $HOME/git/dotfiles/wallpaper.sh
 
