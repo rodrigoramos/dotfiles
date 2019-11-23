@@ -293,7 +293,7 @@ bar {
     mode dock
     position top
     workspace_buttons no 
-    font pango:Fira Mono for Powerline Medium 10
+    font pango:DroidSansMono Nerd Font 11
     status_command i3blocks -c ~/.config/i3blocks/config
 }
 
@@ -301,7 +301,7 @@ bar {
     mode dock
     position bottom
     status_command ~/git/bumblebee-status/bumblebee-status -m cpu memory nic pasink pasource time battery -t gruvbox-powerline
-    font pango:Fira Mono for Powerline Medium 10
+    font pango:DroidSansMono Nerd Font 10
     colors {
       background #32302f
     }
