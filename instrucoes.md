@@ -11,6 +11,9 @@ Via APT
 - python-pip
 - fonts-firacode
 
+Para Lock
+- imagemagick
+
 
 Via GitHub
 - Clonar:

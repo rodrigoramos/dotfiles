@@ -7,13 +7,13 @@ echo $random
 
 case $random in
   1)
-    convert /tmp/screenshot.png -blur 0x5 "/home/rodrigo/Imagens/circlelock.png" -gravity center -geometry +0+540 -composite /tmp/screenshot.png
+    convert /tmp/screenshot.png -blur 0x5 "/home/rodrigo/git/dotfiles/config/i3/scripts/circlelock.png" -gravity center -geometry +0+540 -composite /tmp/screenshot.png
     ;;
   2)
-    convert /tmp/screenshot.png -interpolate nearest -virtual-pixel mirror -spread 5 "/home/rodrigo/Imagens/circlelock.png" -gravity center -geometry +0+540 -composite /tmp/screenshot.png
+    convert /tmp/screenshot.png -interpolate nearest -virtual-pixel mirror -spread 5 "/home/rodrigo/git/dotfiles/config/i3/scripts/circlelock.png" -gravity center -geometry +0+540 -composite /tmp/screenshot.png
     ;;
   *)
-    convert /tmp/screenshot.png -edge 1 -virtual-pixel mirror -spread 1 "/home/rodrigo/Imagens/circlelock.png" -gravity center -geometry +0+540 -composite /tmp/screenshot.png
+    convert /tmp/screenshot.png -edge 1 -virtual-pixel mirror -spread 1 "/home/rodrigo/git/dotfiles/config/i3/scripts/circlelock.png" -gravity center -geometry +0+540 -composite /tmp/screenshot.png
     ;;
 esac
 
