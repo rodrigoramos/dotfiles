@@ -6,3 +6,5 @@ if [ "$(setxkbmap -query | grep us)" ]; then
 else
   setxkbmap -layout us -variant intl
 fi
+
+xmodmap ../../Xmodmap
