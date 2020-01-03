@@ -181,7 +181,11 @@ assign [class="(?i)firefox"] $ws3
 assign [class="(?i)code"] $ws2
 assign [class="(?i)rider"] $ws2
 assign [class="(?i)unj-gravador-audiencia-frontend"] $ws5
+
 for_window [class="(?i)spotify"] move to workspace $ws9
+
+for_window [title="Notificação do Microsoft Teams"] floating enable
+for_window [window_role="gnome-calculator"] floating enable
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
