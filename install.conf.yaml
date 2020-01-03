@@ -53,6 +53,7 @@
         ~/.vimrc: vimrc
         ~/bin/lock: lock
         ~/.config/compton.conf: config/compton.conf
+        ~/.config/.Xmodmap: config/Xmodmap
         ~/.config/i3:
                 glob: true
                 path: config/i3/*
