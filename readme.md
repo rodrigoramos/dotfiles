@@ -25,6 +25,7 @@ Essa instalação foi testada com Ubuntu, Debian e Fedora.
 - python-pip
 - fonts-firacode
   - Para Fedora (https://github.com/tonsky/FiraCode/wiki/Linux-instructions)
+- feh
 
 Para Lock
 - imagemagick
