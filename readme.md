@@ -1,28 +1,51 @@
-Instalei
+# Meus dotfiles
 
-Via APT
+NOTA: Esse repositório utilizar submodulo (dotbot).
+
+Esse repositório possui meus arquivos de configuração bem como a montagem de ambiente.
+
+Componentes:
+- i3wm
+- Terminator
+- Vim
+
+Essa instalação foi testada com Ubuntu, Debian e Fedora.
+
+## Instalação
+
+### Pacotes via APT/yum
 
 - git
-- vim-gtk
+- vim-gtk (APT)
 - i3
 - i3blocks
+  - Para Fedora (https://copr.fedorainfracloud.org/coprs/vladius/i3blocks/)
 - terminator
 - compton
 - python-pip
 - fonts-firacode
+  - Para Fedora (https://github.com/tonsky/FiraCode/wiki/Linux-instructions)
 
 Para Lock
 - imagemagick
+  - Para Fedora (ImageMagick)
 
 
-Via GitHub
-- Clonar:
-https://github.com/tobi-wan-kenobi/bumblebee-status
-- instalar módulo python (pip install) psutil e netifaces
+### Pacotes via GitHub
 
-https://github.com/ryanoasis/nerd-fonts
+- Instalação da Barra Inferior
+  - Clonar: https://github.com/tobi-wan-kenobi/bumblebee-status
+  - APT/Yum para python-dev ou python-devel
+  - Instalar módulo python (pip install) psutil e netifaces
 
-Instalação Manual (GAPS)
+- Instalar font (https://github.com/ryanoasis/nerd-fonts)
+````
+mkdir -p ~/.local/share/fonts
+cd ~/.local/share/fonts && curl -fLo "Droid Sans Mono for Powerline Nerd Font Complete.otf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/DroidSansMono/complete/Droid%20Sans%20Mono%20Nerd%20Font%20Complete.otf
+fc-cache -v
+````
+
+### Instalação Manual (GAPS) - Somente para Debian
 
 1. Instalar dependências
 ```
@@ -57,7 +80,10 @@ make
 sudo make install
 ```
 
-Ajuste do .bashrc
+## Executar dotbot
+Executar o script install na pasta desse respoitório
+
+## Ajuste do .bashrc
 
 1. Alterar o tema
 ```
