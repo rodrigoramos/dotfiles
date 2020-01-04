@@ -7,4 +7,4 @@ else
   setxkbmap -layout us -variant intl
 fi
 
-xmodmap ../../Xmodmap
+xmodmap ~/.Xmodmap

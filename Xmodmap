@@ -1,2 +1,8 @@
+!Remape Caps Lock to Esc
+remove Lock = Caps_Lock
+add Lock = Escape
+keysym Caps_Lock = Escape
+
 !Remape Escape to Dead Grave and Tilde
 keycode 9 = dead_grave dead_tilde dead_grave dead_tilde grave asciitilde grave
+

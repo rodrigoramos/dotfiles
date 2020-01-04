@@ -51,9 +51,8 @@
         ~/.tmux.conf: tmux.conf
         ~/.vim: vim
         ~/.vimrc: vimrc
-        ~/bin/lock: lock
+        ~/.Xmodmap: Xmodmap
         ~/.config/compton.conf: config/compton.conf
-        ~/.config/.Xmodmap: config/Xmodmap
         ~/.config/i3:
                 glob: true
                 path: config/i3/*

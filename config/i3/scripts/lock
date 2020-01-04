@@ -1,1 +1,22 @@
-/home/rodrigo/git/dotfiles/lock
+#!/bin/bash
+
+random=$[ $RANDOM % 4 + 1 ]
+
+import -window root /tmp/screenshot.png
+echo $random
+
+image=$HOME/.config/i3/scripts/circlelock.png
+
+case $random in
+  1)
+    convert /tmp/screenshot.png -blur 0x5 "$image" -gravity center -geometry +0+540 -composite /tmp/screenshot.png
+      ;;
+  2)
+    convert /tmp/screenshot.png -interpolate nearest -virtual-pixel mirror -spread 5 "$image" -gravity center -geometry +0+540 -composite /tmp/screenshot.png
+    ;;
+  *)
+    convert /tmp/screenshot.png -edge 1 -virtual-pixel mirror -spread 1 "$image" -gravity center -geometry +0+540 -composite /tmp/screenshot.png
+    ;;
+esac
+
+i3lock -i /tmp/screenshot.png
