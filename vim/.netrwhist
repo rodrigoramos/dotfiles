@@ -1,7 +1,6 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =5
-let g:netrw_dirhist_1='/home/rodrigo/.config'
-let g:netrw_dirhist_2='/home/rodrigo/.config/i3blocks'
-let g:netrw_dirhist_3='/home/rodrigo/.config/i3blocks/scripts'
-let g:netrw_dirhist_4='/home/rodrigo/.config/i3blocks'
-let g:netrw_dirhist_5='/home/rodrigo/.config/i3'
+let g:netrw_dirhistcnt =4
+let g:netrw_dirhist_4='/home/rramos/git/dotfiles/polybar'
+let g:netrw_dirhist_3='/home/rramos/git/dotfiles/config/i3'
+let g:netrw_dirhist_2='/home/rramos/git/dotfiles/config'
+let g:netrw_dirhist_1='/home/rramos/git/dotfiles'

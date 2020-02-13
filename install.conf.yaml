@@ -51,8 +51,15 @@
         ~/.tmux.conf: tmux.conf
         ~/.vim: vim
         ~/.vimrc: vimrc
+        ~/.ideavimrc: vimrc
         ~/.Xmodmap: Xmodmap
         ~/.config/compton.conf: config/compton.conf
+        ~/.config/lemonbar:
+                glob: true
+                path: lemonbar
+        ~/.config/polybar: 
+                glob: true
+                path: polybar/*
         ~/.config/i3:
                 glob: true
                 path: config/i3/*

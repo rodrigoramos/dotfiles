@@ -1,8 +1,17 @@
 [global_config]
   focus = system
-  tab_position = hidden
   inactive_color_offset = 1.0
+  tab_position = hidden
 [keybindings]
+[layouts]
+  [[default]]
+    [[[child1]]]
+      parent = window0
+      type = Terminal
+    [[[window0]]]
+      parent = ""
+      type = Window
+[plugins]
 [profiles]
   [[default]]
     allow_bold = False
@@ -12,15 +21,6 @@
     cursor_color = "#aaaaaa"
     font = Fira Mono for Powerline Medium 11
     foreground_color = "#ffffff"
-    show_titlebar = False
     scrollbar_position = hidden
+    show_titlebar = False
     use_system_font = False
-[layouts]
-  [[default]]
-    [[[window0]]]
-      type = Window
-      parent = ""
-    [[[child1]]]
-      type = Terminal
-      parent = window0
-[plugins]

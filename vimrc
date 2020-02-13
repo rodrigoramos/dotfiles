@@ -17,3 +17,8 @@ set encoding=utf-8
 
 set background=dark
 colorscheme gruvbox
+
+" IdeaVim plugins
+set surround
+set commentary
+set easymontion

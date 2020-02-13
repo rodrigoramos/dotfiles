@@ -1,0 +1,6 @@
+#!/bin/bash
+
+value=$(free -m | awk 'NR==2{printf "%.1f%%\n",$3*100/$2}')
+
+echo -e "%{+u}\uf986 $value%{-u}"
+#df -h | awk '$NF=="/"{printf "Disk Usage: %d/%dGB (%s)\n", $3,$2,$5}'

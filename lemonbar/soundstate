@@ -1,0 +1,15 @@
+#!/bin/bash
+
+outstr=""
+volout=$($HOME/git/dotfiles/lemonbar/volume)
+
+echo -n "%{+u}"
+
+if [[ "${volout}" != "MUTE" ]]; then
+  echo -n -e "\ufa7d" # volume-up
+else
+  echo -n -e "\ufa80" # volume-off
+fi
+
+echo -n " ${volout}%{-u}" | tr '[:upper:]' '[:lower:]'
+

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+WALLPAPER_MAIN_COLOR=$(convert /tmp/wallpaper-remoto.jpg +dither -colors 3 -define histogram:unique-colors=true -format "%c" histogram:info: \
+ | grep -o -E -m 2 "#[^\s]*" \
+ | tail -n 1)                                                                                   
+
+echo "%{U$WALLPAPER_MAIN_COLOR}"

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cpu=$(top -bn1 | grep load | awk '{printf "%.1f%\n", $(NF-2) * 10}')
+
+echo -e "%{+u}\uf799 $cpu%{-u}"
+#echo -e "%{+u}\ufa19 $cpu%{-u}"
