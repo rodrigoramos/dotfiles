@@ -293,8 +293,10 @@ bindsym $mod+o mode "$mode_output_audio"
 # finds out, if available)
     #status_command i3status 
 bar {
-  mode invisible
-  height 27
+  mode hide
+  workspace_buttons no
+  hidden_state hide
+  modifier Mod4
 }
 
 
@@ -362,4 +364,4 @@ focus_follows_mouse no
 
 exec_always compton -b --config ~/.config/compton.conf
 exec --no-startup-id $HOME/git/dotfiles/wallpaper.sh
-exec_always $HOME/git/dotfiles/lemonbar/startbar
+exec_always $HOME/git/dotfiles/lemonbar/startbar2 --transparency
