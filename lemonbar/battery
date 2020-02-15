@@ -4,7 +4,6 @@
 battery () {
 	battery="$(</sys/class/power_supply/BAT0/capacity)"
 	charging="$(</sys/class/power_supply/BAT0/status)"
-	charging=[ "$charging" == "Charging" ]
   output=""
 
 	case "$battery" in
@@ -13,39 +12,29 @@ battery () {
 		;;
 
 		1[0-9]|2[0-5])
-      if [ $charging ]; then
-        output="\uf585"
-      else
-        output="\uf57A"
-      fi
+      output="\uf57A"
 		;;
 
 		2[6-9]|3[0-9]|4[0-9]|50)
-      if [ $charging ]; then
-        output="\uf587"
-      else
-        output="\uf57D"
-      fi
+      output="\uf57D"
 		;;
 
 		5[1-9]|6[0-9]|7[0-5])
-      if [ $charging ]; then
-        output="\uf589"
-      else
-        output="\uf57F"
-      fi
+      output="\uf57F"
 		;;
 
 		7[6-9]|8[0-9]|9[0-9]|100)
-      if [ $charging ]; then
-        output="\uf584"
-      else
-        output="\uf578"
-      fi
+      output="\uf578"
 		;;
 	esac
 
-echo -e "%{+u}$output $battery%%{-u}"
+  if [ "$charging" == "Charging" ]; then
+    charging="\u26a1"
+  else
+    charging=""
+  fi
+
+  echo -e "%{+u}$output$charging $battery%%{-u}"
 }
 
 battery
