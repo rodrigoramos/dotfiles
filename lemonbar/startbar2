@@ -5,7 +5,7 @@ getMonitorPosition () {
 }
 
 launchBar () {
-  /usr/local/sbin/admiral -c ~/git/dotfiles/admiral/admiral.toml | lemonbar -u 4 -p -B "#cc000000" -F "#ffeeeeee" -U "$WALLPAPER_MAIN_COLOR" -f "DroidSansMono Nerd Font:size=11" -f "Fira Mono for Powerline:size=11" -f "Font Awesome 5 Free:style=Regular:size=5" -f "siji" -g 1920x25$1 | sh
+  /usr/local/sbin/admiral -c ~/git/dotfiles/admiral/admiral.toml | lemonbar -u 4 -p -B "#cc000000" -F "#ffeeeeee" -U "$WALLPAPER_MAIN_COLOR" -f "DroidSansMono Nerd Font:size=11" -f "Fira Mono for Powerline:size=11" -f "Font Awesome 5 Free:style=Regular:size=5" -f "siji" -g 1920x25$1 | sh &
 }
 
 pkill admiral &>/dev/null
@@ -15,7 +15,6 @@ pkill lemonbar &>/dev/null
 
 export output="eDP-1"
 notebookPos=$(getMonitorPosition $output)
-#/usr/local/sbin/admiral -c ~/git/dotfiles/admiral/admiral.toml | lemonbar -u 3 -p -B "#cc000000" -F "#ffeeeeee" -U "$WALLPAPER_MAIN_COLOR" -f "DroidSansMono Nerd Font" -f "Fira Mono for Powerline:size=11" -f "Font Awesome 5 Free:style=Regular:size=5" -f "siji" -g 1920x25$notebookPos | sh &
 launchBar $notebookPos
 
 output="HDMI-1"
