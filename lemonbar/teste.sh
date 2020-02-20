@@ -2,24 +2,32 @@ run() {
   wjson=$(jshon -a -j)
 
   for a in $wjson; do
-    number=$(echo $a | jshon -e num)
-    name=$(echo $a | jshon -e name -u)
-    focused=$(echo $a | jshon -e focused)
     joutput=$(echo $a | jshon -e output -u)
 
-    if $focused; then
-      if [ "$output" == "$joutput" ]; then
+    if [ "$output" != "$joutput" ]; then
+      continue 
+    fi
+
+    parsed=($(echo $a | jshon -e name -u -p -e focused -u -p -e urgent -u -p -e visible -u))
+    
+    name=${parsed[0]}
+    focused=${parsed[1]}
+    urgent=${parsed[2]}
+    visible=${parsed[3]}
+
+    if $urgent; then
+        echo -n "%{B#c00}%{F#fff}"
+    elif $focused; then
         echo -n "%{B#eee}%{F#000}%{+u}"
-      else
+    elif $visible; then
         echo -n "%{B#999}%{F#fff}%{+u}"
-      fi
     else  
-      echo -n %{B F}
+        echo -n %{B F}
     fi
 
     echo -n " $name %{B- F-}"
 
-    if $focused; then
+    if $focused || $visible; then
       echo -n %{-u}
     fi
   done
