@@ -316,8 +316,8 @@ bindsym XF86AudioPrev exec playerctl previous
 
 
 # Gaps
-gaps inner 5
-gaps outer 2
+gaps inner 10
+gaps outer 25
 
 smart_gaps on
 smart_borders on
