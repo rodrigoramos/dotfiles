@@ -16,10 +16,10 @@
           stdout: true
           stderr: true
 
-        - command: 'sh ./apt_install.sh tmux'
-          stdin: true
-          stdout: true
-          stderr: true
+          #- command: 'sh ./apt_install.sh tmux'
+          #stdin: true
+          #stdout: true
+          #stderr: true
 
         - command: 'mkdir ~/bin'
           stdin: true
@@ -57,10 +57,10 @@
         ~/.config/lemonbar:
                 glob: true
                 path: lemonbar
-        ~/.config/polybar: 
-                glob: true
-                path: polybar/*
-        ~/.config/i3:
+        #~/.config/polybar: 
+                #glob: true
+                #path: polybar/*
+        ~/.i3:
                 glob: true
                 path: config/i3/*
         ~/.config/i3blocks:
