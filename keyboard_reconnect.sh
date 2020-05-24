@@ -1,34 +1,27 @@
-# Change <YOUR_MAC_ADDRESS> and add or remove the commands in the deepest "if" block as you like.
+!/bin/bash
 
 while read line; do
-  if echo $line | grep -q 'Connect Complete'; then
-    read line
-    if echo $line | grep -q 'Status: Success'; then
-      read line
-      read line
-      if echo $line | grep -q '50:E6:66:9C:BE:CE'; then # MAC ID AKKO 3068BT-1
-       while :; do
-          if $HOME/git/dotfiles/keyboard_layout_device.sh; then
-            echo "Layout set" 
-            break
-          else
-            echo "Layout set failed"
-          fi
-          sleep 1s
-        done
+ if echo $line | grep -q "Connect Complete"; then
+   echo "[KEYMON] Connection Detected $line"
 
-        while :; do
-          if xmodmap $HOME/.Xmodmap; then
-            echo "Remapping Loaded"
-            # xset r rate 170 130 # Remove this command if you don't need it.
-            # And add any other commands as you like.
-            break
-          else
-            echo "Remapping failed"
-          fi
-          sleep 2s
-        done
+   read line
+   if echo $line | grep -q 'Status: Success'; then
+     echo "[KEYMON] With Status Success $line"
+
+     read line
+     read line
+
+     if echo $line | grep -q '50:E6:66:9C:BE:CE'; then # MAC ID AKKO 3068BT-1
+       echo "[KEYMON] Keyboard found $line"
+       sleep 1s
+       $HOME/git/dotfiles/keyboard_layout_device.sh
+      else
+        echo $line
       fi
+    else
+      echo $line
     fi
+  else
+    echo $line
   fi
 done

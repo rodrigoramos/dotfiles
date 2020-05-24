@@ -1,6 +1,7 @@
 #!/bin/bash
 
 #echo -n -e "\uf11c"
-echo -n -e "%{+u}\uf80b"
+#echo -n -e "%{+u}\uf80b"
+echo -n -e "%{+u}\uf11c"
 echo -n " $(setxkbmap -query | grep -oP "(?<=layout:\s{5})[a-z]+")"
 echo -n -e "%{-u}"

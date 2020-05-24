@@ -1,8 +1,7 @@
 [admiral]
 
 items = [ "startbar", "left", "workspaces", "space", "modes",
-          "center", "clock" , 
-          "right", "keyboard", "space", "cpu" , "space", "memory", "space", "wifi", "space", "volume", "space", "battery", "finishbar" ]
+          "right", "keyboard", "space", "cpu" , "space", "memory", "space", "wifi", "space", "battery", "space", "clock", "space",  "finishbar" ]
 
 [workspaces]
 path = "~/.config/lemonbar/teste.sh"
@@ -13,11 +12,11 @@ path = "~/.config/lemonbar/modes"
 
 [wifi]
 path = "~/.config/lemonbar/wifi"
-reload = 2
+reload = 5
 
 [cpu]
 path = "~/.config/lemonbar/cpu"
-reload = 2
+reload = 5
 
 [memory]
 path = "~/.config/lemonbar/memory"
@@ -28,8 +27,8 @@ path = "~/.config/lemonbar/keyboard"
 reload = 1
 
 [clock]
-path = "date '+%a %d %b %H:%M'"
-reload = 2
+path = "echo %{+u}$(date +%H:%M)%{-u}"
+reload = 1
 
 [battery]
 path = "~/.config/lemonbar/battery"

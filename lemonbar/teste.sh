@@ -9,8 +9,8 @@ run() {
     fi
 
     parsed=($(echo $a | jshon -e name -u -p -e focused -u -p -e urgent -u -p -e visible -u))
-    
-    name=${parsed[0]}
+
+    number=${parsed[0]:0:1}
     focused=${parsed[1]}
     urgent=${parsed[2]}
     visible=${parsed[3]}
@@ -25,7 +25,7 @@ run() {
         echo -n %{B F}
     fi
 
-    echo -n " $name %{B- F-}"
+    echo -n " $number %{B- F-}"
 
     if $focused || $visible; then
       echo -n %{-u}

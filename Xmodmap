@@ -1,6 +1,6 @@
-!Remape Caps Lock to Esc
-remove Lock = Caps_Lock
-keysym Caps_Lock = Escape
+clear Lock
+
+keycode 66 = Escape Escape Escape Caps_Lock
 
 !Remape Escape to Dead Grave and Tilde
 keycode 9 = dead_grave dead_tilde dead_grave dead_tilde grave asciitilde grave

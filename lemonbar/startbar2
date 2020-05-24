@@ -1,28 +1,41 @@
 #!/usr/bin/env bash
 
+lauchedBarPositions=()
+
 getMonitorPosition () {
   echo $(xrandr --listactivemonitors | grep -oP "\+[0-9]+(?=.*$1)"| tr -d '[:space:]')
 }
 
+getMonitorSize () {
+  echo $(xrandr --listactivemonitors | awk -v output=$1 '$2 ~ output { print $3 }' | grep -oP "[0-9]{4}" | head -n1)
+}
+
 launchBar () {
-  /usr/local/sbin/admiral -c ~/git/dotfiles/admiral/admiral.toml | lemonbar -u 3 -p -B "#90000000" -F "#ffeeeeee" -U "$WALLPAPER_MAIN_COLOR" -f "DroidSansMono Nerd Font:size=11" -f "Fira Mono for Powerline:size=11" -f "Font Awesome 5 Free:style=Regular:size=5" -f "siji" -g 1920x25$1 | sh &
+  outputPos=$(getMonitorPosition $output)
+  outputSize=$(getMonitorSize $output)
+
+  if [[ ! " ${lauchedBarPositions[@]}" =~ "$outputPos" ]]; then
+    echo lauchingBar $output ${outputSize}x22${outputPos}
+    lauchedBarPositions+=("$outputPos")
+    /usr/local/sbin/admiral -c ~/git/dotfiles/admiral/admiral.toml | lemonbar -b -u 2 -p -B "#00000000" -F "#ffeeeeee" \
+      -U "${WALLPAPER_MAIN_COLOR:=#ffeeeeee}" \
+      -f "Droid Sans Mono for Powerline:style=Regular:size=10" -f "Font Awesome 5 Brands Regular:size=10" -f "Font Awesome 5 Free Solid:size=10" \
+      -g ${outputSize}x22${outputPos} | sh &
+  else
+    echo Ignoring $output
+  fi
 }
 
 pkill admiral &>/dev/null
 pkill lemonbar &>/dev/null
 
-#/usr/local/sbin/admiral -c ~/gitdotfiles/admiral/admiral.toml | lemonbar -u 2 -p -B "#FF353945" -F "#eeeeee" -f "Fira Code:size=7" -o -1 -f "Font Awesome 5 Free:size=8" -f "siji" -f "Symbola-7" -g 1920x18+0+0 | sh
-
 export output="eDP-1"
-notebookPos=$(getMonitorPosition $output)
-launchBar $notebookPos
+launchBar
 
-output="HDMI-1"
-hdmiPos=$(getMonitorPosition $output)
-echo $hdmiPos
-echo $notebookPos
+export output="HDMI-1"
+launchBar
 
-if [ "$hdmiPos" != "" ] && [ "$hdmiPos" != "$notebookPos" ]; then
-  launchBar $hdmiPos
-fi
+export output="DP-2"
+launchBar
 
+echo Bars lauched

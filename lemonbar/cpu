@@ -1,6 +1,8 @@
 #!/bin/bash
 
-cpu=$(top -bn1 | grep load | awk '{printf "%.1f%\n", $(NF-2) * 10}')
+#cpu=$(top -bn1 | grep load | awk '{printf "%.1f%\n", $(NF-2) * 10}')
+cpu=$(top -b -n1 | grep "%CPU(s)" | echo $(read s; s=${s//,/.}; echo $s) | awk '{printf "%04.1f", $2 + $4}')
 
-echo -e "%{+u}\uf799 $cpu%{-u}"
+#echo -e "%{+u}\uf799 $cpu%{-u}"
 #echo -e "%{+u}\ufa19 $cpu%{-u}"
+echo -e "%{+u}\uf3fd $cpu%%{-u}"

@@ -6,10 +6,11 @@ if [[ $network == "" ]]; then
     exit 0
 else
     #signal=$(nmcli dev wifi | grep $network)
-    signal=$(cat /proc/net/wireless | awk 'NR==3' | awk '{ print $3 }' | tr -d '.')
+    signal=$(cat /proc/net/wireless | awk 'NR==3' | awk '{ printf "%3.0f", $3 / 70.0 * 100 }' )
 fi
 
 echo -n "%{+u}"
-echo -n -e "\ue619"
-echo -n " $((signal * 100 / 70))%"
+#echo -n -e "\ue619"
+echo -n -e "\uf1eb"
+echo -n "$signal%"
 echo -n "%{-u}"
