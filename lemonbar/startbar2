@@ -3,16 +3,16 @@
 lauchedBarPositions=()
 
 getMonitorPosition () {
-  echo $(xrandr --listactivemonitors | grep -oP "\+[0-9]+(?=.*$1)"| tr -d '[:space:]')
+  echo $(echo $1 | grep -oP "\+[0-9]+"| tr -d '[:space:]')
 }
 
 getMonitorSize () {
-  echo $(xrandr --listactivemonitors | awk -v output=$1 '$2 ~ output { print $3 }' | grep -oP "[0-9]{4}" | head -n1)
+  echo $(echo $1 | grep -oP "[0-9]{4}" | head -n1)
 }
 
 launchBar () {
-  outputPos=$(getMonitorPosition $output)
-  outputSize=$(getMonitorSize $output)
+  outputPos=$(getMonitorPosition $1)
+  outputSize=$(getMonitorSize $1)
 
   if [[ ! " ${lauchedBarPositions[@]}" =~ "$outputPos" ]]; then
     echo lauchingBar $output ${outputSize}x22${outputPos}
@@ -29,13 +29,13 @@ launchBar () {
 pkill admiral &>/dev/null
 pkill lemonbar &>/dev/null
 
-export output="eDP-1"
-launchBar
+outputs=($(xrandr --listactivemonitors | awk ' { print $4" "$3 } '))
 
-export output="HDMI-1"
-launchBar
-
-export output="DP-2"
-launchBar
+export output=""
+for (( i=0; i<${#outputs[@]}; i += 2))
+do
+  output=${outputs[i]} # Output name
+  launchBar ${outputs[i + 1]}
+done
 
 echo Bars lauched
