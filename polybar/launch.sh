@@ -12,14 +12,14 @@ echo "Wallpaper main color is $WALLPAPER_MAIN_COLOR"
 
 echo "---" | tee -a /tmp/polybar-botttom.log 
 
-#if type "xrandr"; then
-  #for m in $(xrandr --query | grep " connected" | cut -d" " -f1); do
-    #echo Lauching for $m
-    #MONITOR=$m polybar bottom --reload >>/tmp/polybar-bottom-$m.log 2>&1 &
-    #sleep 1s
-  #done
-#else
+outputs=($(xrandr --listactivemonitors | awk ' { print $4" "$3 } '))
+
+export output=""
+for (( i=0; i<${#outputs[@]}; i += 2))
+do
+  output=${outputs[i]} # Output name
   polybar bottom --reload >>/tmp/polybar-bottom.log 2>&1 &
-#fi
+  sleep 1s
+done
 
 echo "Bars launched..."
