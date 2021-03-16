@@ -17,7 +17,7 @@ hide_edge_borders none
 # change borders
 bindsym $mod+u border none
 bindsym $mod+y border pixel 1
-bindsym $mod+n border normal
+#bindsym $mod+n border normal
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
@@ -44,7 +44,10 @@ bindsym $mod+z exec --no-startup-id morc_menu
 ################################################################################################
 
 exec --no-startup-id pa-applet
-bindsym $mod+Ctrl+m exec terminal -e 'alsamixer'
+exec --no-startup-id mictray
+
+bindsym $mod+Ctrl+m exec xterm -e 'alsamixer'
+bindsym $mod+c exec xterm -e 'bc -l'
 #exec --no-startup-id pa-applet
 #bindsym $mod+Ctrl+m exec pavucontrol
 
@@ -53,6 +56,9 @@ bindsym $mod+Ctrl+m exec terminal -e 'alsamixer'
 # Screen brightness controls
 # bindsym XF86MonBrightnessUp exec "xbacklight -inc 10; notify-send 'brightness up'"
 # bindsym XF86MonBrightnessDown exec "xbacklight -dec 10; notify-send 'brightness down'"
+
+bindsym XF86AudioMicMute exec "~/.i3/scripts/mute-default-mic"
+bindsym $mod+m exec "~/.i3/scripts/mute-default-mic" 
 
 # Start Applications
 bindsym $mod+Ctrl+b exec terminal -e 'bmenu'
@@ -71,15 +77,13 @@ bindsym $mod+Ctrl+p --release exec --no-startup-id i3-scrot
 bindsym $mod+Ctrl+x --release exec --no-startup-id xkill
 bindsym $mod+Ctrl+o --release exec --no-startup-id pavucontrol
 
-
 focus_follows_mouse no
-focus_on_window_activation none
 
 # change focus
 bindsym $mod+l workspace next
 bindsym $mod+h workspace prev
-bindsym $mod+j workspace next
-bindsym $mod+k workspace prev
+bindsym $mod+j workspace next_on_output
+bindsym $mod+k workspace prev_on_output
 
 # change focus
 bindsym $mod+Left focus left
@@ -191,47 +195,38 @@ assign [class="(?i)firefox"] $ws3
 assign [class="(?i)code"] $ws2
 assign [class="(?i)rider"] $ws2
 assign [class="(?i)teams - preview"] $ws4
-assign [class="(?i)unj-gravador-audiencia-frontend"] $ws5
 
 
 # Open specific applications in floating mode
-for_window [title="alsamixer"] floating enable border pixel 1
-for_window [class="calamares"] floating enable border normal
-for_window [class="Clipgrab"] floating enable
-for_window [title="File Transfer*"] floating enable
-for_window [class="fpakman"] floating enable
-for_window [class="Galculator"] floating enable border pixel 1
-for_window [class="GParted"] floating enable border normal
-for_window [title="i3_help"] floating enable sticky enable border normal
-for_window [class="Lightdm-settings"] floating enable
-for_window [class="Lxappearance"] floating enable sticky enable border normal
-for_window [class="Manjaro-hello"] floating enable
-for_window [class="Manjaro Settings Manager"] floating enable border normal
-for_window [title="MuseScore: Play Panel"] floating enable
-for_window [class="Nitrogen"] floating enable sticky enable border normal
-for_window [class="Oblogout"] fullscreen enable
-for_window [class="octopi"] floating enable
-for_window [title="About Pale Moon"] floating enable
-for_window [class="Pamac-manager"] floating enable
-for_window [class="Pavucontrol"] floating enable
-for_window [class="qt5ct"] floating enable sticky enable border normal
-for_window [class="Qtconfig-qt4"] floating enable sticky enable border normal
-for_window [class="Simple-scan"] floating enable border normal
-for_window [class="(?i)System-config-printer.py"] floating enable border normal
-for_window [class="Skype"] floating enable border normal
-for_window [class="Timeset-gui"] floating enable border normal
-for_window [class="(?i)virtualbox"] floating enable border normal
-for_window [class="Xfburn"] floating enable
+#for_window [title="alsamixer"] floating enable border pixel 1
+#for_window [class="calamares"] floating enable border normal
+#for_window [class="Clipgrab"] floating enable
+#for_window [title="File Transfer*"] floating enable
+#for_window [class="fpakman"] floating enable
+#for_window [class="Galculator"] floating enable border pixel 1
+#for_window [class="GParted"] floating enable border normal
+#for_window [title="i3_help"] floating enable sticky enable border normal
+#for_window [class="Lightdm-settings"] floating enable
+#for_window [class="Lxappearance"] floating enable sticky enable border normal
+#for_window [class="Manjaro-hello"] floating enable
+#for_window [class="Manjaro Settings Manager"] floating enable border normal
+#for_window [title="MuseScore: Play Panel"] floating enable
+#for_window [class="Nitrogen"] floating enable sticky enable border normal
+#for_window [class="Oblogout"] fullscreen enable
+#for_window [class="octopi"] floating enable
+#for_window [title="About Pale Moon"] floating enable
+#for_window [class="Pamac-manager"] floating enable
+#for_window [class="Pavucontrol"] floating enable
+#for_window [class="qt5ct"] floating enable sticky enable border normal
+#for_window [class="Qtconfig-qt4"] floating enable sticky enable border normal
+#for_window [class="Simple-scan"] floating enable border normal
+#for_window [class="(?i)System-config-printer.py"] floating enable border normal
+#for_window [class="Skype"] floating enable border normal
+#for_window [class="Timeset-gui"] floating enable border normal
+#for_window [class="(?i)virtualbox"] floating enable border normal
+#for_window [class="Xfburn"] floating enable
 
 for_window [class="(?i)spotify"] move to workspace $ws9
-
-for_window [title="Notificação do Microsoft Teams"] floating enable, focus tiling
-no_focus [title="Notificação do Microsoft Teams"]
-#for_window [title="Notificação do Microsoft Teams"] move absolute position right
-#for_window [title="Notificação do Microsoft Teams"] move absolute position down
-
-#for_window [title="Microsoft Teams Notification"] move absolute position down
-#for_window [title="Microsoft Teams Notification"] move absolute position right
 
 # switch to workspace with urgent window automatically
 #for_window [urgent=latest] focus
@@ -254,7 +249,7 @@ bindsym $mod+apostrophe mode "$mode_system"
 
 set $mode_system (l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown
 mode "$mode_system" {
-    bindsym l exec --no-startup-id blurlock, mode "default"
+    bindsym l exec --no-startup-id betterlockscreen -l, mode "default"
     bindsym s exec --no-startup-id i3exit suspend, mode "default"
     bindsym u exec --no-startup-id i3exit switch_user, mode "default"
     bindsym e exec --no-startup-id i3exit logout, mode "default"
@@ -306,9 +301,8 @@ mode "$mode_video" {
 
 bindsym $mod+v mode "$mode_video"
 
-set $mode_move_workspaces_monitor Move Current Workspace to: (h)HDMI, (n)notebook, Vim arrows
+set $mode_move_workspaces_monitor Move Current Workspace to: (n)notebook, Vim arrows
 mode "$mode_move_workspaces_monitor" {
-        bindsym h move workspace to output HDMI-1, mode "default"
         bindsym n move workspace to output eDP-1, mode "default"
 
         bindsym j move workspace to output down, mode "default"
@@ -321,7 +315,7 @@ mode "$mode_move_workspaces_monitor" {
         bindsym Escape mode "default"
 }
 
-bindsym $mod+m mode "$mode_move_workspaces_monitor"
+bindsym $mod+Shift+m mode "$mode_move_workspaces_monitor"
 
 # Setup Audio Output
 set $mode_output_audio (S)ink Toggle, (A)nalog, (H)dmi, 
@@ -349,7 +343,7 @@ exec --no-startup-id pamac-tray
 # exec_always --no-startup-id sbxkb
 #exec --no-startup-id start_conky_maia
 # exec --no-startup-id start_conky_green
-exec --no-startup-id xautolock -time 10 -locker blurlock
+exec --no-startup-id xautolock -time 10 -locker betterlockscreen
 exec_always --no-startup-id ff-theme-util
 exec_always --no-startup-id fix_xcursor
 
@@ -371,24 +365,24 @@ exec --no-startup-id $HOME/git/dotfiles/wallpaper.sh
 # to:
 # background $term_background
 # Same logic applied to everything else.
-set_from_resource $term_background background
-set_from_resource $term_foreground foreground
-set_from_resource $term_color0     color0
-set_from_resource $term_color1     color1
-set_from_resource $term_color2     color2
-set_from_resource $term_color3     color3
-set_from_resource $term_color4     color4
-set_from_resource $term_color5     color5
-set_from_resource $term_color6     color6
-set_from_resource $term_color7     color7
-set_from_resource $term_color8     color8
-set_from_resource $term_color9     color9
-set_from_resource $term_color10    color10
-set_from_resource $term_color11    color11
-set_from_resource $term_color12    color12
-set_from_resource $term_color13    color13
-set_from_resource $term_color14    color14
-set_from_resource $term_color15    color15
+#set_from_resource $term_background background
+#set_from_resource $term_foreground foreground
+#set_from_resource $term_color0     color0
+#set_from_resource $term_color1     color1
+#set_from_resource $term_color2     color2
+#set_from_resource $term_color3     color3
+#set_from_resource $term_color4     color4
+#set_from_resource $term_color5     color5
+#set_from_resource $term_color6     color6
+#set_from_resource $term_color7     color7
+#set_from_resource $term_color8     color8
+#set_from_resource $term_color9     color9
+#set_from_resource $term_color10    color10
+#set_from_resource $term_color11    color11
+#set_from_resource $term_color12    color12
+#set_from_resource $term_color13    color13
+#set_from_resource $term_color14    color14
+#set_from_resource $term_color15    color15
 
 set $transparent #00000000
 
@@ -454,7 +448,7 @@ set $transparent #00000000
 #}
 
 # hide/unhide i3status bar
-bindsym $mod+Shift+m bar mode toggle
+#bindsym $mod+Shift+m bar mode toggle
 
 # Theme colors
 # class                   border  backgr. text    indic.   child_border

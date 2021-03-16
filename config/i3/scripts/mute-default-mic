@@ -1,0 +1,12 @@
+#!/bin/bash
+
+pactl set-source-mute $(pactl info | grep -oP '(?<=Fonte padrão: ).+') toggle
+
+if [ $(pactl list sources | grep HARDWARE -c) == 1 ]; then
+  amixer sset 'Mic Mute-LED Mode' 'Follow Mute'
+else
+  defaultMicIsMute=$(amixer get Capture | grep -wq off && echo 1 || echo 0)
+  countMicMuted=$(pactl list sources | grep -c "Mudo: sim")
+
+  amixer sset 'Mic Mute-LED Mode' $([[ $(($countMicMuted - $defaultMicIsMute)) > 0 ]] && echo "On" || echo "Off")
+fi

@@ -17,7 +17,7 @@
 ;==========================================================
 
 [colors]
-background = ${xrdb:color1:#222}
+background = ${xrdb:background:#222}
 ;background = #222
 ;background = #090d0f
 background-alt = #444
@@ -30,13 +30,14 @@ primary = #ffb52a
 secondary = #e60053
 alert = #bd2c40
 ;background-trans = #cf090d0f
-background-trans = ${xrdb:color1:#222}
+background-trans = ${xrdb:background:#222}
 
 
 [bar/bottom]
+dpi = 144
 monitor = ${env:output:eDP-1}
 width = 100%
-height = 17
+height = 27
 ;offset-x = 0.4%
 ;offset-y = 0.1%
 radius = 0
@@ -206,7 +207,7 @@ label-visible-padding = ${self.label-focused-padding}
 ; urgent = Workspace with urgency hint set
 label-urgent = %name%
 label-urgent-background = ${colors.alert}
-label-urgent-padding = 2
+label-urgent-padding = 1
 
 ; Separator in between workspaces
 ; label-separator = |

@@ -1,0 +1,13 @@
+source ~/.vimrc
+
+set surround
+set commentary
+set multiple-cursors
+set highlightedyank
+
+" GoTo Impementation
+nmap gD :action GotoImplementation<CR>
+
+" Commentary that actually works on Rider
+nmap gcc :action CommentByLineComment<CR>
+vmap gc :action CommentByBlockComment<CR>
