@@ -5,70 +5,27 @@
 - clean: ['~']
 
 - shell:
-        - [git submodule update --init --recursive, Installing submodules]
-        - command: 'sh ./bash_it_setup.sh'
-          stdin: true
-          stderr: true
-          stdout: true
-
-        - command: 'sh ./powerline_fonts_setup.sh'
-          stdin: true
-          stdout: true
-          stderr: true
-
-          #- command: 'sh ./apt_install.sh tmux'
-          #stdin: true
-          #stdout: true
-          #stderr: true
-
-        - command: 'mkdir ~/bin'
-          stdin: true
-          stdout: true
-          stderr: true
-
-        - command: 'PATH=$PATH:~/bin'
-          stdin: true
-          stdout: true
-          stderr: true
-
-        - command: 'mkdir ~/.config/i3'
-          stdin: true
-          stdout: true
-          stderr: true
-
-        - command: 'mkdir ~/.config/terminator'
-          stdin: true
-          stdout: true
-          stderr: true
-
-        - command: 'mkdir ~/.config/i3blocks'
-          stdin: true
-          stdout: true
-          stderr: true
 
 - link:
         ~/.dotfiles: ''
         ~/.tmux.conf: tmux.conf
         ~/.vim: vim
         ~/.vimrc: vimrc
-        ~/.ideavimrc: vimrc
+        ~/.ideavimrc: ideavimrc
         ~/.Xmodmap: Xmodmap
-        ~/.config/compton.conf: config/compton.conf
-        ~/.config/lemonbar:
+        ~/.xkb/symbols/us_custom: xkb/symbols/us_custom
+        ~/.config/sway/:
                 glob: true
-                path: lemonbar
-        #~/.config/polybar: 
-                #glob: true
-                #path: polybar/*
-        ~/.i3:
+                path: sway/*
+        ~/.config/waybar/:
                 glob: true
-                path: config/i3/*
-        ~/.config/i3blocks:
+                path: waybar/*
+        ~/.config/alacritty/:
                 glob: true
-                path: config/i3blocks/*
-        ~/.config/terminator:
+                path: alacritty/*
+        ~/.config/nvim/:
                 glob: true
-                path: config/terminator/*
+                path: nvim/*
         ~/.bash_it/custom/:
                 glob: true
                 path: bash_it_customs/*

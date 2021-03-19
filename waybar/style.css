@@ -1,0 +1,179 @@
+* {
+  font-size: 14px;
+  font-family: "Fira Mono for Powerline","Font Awesome 5 Brands", "Icons"
+}
+
+@keyframes blink-critical {
+    70% {
+      color: white;
+    }
+
+    to {
+        color: white;
+        background-color: #af005f;
+    }
+}
+
+@keyframes blink-notification-mode {
+    70% {
+      color: #c5c8c6;
+      background: #1d1f21;
+    }
+
+    to {
+      background: #c5c8c6;
+      color: black;
+    }
+}
+
+window#waybar {
+    background: rgba(0,0,0,0);
+}
+
+#battery {
+  font-family: "Fira Mono for Powerline", "TerminessTTF Nerd Font";
+  /* font-family: "Fira Mono for Powerline", "Icons"; */
+  /* font-size: 15px; */
+  margin: 3px 0px 3px 0px;
+  background: #1d1f21;
+  padding: 5px;
+  color: #c5c8c6;
+}
+
+#battery.critical.discharging {
+    animation-name: blink-critical;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
+    animation-duration: 3s;
+}
+
+/* #custom-quit { */
+#mode {
+  margin: 3px;
+  padding: 5px 7px;
+  border-radius: 10px;
+  border: 2px solid #1d1f21;
+  color:#c5c8c6;
+  background: #1d1f21;
+  animation-name: blink-notification-mode; 
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-duration: 3s;
+}
+
+ #clock {
+  margin: 3px;
+  padding: 5px 10px; 
+  color: #FFF;
+  background: #1d1f21;
+  border-radius: 10px;
+  color: #c5c8c6;
+}
+
+#custom-keyboard {
+  background: #1d1f21;
+  color: #c5c8c6;
+  padding: 5px 5px 5px 7px;
+  margin: 3px 0px 3px 3px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+#custom-media {
+  margin: 3px;
+  padding: 5px 7px 5px 7px;
+  border-radius: 10px;
+  background: #1d1f21;
+  color: #c5c8c6;
+}
+
+#pulseaudio {
+  font-family: "Fira Mono for Powerline", "TerminessTTF Nerd Font";
+  margin: 3px 0px 3px 0px;
+  padding: 5px 7px 5px 5px;
+  background: #1d1f21;
+  color: #c5c8c6;
+}
+
+#network {
+  font-family: "Fira Mono for Powerline", "TerminessTTF Nerd Font";
+  background: #1d1f21;
+  color: #c5c8c6;
+  margin: 3px 0px 3px 0px;
+  padding: 5px;
+}
+
+#workspaces {
+  font-family: "TerminessTTF Nerd Font";
+  font-size: 45px;
+  background: #1d1f21;
+  color: #c5c8c6;
+  margin: 3px;
+  padding: 2px;
+  border-radius: 10px;
+}
+
+
+#workspaces button {
+  padding: 0px 5px;
+  color: #b8b8b8;
+  font-family: "TerminessTTF Nerd Font";
+  font-size: 45px;
+}
+
+#workspaces button:hover {
+  box-shadow: inherit;
+  text-shadow: inherit;
+}
+
+#workspaces button.focused {
+  color: #63bcff;
+}
+
+#workspaces button.urgent {
+  color: #d80077;
+  animation-name: blink-critical;
+  animation-direction: alternate;
+  animation-iteration-count: 8;
+  animation-duration: 3s;
+}
+
+#cpu {
+  background: #1d1f21;
+  color: #c5c8c6;
+  padding: 5px 5px 5px 7px;
+  margin: 3px 0px 3px 7px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+#memory {
+  background: #1d1f21;
+  color: #c5c8c6;
+  margin: 3px 0px 3px 0px;
+  padding: 5px 5px 5px 7px;
+  font-family: "Fira Mono for Powerline", "TerminessTTF Nerd Font";
+}
+
+#tray {
+  background: #1d1f21;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  padding: 5px 7px 5px 7px;
+  margin: 3px 3px 3px 0px;
+}
+
+#custom-headset {
+  background: #1d1f21;
+  color: #c5c8c6;
+  margin: 3px 0px 3px 0px;
+  padding: 5px 5px 5px 7px;
+}
+
+#idle_inhibitor {
+  background: #1d1f21;
+  color: #c5c8c6;
+  font-family: "Fira Mono for Powerline", "TerminessTTF Nerd Font";
+  margin: 3px 0px 3px 0px;
+  padding: 5px 10px 5px 7px;
+}

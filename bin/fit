@@ -1,0 +1,3 @@
+#!/bin/bash
+
+grep -irn ${2:-.} -e $1 --exclude='*json' --exclude='*dll' --exclude='*exe' --exclude-dir='*node_modules*' --exclude-dir='*bin*' --exclude-dir='*obj*' --exclude-dir='*.idea*' --color=always  $@

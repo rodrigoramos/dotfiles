@@ -1,0 +1,19 @@
+#!/bin/bash
+
+if [ "$1" == "2" ]; then
+  # 2 monitores
+  xrandr --fb 6720x2160 \
+   --output eDP-1 --panning 2880x1620 \
+   --output HDMI-1 --mode 3840x2160 --pos 2880x0
+elif [ "$1" == "3" ]; then
+  # 3 monitores 
+  xrandr --fb 9600x2160 \
+   --output eDP-1 --scale 1.5x1.5 --panning 2880x1620 \
+   --output HDMI-1 --mode 3840x2160  --pos 2880x0 \
+   --output DP-2 --scale 1.5x1.5 --panning 2880x1620+6720+0
+
+  xrandr --output DP-2 --scale 1.5x1.5
+fi
+
+xrandr --output eDP-1 --scale 1.5x1.5
+

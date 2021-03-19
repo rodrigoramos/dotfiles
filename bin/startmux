@@ -1,0 +1,19 @@
+#!/bin/bash
+
+if [ "$?" != "0" ]; then
+  tmux new -s main
+else
+  isMainSessionAttached=$(tmux list-session | awk '$1 == "main:" && $10 == "(attached)" { print $1 }' )
+  if [ -z "$isMainSessionAttached" ]; then
+    exec tmux new-session -A -s main
+  else
+
+    detachedSessionId=$(tmux list-session | awk '$10 != "(attached)" { print $1 }')
+    if [ -n "$detachedSessionId" ]; then
+      exec tmux new-session -A -s ${detachedSessionId/:/}
+    else
+      exec tmux new-session
+    fi
+  fi
+fi
+

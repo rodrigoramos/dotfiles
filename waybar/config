@@ -1,0 +1,89 @@
+{
+    "layer": "top",
+    "position": "top",
+    "modules-left": ["sway/workspaces", "sway/mode"],
+    "modules-center": ["clock#date"],
+    "modules-right": ["cpu", "memory", "network", "battery", "pulseaudio", "custom/headset", "idle_inhibitor", "tray", "clock#time"],
+    "clock#date": {
+        "format": "{:%a, %e %b %Y}",
+        "format-alt": "{:%a %b %d}",
+        "tooltip": false
+    },
+    "clock#time": {
+        "format": "{:%H:%M}",
+        "format-alt": "{:%a %b %d}",
+        "tooltip": false
+    },
+    "battery": {
+        "states": {
+            "good": 95,
+            "warning": 30,
+            "critical": 15
+        },
+        "bat":"BAT0",
+        "format": "{icon}  {capacity}%",
+        "format-charging": "\uf583 {capacity}%",
+        "format-plugged": "\uf58E {capacity}%",
+        "format-icons": ["\uf244", "\uf243", "\uf242", "\uf241", "\uf240"],
+        "__TTF-alt__format-icons": ["\uf578", "\uf57F", "\uf57E", "\uf57C", "\uf579"],
+        "__Icons__format-icons": ["\uf213", "\uf214", "\uf215", "\uf212"],
+        "tooltip-format": "{time}",
+    },
+    "network": {
+        "format": "{ifname}",
+        "format-wifi": "\ufaa8 {signalStrength}%",
+        "format-ethernet": "\uf9a9",
+        "tooltip-format-ethernet": "{ifname}",
+        "format-disconnected": "\ufaa9",
+        "tooltip-format-wifi": "{essid}",
+        "max-length": 20
+    },
+    "pulseaudio": {
+        "format": "{icon} {volume}% {format_source}",
+        "format-bluetooth": "{icon} {volume}%",
+        "format-muted": "\uf466  {format_source}",
+        "format-source": "\uf130",
+        "format-source-muted": "\uf131",
+        "format-icons": {
+            "headphone": "\uf7ca",
+            "hands-free": "\uf7cd",
+            "headset": "\uf7cd",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", ""]
+        },
+        "scroll-step": 1,
+        "on-click": "pavucontrol"
+    },
+    "cpu": {
+      "interval": 10,
+      "format": "\uf0e4 {}%",
+      "max-length": 10
+    },
+    "memory": {
+      "interval": 30,
+      "format": "\uf2db {}%",
+      "max-length": 10
+    },
+    "tray": {
+      "icon-size": 16,
+      "spacing": 10
+    },
+    "custom/headset": {
+     "format": "{icon}{}%",
+     "interval": 30,
+     "tooltip": false,
+     "format-icons": {
+        "default": "\uf294",
+      },
+     "exec": "headsetcontrol -bc" 
+    },
+    "idle_inhibitor": {
+      "format": "{icon}",
+      "format-icons": {
+           "activated": "\ufa0c",
+           "deactivated": "\ufa01"
+       }
+    }
+}

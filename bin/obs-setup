@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# load the module and
+# create one virtual video device
+sudo modprobe v4l2loopback 
+
+QT_QPA_PLATFORM=xcb
+
+if [ "$1" != "" ]; then
+  obs
+fi
