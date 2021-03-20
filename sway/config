@@ -46,6 +46,11 @@ set $menu wofi --show drun
     xkb_options caps:escape
   }
 
+  input "1739:52631:DELL08E1:00_06CB:CD97_Touchpad" {
+    tap enabled
+    dwt enabled
+  }
+
 # General Configuration
 focus_follows_mouse no
 
@@ -70,6 +75,7 @@ gaps outer 2
 # Start Applications
 #
     exec waybar
+    exec mako
 
     exec_always --no-startup-id $HOME/git/dotfiles/sway/import-gsettings
 

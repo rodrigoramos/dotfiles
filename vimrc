@@ -3,8 +3,7 @@ set incsearch                   " incremental searching
 set ignorecase                  " searches are case insensitive...
 set smartcase                   " ... unless they contain at least one capital letter
 
-set relativenumber
-set ru                          " Absolute Line Number on selected line
+set number relativenumber       " set relative number with absolute line number on selected line
 set nobackup
 set nowritebackup
 
