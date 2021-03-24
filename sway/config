@@ -41,6 +41,11 @@ set $menu wofi --show drun
     xkb_options caps:escape
   }
 
+  input "2652:569:AKKO_3068BT-1_Keyboard" {
+    xkb_layout us_custom
+    xkb_options caps:escape
+  }
+
   input "1:1:AT_Translated_Set_2_keyboard" {
     xkb_layout br
     xkb_options caps:escape
@@ -75,14 +80,14 @@ gaps outer 2
 # Start Applications
 #
     exec waybar
-    exec mako
+    exec mako --default-timeout 5000
 
     exec_always --no-startup-id $HOME/git/dotfiles/sway/import-gsettings
 
     # exec --no-startup-id xrandr --dpi 192
 
     # random wallpaper
-    exec --no-startup-id $HOME/git/dotfiles/wallpaper.sh &
+    exec --no-startup-id $HOME/git/dotfiles/wallpaper.sh
 
 ### Key bindings
 #
@@ -123,8 +128,8 @@ gaps outer 2
 
     # Mute Mic
     # 
-    bindsym XF86AudioMicMute exec "~/.i3/scripts/mute-default-mic"
-    bindsym $mod+m exec "~/.i3/scripts/mute-default-mic" 
+    bindsym XF86AudioMicMute exec "~/git/dotfiles/bin/mute-default-mic"
+    bindsym $mod+m exec "~/git/dotfiles/bin/mute-default-mic" 
 
     bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
     bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
@@ -134,8 +139,10 @@ gaps outer 2
     bindsym $mod+Ctrl+o --release exec --no-startup-id pavucontrol
 
     # Screenshot
-    bindsym $mod+p exec grim -g "$(slurp)" | wl-copy -
-    bindsym $mod+Shift+p exec grim -g "$(slurp)" | swappy -f -
+    bindsym $mod+p exec grim -g "$(slurp)" - | wl-copy
+    bindsym $mod+Shift+p exec grim -g "$(slurp)" - | swappy -f -
+
+    bindsym $mod+Shift+c exec makoctl dismiss -a
 
 #
 # Moving around:
@@ -165,15 +172,15 @@ gaps outer 2
 
     # Definition of Workspaces
     #  
-    set $ws1 
-    set $ws2  
-    set $ws3 
-    set $ws4 
+    set $ws1 1 
+    set $ws2 2  
+    set $ws3 3 
+    set $ws4 4 
     set $ws5 5
     set $ws6 6
     set $ws7 7
     set $ws8 8
-    set $ws9 
+    set $ws9 9 
 
     # switch to workspace
     bindsym $mod+1 workspace $ws1
