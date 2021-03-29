@@ -62,7 +62,7 @@ focus_follows_mouse no
 default_border pixel 1
 default_floating_border normal
 
-font xft:FiraMonoforPowerline:style=Medium 35
+font xft:FiraMonoforPowerline:style=Medium 11
 
 seat seat0 xcursor_theme volantes_cursors 35
 
@@ -131,12 +131,13 @@ gaps outer 2
     bindsym XF86AudioMicMute exec "~/git/dotfiles/bin/mute-default-mic"
     bindsym $mod+m exec "~/git/dotfiles/bin/mute-default-mic" 
 
+
     bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
     bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
     bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
     
     bindsym $mod+Ctrl+x --release exec --no-startup-id xkill
-    bindsym $mod+Ctrl+o --release exec --no-startup-id pavucontrol
+    bindsym $mod+Ctrl+p exec pavucontrol
 
     # Screenshot
     bindsym $mod+p exec grim -g "$(slurp)" - | wl-copy
