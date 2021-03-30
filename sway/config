@@ -87,7 +87,7 @@ gaps outer 2
     # exec --no-startup-id xrandr --dpi 192
 
     # random wallpaper
-    exec --no-startup-id $HOME/git/dotfiles/wallpaper.sh
+    exec $HOME/git/dotfiles/bin/wallpaper.sh
 
 ### Key bindings
 #
