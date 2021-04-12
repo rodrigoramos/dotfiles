@@ -100,6 +100,8 @@ gaps outer 2
     # random wallpaper
     exec $HOME/git/dotfiles/bin/wallpaper.sh
 
+    exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP
+
 ### Key bindings
 #
 # Basics:
