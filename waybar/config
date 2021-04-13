@@ -6,8 +6,8 @@
     "modules-right": ["cpu", "memory", "network", "battery", "pulseaudio", "custom/headset", "idle_inhibitor", "tray", "clock#time"],
     "clock#date": {
         "format": "{:%a, %e %b %Y}",
-        "format-alt": "{:%a %b %d}",
-        "tooltip": false
+        "on-click": "alacritty -t Calendar -e ~/git/dotfiles/bin/open_calendar",
+        "tooltip": false,
     },
     "clock#time": {
         "format": "{:%H:%M}",

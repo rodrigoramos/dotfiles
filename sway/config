@@ -137,7 +137,10 @@ gaps outer 2
     #
     
     # Calculator
-    bindsym $mod+c exec alacritty -c 'bc -l' 
+    bindsym $mod+c exec alacritty -t Calc -e bc -l 
+
+    # Calendar
+    bindsym $mod+Shift+c exec alacritty -t Calendar -e ~/git/dotfiles/bin/open_calendar
 
     # Mute Mic
     # 
@@ -156,7 +159,7 @@ gaps outer 2
     bindsym $mod+p exec grim -g "$(slurp)" - | wl-copy
     bindsym $mod+Shift+p exec grim -g "$(slurp)" - | swappy -f -
 
-    bindsym $mod+Shift+c exec makoctl dismiss -a
+    bindsym $mod+Shift+d exec makoctl dismiss -a
 
 #
 # Moving around:
@@ -241,6 +244,14 @@ gaps outer 2
   assign [class="(?i)teams - preview"] $ws4
 
   for_window [class="(?i)spotify"] move to workspace $ws9
+
+  for_window [title="Calc"] floating enabled
+  for_window [title="Calc"] resize set width 500px
+
+  for_window [title="Calendar"] floating enabled 
+  # for_window [title="Calendar"] move up 220px
+  # for_window [title="Calendar"] resize set width 475px
+  # for_window [title="Calendar"] move up 220px
 
 #
 # Layout stuff:

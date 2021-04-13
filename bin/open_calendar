@@ -1,0 +1,3 @@
+#!/bin/bash
+
+pal -r 3 -c 4 && read -n 1
