@@ -20,15 +20,26 @@ set $term alacritty
 set $menu wofi --show drun
 
 ### Output configuration
-  output eDP-1 pos 0,0 resolution 1920x1080 scale 1
-  #output HDMI-A-1 resolution 3840x2140 position 1920,0 scale 1.4
+  # Configuração completa
+  # output eDP-1 pos 0,0 resolution 1920x1080 scale 1
+  # output HDMI-A-1 resolution 3840x2140 position 1920,0 scale 1.4 
+  # output DP-2 resolution 1920x1080 position 5760,0 scale 1
+  
+  # Configuração somente com 1 monitor externo (Full HD)
+  # output eDP-1 pos 0,0 resolution 1920x1080 scale 1
+  # output HDMI-A-1 resolution 1920x1080 position 1920,0 scale 1
+
+  # Sem a tela do notebook
+  output eDP-1 resolution 1920x1080 position 0,0
+  output HDMI-A-1 resolution 3840x2140 scale 1.4 position 1920,0
+  output DP-2 resolution 1920x1080 position 4666,0
 
 # You can get the names of your outputs by running: swaymsg -t get_outputs
 
 ### Idle configuration
     exec swayidle -w \
           timeout 300 'swaylock -f -i /tmp/wallpaper-remoto.jpg' \
-          timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
+          #timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
           before-sleep 'swaylock -f -i /tmp/wallpaper-remoto.jpg'
 
 # This will lock your screen after 300 seconds of inactivity, then turn off
@@ -75,17 +86,19 @@ default_floating_border normal
 
 font xft:FiraMonoforPowerline:style=Medium 11
 
-seat seat0 xcursor_theme volantes_cursors 35
+seat seat0 xcursor_theme volantes_cursors 25
 
 # Hide borders
 hide_edge_borders none
 
 # xwayland disabled
+xwayland scale 2
 
 # Gaps
 smart_gaps on
 gaps inner 8
 gaps outer 2
+
 
 #
 # Start Applications
@@ -95,7 +108,9 @@ gaps outer 2
 
     exec_always --no-startup-id $HOME/git/dotfiles/sway/import-gsettings
 
-    # exec --no-startup-id xrandr --dpi 192
+    exec --no-startup-id xrandr --dpi 192
+
+    exec xrdb -load ~/.Xresources
 
     # random wallpaper
     exec $HOME/git/dotfiles/bin/wallpaper.sh
@@ -147,10 +162,12 @@ gaps outer 2
     bindsym XF86AudioMicMute exec "~/git/dotfiles/bin/mute-default-mic"
     bindsym $mod+m exec "~/git/dotfiles/bin/mute-default-mic" 
 
-
     bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
     bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
     bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+    bindsym XF86AudioPlay exec playerctl play-pause
+    bindsym XF86AudioNext exec playerctl next
+    bindsym XF86AudioPrev exec playerctl previous
     
     bindsym $mod+Ctrl+x --release exec --no-startup-id xkill
     bindsym $mod+Ctrl+p exec pavucontrol

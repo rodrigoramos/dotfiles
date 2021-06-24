@@ -2,7 +2,14 @@
 
 function vo () { (alacritty --working-directory ${1:-$PWD} -t NeoVim  -e nvim 1> /dev/null 2>&1 &) }
 alias vim="nvim"
-alias chromium="chromium --enable-features=UseOzonePlatform --ozone-platform=wayland"
 alias fif="$HOME/git/dotfiles/bin/fit"
 alias vpn="$HOME/vpn_l3"
 alias my-rclone="$HOME/git/dotfiles/bin/rclone.sh"
+
+# Wayland
+alias spotify="spotify --force-device-scale-factor=1.5"
+
+alias code="code --enable-features=UseOzonePlatform --ozone-platform=wayland"
+alias chromium="chromium --enable-features=UseOzonePlatform --ozone-platform=wayland"
+
+alias teams="XCURSOR_SIZE=65 teams"
