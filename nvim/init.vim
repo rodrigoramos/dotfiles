@@ -6,14 +6,13 @@ source ~/.config/nvim/coc.vim
 
 
 call plug#begin("~/.vim/plugged")
-  " Plugin Section
+  "Plugin Section
   
   " Theme
-  "Plug 'dikiaap/minimalist'
-  Plug 'arcticicestudio/nord-vim'
+  Plug 'dikiaap/minimalist'
   Plug 'kaicataldo/material.vim', { 'branch': 'main' }
 
-  " File Explorer
+  "" File Explorer
   Plug 'scrooloose/nerdtree'
   Plug 'ryanoasis/vim-devicons'
 
@@ -25,12 +24,12 @@ call plug#begin("~/.vim/plugged")
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
   " Typescript highlighting
-  "Plug 'leafgarland/typescript-vim'
+  Plug 'leafgarland/typescript-vim'
   Plug 'mxw/vim-jsx'
   Plug 'pangloss/vim-javascript'
 
   Plug 'kyazdani42/nvim-web-devicons'
-  Plug 'romgrk/barbar.nvim'
+  "Plug 'romgrk/barbar.nvim'
 
   Plug 'machakann/vim-highlightedyank'
 
@@ -72,12 +71,12 @@ let g:NERDTreeIgnore = []
 let g:NERDTreeStatusline = ''
 let g:NERDTreeChDirMode = 2
 " Automaticaly close nvim if NERDTree is only thing left open
-"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " Toggle
 nnoremap <silent> <C-b> :NERDTreeToggle<CR>
 
- " use alt+hjkl to move between split/vsplit panels
+" use alt+hjkl to move between split/vsplit panels
 tnoremap <A-h> <C-\><C-n><C-w>h
 tnoremap <A-j> <C-\><C-n><C-w>j
 tnoremap <A-k> <C-\><C-n><C-w>k
@@ -87,12 +86,12 @@ nnoremap <A-j> <C-w>j
 nnoremap <A-k> <C-w>k
 nnoremap <A-l> <C-w>l
 
-" nnoremap <C-k> :tabprevious<CR>
-" nnoremap <C-j> :tabnext<CR>
+nnoremap <C-k> :tabprevious<CR>
+nnoremap <C-j> :tabnext<CR>
 
 " Move to previous/next
-nnoremap <silent>    <C-k> :BufferPrevious<CR>
-nnoremap <silent>    <C-j> :BufferNext<CR>
+"nnoremap <silent>    <C-k> :BufferPrevious<CR>
+"nnoremap <silent>    <C-j> :BufferNext<CR>
 
 " Goto buffer in position...
 nnoremap <silent>    <A-1> :BufferGoto 1<CR>
@@ -115,7 +114,7 @@ let g:fzf_action = {
   \ 'ctrl-v': 'vsplit'
   \}
 
-let $FZF_DEFAULT_COMMAND = 'ag -g ""'
+let $FZF_DEFAULT_COMMAND = 'rg --files . !.git !node_modules'
 
 
 " === Denite setup ==="
@@ -125,7 +124,7 @@ let $FZF_DEFAULT_COMMAND = 'ag -g ""'
 "   --glob:  Include or exclues files for searching that match the given glob
 "            (aka ignore .git files)
 "
-call denite#custom#var('file/rec', 'command', ['rg', '--files', '--glob', '!.git'])
+call denite#custom#var('file/rec', 'command', ['rg', '--files', '--glob', '!.git', '!node_modules'])
 
 " Use ripgrep in place of "grep"
 call denite#custom#var('grep', 'command', ['rg'])

@@ -13,3 +13,8 @@ alias code="code --enable-features=UseOzonePlatform --ozone-platform=wayland"
 alias chromium="chromium --enable-features=UseOzonePlatform --ozone-platform=wayland"
 
 alias teams="XCURSOR_SIZE=65 teams"
+
+
+# Git
+alias gs="git status"
+alias gpuoc='git push --set-upstream origin $(git symbolic-ref --short HEAD)'
