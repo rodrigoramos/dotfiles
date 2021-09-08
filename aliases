@@ -5,6 +5,7 @@ vo()
   kitty --detach --working-directory=${1:-$PWD} -T=NeoVim nvim
 }
 
+alias cat="bat"
 alias vim="nvim"
 alias fif="$HOME/git/dotfiles/bin/fit"
 alias vpn="$HOME/vpn_l3"

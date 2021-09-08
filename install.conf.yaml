@@ -8,6 +8,7 @@
     ~/.xkb/symbols/us_custom: xkb/symbols/us_custom
     ~/.vimrc: vimrc
     ~/.ideavimrc: ideavimrc
+    ~/.gitconfig: gitconfig
     ~/.config/nvim:
         path: 'nvim/config'
         create: true

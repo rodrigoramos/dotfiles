@@ -79,6 +79,6 @@ Principais aplicativos que costumo instalar. Foi utilizado a imagem da comunidad
    - Chromium
    - bat
    ```
-   yay -S headsetcontrol ripgrep chromium bat
+   yay -S headsetcontrol ripgrep chromium bat git-delta
    ```
 
