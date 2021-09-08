@@ -1,31 +1,18 @@
 - defaults:
-        link:
-                relink: true
-
-- clean: ['~']
-
-- shell:
+    link:
+      relink: true
 
 - link:
-        ~/.dotfiles: ''
-        ~/.tmux.conf: tmux.conf
-        ~/.vim: vim
-        ~/.vimrc: vimrc
-        ~/.ideavimrc: ideavimrc
-        ~/.Xmodmap: Xmodmap
-        ~/.xkb/symbols/us_custom: xkb/symbols/us_custom
-        ~/.config/sway/:
-                glob: true
-                path: sway/*
-        ~/.config/waybar/:
-                glob: true
-                path: waybar/*
-        ~/.config/alacritty/:
-                glob: true
-                path: alacritty/*
-        ~/.config/nvim/:
-                glob: true
-                path: nvim/*
-        ~/.bash_it/custom/:
-                glob: true
-                path: bash_it_customs/*
+    ~/.dotfiles: ''
+    ~/.vimrc: vimrc
+    ~/.ideavimrc: ideavimrc
+    ~/.xkb/symbols/us_custom: xkb/symbols/us_custom
+    ~/.config/rclone/OneDrive-Pessoal.env: rclone/OneDrive-Pessoal.env
+
+- create:
+    - ~/.config/rclone
+    - ~/.xkb/symbols
+
+
+- shell:
+    - [git submodule update --init --recursive, Installing submodules]
