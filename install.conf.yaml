@@ -27,6 +27,8 @@
     ~/.config/waybar:
         path: 'waybar/*'
         glob: true
-
+    ~/.config/kitty/kitty.conf:
+        create: true
+        path: 'kitty/kitty.conf'
 - shell:
     - [git submodule update --init --recursive, Installing submodules]

@@ -8,6 +8,7 @@
 # * change the theme: set $theme /usr/share/sway/themes/matcha-blue
 # * change waybar position: set $waybar_position bottom%
 
+# Workspaces Names with Icons
 set $ws1 1 
 set $ws2 2  
 set $ws3 3 
@@ -17,3 +18,10 @@ set $ws6 6
 set $ws7 7
 set $ws8 8
 set $ws9 9 
+
+
+# styles - matcha-green or matcha-blue
+set $theme /usr/share/sway/themes/matcha-blue
+
+# Your preferred terminal emulator
+set $term /usr/bin/kitty
