@@ -1,6 +1,8 @@
-# Passo a Passo Instalacao
+# Referência para Instalação
 
-1. KeePassXC (habilitar senhas)
+Principais aplicativos que costumo instalar. Foi utilizado a imagem da comunidade do Manjaro Sway como base.
+
+## KeePassXC (habilitar senhas)
     1. Instalar Rclone via pacman
     0. Setup (rclone config) para OneDrive-Pessoal
     0. Setup Systemd [https://github.com/rclone/rclone/wiki/Systemd-rclone-mount]
@@ -14,7 +16,7 @@
        $ sudo pacman -S keepassxc
        ```
 
-0. SSH
+## SSH
    1. Criar nova chave ssh local
    ```bash
    $ ssh-keygen
@@ -22,7 +24,7 @@
    2. Adicionar chave pública no GitHub 
 
 
-0. Dotfiles
+## Dotfiles
    1. Verificar se a pasta ~/.xkb/symbols existe;
    0. Remover arquivos (ou fazer backup) da pasta ~/.config/waybar
    0. Clone repo
@@ -30,7 +32,26 @@
       ```bash
       ./install -v
       ```
-0. Setup NeoVim
+## Instalar NVM (Node e NPM)
+   1. Instalar NVM
+   ```bash
+   pacman -S nvm
+   ```
+   0. Edit the .zshrc (or .bashrc)
+   ```bash
+   echo 'source /usr/share/nvm/init-nvm.sh' >> ~/.zshrc
+   ```
+   0. Restart the shell
+   0. Install Node/NPM
+   ```bash
+   nvm install --lts
+   ```
+   0. Definir instalação como default
+   ```bash
+   nvm alias default $(node --version)
+   ```
+
+## Setup NeoVim
    1. Open NeoVim
    ```bash
    nvim
@@ -41,7 +62,7 @@
    :PlugInstall
    ```
 
-0. Instalar programas:
+## Outros Programas Utilizados
    - headsetcontrol (AUR)
    ```
    yay -S headsetcontrol
@@ -54,5 +75,8 @@
    ```bash
    pacman -S chromium
    ```
-
+   - bat
+   ```bash
+   pacman -S bat
+   ```
 
