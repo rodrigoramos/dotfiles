@@ -30,8 +30,29 @@
       ```bash
       ./install -v
       ```
+0. Setup NeoVim
+   1. Open NeoVim
+   ```bash
+   nvim
+   ```
+   0. Ignore os erros
+   0. Install Plugins:
+   ```
+   :PlugInstall
+   ```
+
 0. Instalar programas:
    - headsetcontrol (AUR)
    ```
    yay -S headsetcontrol
    ```
+   - Ripgrep (rg) - necessário para o meu NeoVim
+   ```bash
+   pacman -S ripgrep
+   ```
+   - Chromium
+   ```bash
+   pacman -S chromium
+   ```
+
+
