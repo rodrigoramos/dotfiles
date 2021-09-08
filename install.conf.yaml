@@ -2,17 +2,26 @@
     link:
       relink: true
 
+      
 - link:
     ~/.dotfiles: ''
     ~/.vimrc: vimrc
     ~/.ideavimrc: ideavimrc
     ~/.xkb/symbols/us_custom: xkb/symbols/us_custom
     ~/.config/rclone/OneDrive-Pessoal.env: rclone/OneDrive-Pessoal.env
-
-- create:
-    - ~/.config/rclone
-    - ~/.xkb/symbols
-
+    ~/.config/sway/definitions: 
+        path: 'sway/definitions'
+        force: true
+    ~/.config/sway/config:
+        path: 'sway/config'
+        force: true
+    ~/.config/sway/config.d/:
+        path: 'sway/config.d/*'
+        force: true
+        glob: true
+    ~/.config/waybar:
+        path: 'waybar/*'
+        glob: true
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]

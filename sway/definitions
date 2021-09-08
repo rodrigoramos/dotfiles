@@ -1,0 +1,19 @@
+# definitions overrides for sway
+#
+# refer to /etc/sway/definitions for global definitions that can be overridden here
+#
+# e.g.:
+# * change modifier key from Win/Pine-Key to Alt: set $mod Mod1
+# * change the background image: set $background /usr/share/wallpapers/manjaro-nudes.png
+# * change the theme: set $theme /usr/share/sway/themes/matcha-blue
+# * change waybar position: set $waybar_position bottom%
+
+set $ws1 1 
+set $ws2 2  
+set $ws3 3 
+set $ws4 4 
+set $ws5 5
+set $ws6 6
+set $ws7 7
+set $ws8 8
+set $ws9 9 

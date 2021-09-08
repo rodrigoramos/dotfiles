@@ -5,29 +5,49 @@
     "modules-center": ["clock#date"],
     "modules-right": ["cpu", "memory", "network", "battery", "pulseaudio", "custom/headset", "idle_inhibitor", "tray", "clock#time"],
     "clock#date": {
+        "interval": 60,
         "format": "{:%a, %e %b %Y}",
-        "on-click": "alacritty -t Calendar -e ~/git/dotfiles/bin/open_calendar",
-        "tooltip": false,
+        "on-click": "swaymsg exec \\$calendar",
+        "tooltip": true,
+        "tooltip-format": "<big>{:%B %Y}</big>\n<tt>{calendar}</tt>"
     },
     "clock#time": {
         "format": "{:%H:%M}",
-        "format-alt": "{:%a %b %d}",
         "tooltip": false
     },
+    /* "battery": { */
+    /*     "states": { */
+    /*         "good": 95, */
+    /*         "warning": 30, */
+    /*         "critical": 15 */
+    /*     }, */
+    /*     "bat":"BAT0", */
+    /*     "format": "{icon}  {capacity}%", */
+    /*     "format-charging": "\uf583 {capacity}%", */
+    /*     "format-plugged": "\uf58E {capacity}%", */
+    /*     "format-icons": ["\uf244", "\uf243", "\uf242", "\uf241", "\uf240"], */
+    /*     "__TTF-alt__format-icons": ["\uf578", "\uf57F", "\uf57E", "\uf57C", "\uf579"], */
+    /*     "__Icons__format-icons": ["\uf213", "\uf214", "\uf215", "\uf212"], */
+    /*     "tooltip-format": "{time}", */
+    /* }, */
     "battery": {
+        "interval": 30,
         "states": {
-            "good": 95,
             "warning": 30,
             "critical": 15
         },
-        "bat":"BAT0",
-        "format": "{icon}  {capacity}%",
-        "format-charging": "\uf583 {capacity}%",
-        "format-plugged": "\uf58E {capacity}%",
-        "format-icons": ["\uf244", "\uf243", "\uf242", "\uf241", "\uf240"],
-        "__TTF-alt__format-icons": ["\uf578", "\uf57F", "\uf57E", "\uf57C", "\uf579"],
-        "__Icons__format-icons": ["\uf213", "\uf214", "\uf215", "\uf212"],
-        "tooltip-format": "{time}",
+        "format-charging": "󰂄{capacity}%", // Icon: bolt
+        "format": "{icon}{capacity}%",
+        "format-icons": [
+            "󰂃",
+	        "󰁺", // Icon: battery-empty
+            "󰁻", // Icon: battery-quarter
+            "󰁽", // Icon: battery-half
+            "󰂀", // Icon: battery-three-quarters
+            "󰁹"  // Icon: battery-full
+        ],
+        "tooltip": false,
+        "bat": "BAT0"
     },
     "network": {
         "format": "{ifname}",
@@ -80,10 +100,10 @@
      "exec": "headsetcontrol -bc" 
     },
     "idle_inhibitor": {
-      "format": "{icon}",
-      "format-icons": {
-           "activated": "\ufa0c",
-           "deactivated": "\ufa01"
-       }
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "󰒳",
+            "deactivated": "󰒲"
+        }
     }
 }

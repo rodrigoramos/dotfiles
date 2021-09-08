@@ -21,3 +21,17 @@
    ```
    2. Adicionar chave pública no GitHub 
 
+
+0. Dotfiles
+   1. Verificar se a pasta ~/.xkb/symbols existe;
+   0. Remover arquivos (ou fazer backup) da pasta ~/.config/waybar
+   0. Clone repo
+   0. Run install
+      ```bash
+      ./install -v
+      ```
+0. Instalar programas:
+   - headsetcontrol (AUR)
+   ```
+   yay -S headsetcontrol
+   ```
