@@ -2,7 +2,19 @@
 
 Principais aplicativos que costumo instalar. Foi utilizado a imagem da comunidade do Manjaro Sway como base.
 
-## KeePassXC (habilitar senhas)
+## Dotfiles
+   1. Garanta que a pasta `~/.xkb/symbols` existe
+   0. Remover arquivos (ou fazer backup) da pasta `~/.config/waybar`
+   0. Clone repo
+      ```bash
+      git clone git@github.com:rodrigoramos/dotfiles.git
+      ```
+   0. Run install
+      ```bash
+      cd dotfiles && ./install -v
+      ```
+
+## Rclone + KeePassXC (habilitar senhas)
 
 1. Instalar Rclone via pacman
     ```bash
@@ -10,7 +22,7 @@ Principais aplicativos que costumo instalar. Foi utilizado a imagem da comunidad
     ```
 0. Setup (rclone config) para OneDrive-Pessoal
 0. Setup Systemd [https://github.com/rclone/rclone/wiki/Systemd-rclone-mount]
-   1. dotfiles .config/rclone/OneDrive-Pessoal.env
+   1. Garanta que esse arquivo existe: `.config/rclone/OneDrive-Pessoal.env` (proveniente do dotfiles)
    0. Criar o arquivo rclone@.service em /etc/systemd/user
    0. Reiniciar o Daemon 
       `systemctl --user daemon-reload`
@@ -31,17 +43,6 @@ Principais aplicativos que costumo instalar. Foi utilizado a imagem da comunidad
    2. Adicionar chave pública no GitHub [https://github.com/settings/keys]
 
 
-## Dotfiles
-   1. Garanta que a pasta `~/.xkb/symbols` existe;
-   0. Remover arquivos (ou fazer backup) da pasta `~/.config/waybar`;
-   0. Clone repo
-      ```bash
-      git clone git@github.com:rodrigoramos/dotfiles.git
-      ```
-   0. Run install
-      ```bash
-      cd dotfiles && ./install -v
-      ```
 ## Instalar NVM (Node e NPM)
    1. Instalar NVM
       ```bash
