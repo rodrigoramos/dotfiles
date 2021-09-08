@@ -20,19 +20,19 @@ Principais aplicativos que costumo instalar. Foi utilizado a imagem da comunidad
       `systemctl --user start rclone@OneDrive-Pessoal.service`
 0. Instalar o KeePass
    ```bash
-   $ sudo pacman -S keepassxc
+   sudo pacman -S keepassxc
    ```
 
 ## SSH
    1. Criar nova chave ssh local
-   ```bash
-   ssh-keygen
-   ```
+      ```bash
+      ssh-keygen
+      ```
    2. Adicionar chave pública no GitHub [https://github.com/settings/keys]
 
 
 ## Dotfiles
-   1. Verificar se a pasta `~/.xkb/symbols existe`;
+   1. Garanta que a pasta `~/.xkb/symbols` existe;
    0. Remover arquivos (ou fazer backup) da pasta `~/.config/waybar`;
    0. Clone repo
       ```bash
@@ -44,33 +44,33 @@ Principais aplicativos que costumo instalar. Foi utilizado a imagem da comunidad
       ```
 ## Instalar NVM (Node e NPM)
    1. Instalar NVM
-     ```bash
-     pacman -S nvm
-     ```
+      ```bash
+      pacman -S nvm
+      ```
    0. Edit the .zshrc (or .bashrc)
-     ```bash
-     echo 'source /usr/share/nvm/init-nvm.sh' >> ~/.zshrc
-     ```
+      ```bash
+      echo 'source /usr/share/nvm/init-nvm.sh' >> ~/.zshrc
+      ```
    0. Restart the shell
    0. Install Node/NPM
-     ```bash
-     nvm install --lts
-     ```
+      ```bash
+      nvm install --lts
+      ```
    0. Definir instalação como default
-     ```bash
-     nvm alias default $(node --version)
-     ```
+      ```bash
+      nvm alias default $(node --version)
+      ```
 
 ## Setup NeoVim
    1. Open NeoVim
-     ```bash
-     nvim
-     ```
+      ```bash
+      nvim
+      ```
    0. Ignore os erros
    0. Install Plugins:
-     ```
-     :PlugInstall
-     ```
+      ```
+      :PlugInstall
+      ```
 
 ## Outros Programas Utilizados
    - headsetcontrol (AUR)
