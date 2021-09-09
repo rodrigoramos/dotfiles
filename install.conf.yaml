@@ -15,6 +15,7 @@
         glob: true
     ~/.local/share/nvim/site/autoload/plug.vim: nvim/autoload/plug.vim
     ~/.config/rclone/OneDrive-Pessoal.env: rclone/OneDrive-Pessoal.env
+    ~/.config/rclone/OneDrive-L3.env: rclone/OneDrive-L3.env
     ~/.config/sway/definitions: 
         path: 'sway/definitions'
         force: true
