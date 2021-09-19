@@ -85,7 +85,7 @@
      "format-icons": {
         "default": [ "󰥇 ", "󰤾 ", "󰤿 ", "󰥀 ", "󰥁 ", "󰥂 ", "󰥃 ", "󰥄 ", "󰥅 ", "󰥆 "], 
       },
-     "exec": "$HOME/git/dotfiles/bin/headset-output.sh $(headsetcontrol -bc)" 
+     "exec": "$HOME/git/dotfiles/waybar/scripts/headset-output.sh $(headsetcontrol -bc)" 
     },
     "custom/notifications": {
      "format": "{icon}",
@@ -93,7 +93,7 @@
      "return-type": "json",
      "tooltip": true,
      "format-icons": ["󰂜","󰂞"], 
-     "exec": "$HOME/git/dotfiles/bin/notf.sh $(swaync-client -c)",
+     "exec": "$HOME/git/dotfiles/waybar/scripts/notf.sh $(swaync-client -c)",
      "on-click": "swaync-client -t -sw"
     },
     "idle_inhibitor": {
