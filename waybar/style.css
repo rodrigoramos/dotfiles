@@ -1,7 +1,20 @@
 * {
   font-size: 14px;
-  font-family: "Fira Mono for Powerline","Font Awesome 5 Brands", "Icons";
+  font-family: "Liberation Mono", "Fira Mono for Powerline","Font Awesome 5 Brands", "Icons";
 }
+
+widget > box, widget > label {
+  color: #c5c8c6;
+  padding: 0 6px;
+}
+
+box.horizontal:dir(ltr) > box.horizontal:dir(ltr) {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+  margin: 3px;
+  padding: 3px 5px; 
+}
+
 
 @keyframes blink-critical {
     70% {
@@ -30,118 +43,46 @@ window#waybar {
   background: rgba(0,0,0,0);
 }
 
-#battery {
-  font-family: "Fira Mono for Powerline", "TerminessTTF Nerd Font";
-  /* font-family: "Fira Mono for Powerline", "Icons"; */
-  /* font-size: 15px; */
-  margin: 3px 0px 3px 0px;
-  /* background: #1d1f21; */
-  background: rgba(0, 0, 0, 0.7);
-  padding: 5px;
-  color: #c5c8c6;
-}
-
 #battery.critical.discharging {
-    animation-name: blink-critical;
-    animation-direction: alternate;
-    animation-iteration-count: infinite;
-    animation-duration: 3s;
-}
-
-/* #custom-quit { */
-#mode {
-  margin: 3px;
-  padding: 5px 7px;
-  border-radius: 10px;
-  border: 2px solid #1d1f21;
-  color:#c5c8c6;
-  /* background: #1d1f21; */
-  background: rgba(0, 0, 0, 0.7);
-  animation-name: blink-notification-mode; 
+  animation-name: blink-critical;
   animation-direction: alternate;
   animation-iteration-count: infinite;
   animation-duration: 3s;
 }
 
- #clock {
-  margin: 3px;
-  padding: 5px 10px; 
-  color: #FFF;
-  /* background: #1d1f21; */
-  background: rgba(0, 0, 0, 0.7);
-  border-radius: 10px;
-  color: #c5c8c6;
-}
-
-#custom-keyboard {
-  /* background: #1d1f21; */
-  background: rgba(0, 0, 0, 0.7);
-  color: #c5c8c6;
-  padding: 5px 5px 5px 7px;
-  margin: 3px 0px 3px 3px;
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
-}
-
-#custom-media {
-  margin: 3px;
-  padding: 5px 7px 5px 7px;
-  border-radius: 10px;
-  background: #1d1f21;
-  /* background: #1d1f21; */
-  background: rgba(0, 0, 0, 0.7);
-  color: #c5c8c6;
+#mode {
+  animation-name: blink-notification-mode; 
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-duration: 3s;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 #custom-notifications {
   font-size: 16px;
-  margin: 3px 0px 3px 0px;
-  padding: 3px 5px 5px 5px;
-
-  /* background: #1d1f21; */
-  background: rgba(0, 0, 0, 0.7);
-  color: #c5c8c6;
 }
 
 #pulseaudio {
-  font-family: "Fira Mono for Powerline", "TerminessTTF Nerd Font";
   font-size: 17px;
-  margin: 3px 0px 3px 0px;
-  padding: 5px 5px 5px 5px;
-
-
-
-  /* background: #1d1f21; */
-  background: rgba(0, 0, 0, 0.7);
-  color: #c5c8c6;
+  margin-top: 3px;
 }
 
-#network {
-  font-family: "Fira Mono for Powerline", "TerminessTTF Nerd Font";
-  /* background: #1d1f21; */
-  background: rgba(0, 0, 0, 0.7);
-  color: #c5c8c6;
-  margin: 3px 0px 3px 0px;
-  padding: 5px;
+
+#workspaces:first-child  {
+  padding-left: 0;
+  margin-left: 0;
 }
 
-#workspaces {
-  font-family: "TerminessTTF Nerd Font";
-  font-size: 45px;
-  /* background: #1d1f21; */
-  background: rgba(0, 0, 0, 0.7);
-  color: #c5c8c6;
-  margin: 3px;
-  padding: 2px;
-  border-radius: 10px;
+#workspaces:last-child {
+  padding-right: 0;
+  margin-right: 0;
 }
-
 
 #workspaces button {
-  padding: 0px 5px;
   color: #b8b8b8;
-  font-family: "TerminessTTF Nerd Font";
-  font-size: 45px;
+  margin: 0;
+  padding: 0 6px;
 }
 
 #workspaces button:hover {
@@ -154,70 +95,31 @@ window#waybar {
 }
 
 #workspaces button.urgent {
-  color: #d80077;
-  animation-name: blink-critical;
   animation-direction: alternate;
-  animation-iteration-count: 8;
   animation-duration: 3s;
+  animation-iteration-count: 8;
+  animation-name: blink-critical;
+  color: #d80077;
 }
 
-#cpu {
-  /* background: #1d1f21; */
-  background: rgba(0, 0, 0, 0.7);
-  color: #c5c8c6;
-  padding: 5px 5px 5px 7px;
-  margin: 3px 0px 3px 7px;
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
-}
-
-#memory {
-  /* background: #1d1f21; */
-  background: rgba(0, 0, 0, 0.7);
-  color: #c5c8c6;
-  margin: 3px 0px 3px 0px;
-  padding: 5px 5px 5px 7px;
-  font-family: "Fira Mono for Powerline", "TerminessTTF Nerd Font";
-}
-
-#tray {
-  /* background: #1d1f21; */
-  background: rgba(0, 0, 0, 0.7);
-  margin: 3px 0px 3px 0px;
-  padding: 5px 10px 5px 7px;
-}
 
 #custom-headset {
-
   font-family: "Material Design Icons";
-  /* background: #1d1f21; */
-  background: rgba(0, 0, 0, 0.7);
-  color: #c5c8c6;
-  margin: 3px 0px 3px 0px;
-  padding: 5px 5px 5px 7px;
 }
 
-#custom-headset.critical {
-    animation-name: blink-critical;
-    animation-direction: alternate;
-    animation-iteration-count: infinite;
-    animation-duration: 3s;
-}
+  #custom-headset.critical {
+      animation-name: blink-critical;
+      animation-direction: alternate;
+      animation-iteration-count: infinite;
+      animation-duration: 3s;
+  }
 
-#custom-headset.warning {
-    animation-name: blink-notification-mode;
-    animation-direction: alternate;
-    animation-iteration-count: infinite;
-    animation-duration: 5s;
-}
+  #custom-headset.warning {
+      animation-name: blink-notification-mode;
+      animation-direction: alternate;
+      animation-duration: 5s;
+  }
 
-#idle_inhibitor {
-  /* background: #1d1f21; */
-  background: rgba(0, 0, 0, 0.7);
-  color: #c5c8c6;
-  font-family: "Fira Mono for Powerline", "TerminessTTF Nerd Font";
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
-  margin: 3px 0px 3px 0px;
-  padding: 5px 10px 5px 7px;
+tooltip label {
+  font-size: 16px;
 }

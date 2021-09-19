@@ -3,7 +3,7 @@
     "position": "top",
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": ["clock#date"],
-    "modules-right": ["cpu", "memory", "network", "battery", "pulseaudio", "custom/headset", "custom/notifications", "tray", "idle_inhibitor", "clock#time"],
+    "modules-right": ["custom/events", "cpu", "memory", "network", "battery", "pulseaudio", "custom/headset", "custom/notifications", "tray", "idle_inhibitor", "clock#time"],
     "clock#date": {
         "interval": 60,
         "format": "{:%a, %e %b %Y}",
@@ -46,7 +46,7 @@
     },
 
     "pulseaudio": {
-        "format": "{icon}{format_source}",
+        "format": "{icon} {format_source}",
         "format-bluetooth": "{icon}",
         "format-muted": "󰖁 {format_source}",
         "format-source": "󰍬",
@@ -102,5 +102,15 @@
             "activated": "󰒳",
             "deactivated": "󰒲"
         }
+    },
+    "custom/events": {
+      "format": "{}",
+      "tooltip": true,
+      "interval": 10,
+      "format-icons": {
+        "default": ""
+      },
+      "exec": "$HOME/git/dotfiles/waybar/scripts/waybar-khal.py",
+      "return-type": "json"
     }
 }
