@@ -3,7 +3,7 @@
     "position": "top",
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": ["clock#date"],
-    "modules-right": ["cpu", "memory", "network", "battery", "pulseaudio", "custom/headset", "idle_inhibitor", "tray", "clock#time"],
+    "modules-right": ["cpu", "memory", "network", "battery", "pulseaudio", "custom/headset", "custom/notifications", "tray", "idle_inhibitor", "clock#time"],
     "clock#date": {
         "interval": 60,
         "format": "{:%a, %e %b %Y}",
@@ -13,23 +13,9 @@
     },
     "clock#time": {
         "format": "{:%H:%M}",
-        "tooltip": false
+        "tooltip": true,
+        "tooltip-format": "<big>{:%B %Y}</big>\n<tt>{calendar}</tt>"
     },
-    /* "battery": { */
-    /*     "states": { */
-    /*         "good": 95, */
-    /*         "warning": 30, */
-    /*         "critical": 15 */
-    /*     }, */
-    /*     "bat":"BAT0", */
-    /*     "format": "{icon}  {capacity}%", */
-    /*     "format-charging": "\uf583 {capacity}%", */
-    /*     "format-plugged": "\uf58E {capacity}%", */
-    /*     "format-icons": ["\uf244", "\uf243", "\uf242", "\uf241", "\uf240"], */
-    /*     "__TTF-alt__format-icons": ["\uf578", "\uf57F", "\uf57E", "\uf57C", "\uf579"], */
-    /*     "__Icons__format-icons": ["\uf213", "\uf214", "\uf215", "\uf212"], */
-    /*     "tooltip-format": "{time}", */
-    /* }, */
     "battery": {
         "interval": 30,
         "states": {
@@ -40,7 +26,7 @@
         "format": "{icon}{capacity}%",
         "format-icons": [
             "󰂃",
-	        "󰁺", // Icon: battery-empty
+            "󰁺", // Icon: battery-empty
             "󰁻", // Icon: battery-quarter
             "󰁽", // Icon: battery-half
             "󰂀", // Icon: battery-three-quarters
@@ -58,12 +44,13 @@
         "tooltip-format-wifi": "{essid}",
         "max-length": 20
     },
+
     "pulseaudio": {
-        "format": "{icon} {volume}% {format_source}",
-        "format-bluetooth": "{icon} {volume}%",
-        "format-muted": "\uf466  {format_source}",
-        "format-source": "\uf130",
-        "format-source-muted": "\uf131",
+        "format": "{icon}{format_source}",
+        "format-bluetooth": "{icon}",
+        "format-muted": "󰖁 {format_source}",
+        "format-source": "󰍬",
+        "format-source-muted": "󰍭",
         "format-icons": {
             "headphone": "\uf7ca",
             "hands-free": "\uf7cd",
@@ -71,7 +58,7 @@
             "phone": "",
             "portable": "",
             "car": "",
-            "default": ["", ""]
+            "default": ["󰖁","󰕿","󰕿","󰕿","󰖀", "󰖀","󰖀", "󰕾","󰕾","󰕾"]
         },
         "scroll-step": 1,
         "on-click": "pavucontrol"
@@ -91,13 +78,23 @@
       "spacing": 10
     },
     "custom/headset": {
-     "format": "{icon}{}%",
+     "format": "{icon}",
      "interval": 30,
-     "tooltip": false,
+     "tooltip": true,
+     "return-type": "json",
      "format-icons": {
-        "default": "\uf294",
+        "default": [ "󰥇 ", "󰤾 ", "󰤿 ", "󰥀 ", "󰥁 ", "󰥂 ", "󰥃 ", "󰥄 ", "󰥅 ", "󰥆 "], 
       },
-     "exec": "headsetcontrol -bc" 
+     "exec": "$HOME/git/dotfiles/bin/headset-output.sh $(headsetcontrol -bc)" 
+    },
+    "custom/notifications": {
+     "format": "{icon}",
+     "interval": 2,
+     "return-type": "json",
+     "tooltip": true,
+     "format-icons": ["󰂜","󰂞"], 
+     "exec": "$HOME/git/dotfiles/bin/notf.sh $(swaync-client -c)",
+     "on-click": "swaync-client -t -sw"
     },
     "idle_inhibitor": {
         "format": "{icon}",

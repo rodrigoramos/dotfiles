@@ -1,6 +1,21 @@
 #!/bin/bash
 
-pactl set-source-mute $(pactl info | grep -oP '(?<=Fonte padrão: ).+') toggle
+defaultSource=$(pactl info | grep -oP '(?<=Fonte padrão: ).+')
+
+if [ "$defaultsource" == "" ]; then
+  defaultSource=$(pactl info | grep -oP '(?<=Default Source: ).+')
+fi
+
+if [ "$defaultSource" = "" ]; then
+  echo It was not possible to retrieve de source
+  exit 1
+fi
+
+pactl set-source-mute $defaultSource toggle
+
+if [ $(amixer controls | grep -c 'Mic Mute-LED Mode') == 0 ]; then
+  exit 0
+fi
 
 if [ $(pactl list sources | grep HARDWARE -c) == 1 ]; then
   amixer sset 'Mic Mute-LED Mode' 'Follow Mute'
@@ -10,3 +25,4 @@ else
 
   amixer sset 'Mic Mute-LED Mode' $([[ $(($countMicMuted - $defaultMicIsMute)) > 0 ]] && echo "On" || echo "Off")
 fi
+

@@ -1,6 +1,6 @@
 * {
   font-size: 14px;
-  font-family: "Fira Mono for Powerline","Font Awesome 5 Brands", "Icons"
+  font-family: "Fira Mono for Powerline","Font Awesome 5 Brands", "Icons";
 }
 
 @keyframes blink-critical {
@@ -27,7 +27,7 @@
 }
 
 window#waybar {
-    background: rgba(0,0,0,0);
+  background: rgba(0,0,0,0);
 }
 
 #battery {
@@ -35,7 +35,8 @@ window#waybar {
   /* font-family: "Fira Mono for Powerline", "Icons"; */
   /* font-size: 15px; */
   margin: 3px 0px 3px 0px;
-  background: #1d1f21;
+  /* background: #1d1f21; */
+  background: rgba(0, 0, 0, 0.7);
   padding: 5px;
   color: #c5c8c6;
 }
@@ -54,7 +55,8 @@ window#waybar {
   border-radius: 10px;
   border: 2px solid #1d1f21;
   color:#c5c8c6;
-  background: #1d1f21;
+  /* background: #1d1f21; */
+  background: rgba(0, 0, 0, 0.7);
   animation-name: blink-notification-mode; 
   animation-direction: alternate;
   animation-iteration-count: infinite;
@@ -65,13 +67,15 @@ window#waybar {
   margin: 3px;
   padding: 5px 10px; 
   color: #FFF;
-  background: #1d1f21;
+  /* background: #1d1f21; */
+  background: rgba(0, 0, 0, 0.7);
   border-radius: 10px;
   color: #c5c8c6;
 }
 
 #custom-keyboard {
-  background: #1d1f21;
+  /* background: #1d1f21; */
+  background: rgba(0, 0, 0, 0.7);
   color: #c5c8c6;
   padding: 5px 5px 5px 7px;
   margin: 3px 0px 3px 3px;
@@ -84,20 +88,38 @@ window#waybar {
   padding: 5px 7px 5px 7px;
   border-radius: 10px;
   background: #1d1f21;
+  /* background: #1d1f21; */
+  background: rgba(0, 0, 0, 0.7);
+  color: #c5c8c6;
+}
+
+#custom-notifications {
+  font-size: 16px;
+  margin: 3px 0px 3px 0px;
+  padding: 3px 5px 5px 5px;
+
+  /* background: #1d1f21; */
+  background: rgba(0, 0, 0, 0.7);
   color: #c5c8c6;
 }
 
 #pulseaudio {
   font-family: "Fira Mono for Powerline", "TerminessTTF Nerd Font";
+  font-size: 17px;
   margin: 3px 0px 3px 0px;
-  padding: 5px 7px 5px 5px;
-  background: #1d1f21;
+  padding: 5px 5px 5px 5px;
+
+
+
+  /* background: #1d1f21; */
+  background: rgba(0, 0, 0, 0.7);
   color: #c5c8c6;
 }
 
 #network {
   font-family: "Fira Mono for Powerline", "TerminessTTF Nerd Font";
-  background: #1d1f21;
+  /* background: #1d1f21; */
+  background: rgba(0, 0, 0, 0.7);
   color: #c5c8c6;
   margin: 3px 0px 3px 0px;
   padding: 5px;
@@ -106,7 +128,8 @@ window#waybar {
 #workspaces {
   font-family: "TerminessTTF Nerd Font";
   font-size: 45px;
-  background: #1d1f21;
+  /* background: #1d1f21; */
+  background: rgba(0, 0, 0, 0.7);
   color: #c5c8c6;
   margin: 3px;
   padding: 2px;
@@ -139,7 +162,8 @@ window#waybar {
 }
 
 #cpu {
-  background: #1d1f21;
+  /* background: #1d1f21; */
+  background: rgba(0, 0, 0, 0.7);
   color: #c5c8c6;
   padding: 5px 5px 5px 7px;
   margin: 3px 0px 3px 7px;
@@ -148,7 +172,8 @@ window#waybar {
 }
 
 #memory {
-  background: #1d1f21;
+  /* background: #1d1f21; */
+  background: rgba(0, 0, 0, 0.7);
   color: #c5c8c6;
   margin: 3px 0px 3px 0px;
   padding: 5px 5px 5px 7px;
@@ -156,24 +181,43 @@ window#waybar {
 }
 
 #tray {
-  background: #1d1f21;
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
-  padding: 5px 7px 5px 7px;
-  margin: 3px 3px 3px 0px;
+  /* background: #1d1f21; */
+  background: rgba(0, 0, 0, 0.7);
+  margin: 3px 0px 3px 0px;
+  padding: 5px 10px 5px 7px;
 }
 
 #custom-headset {
-  background: #1d1f21;
+
+  font-family: "Material Design Icons";
+  /* background: #1d1f21; */
+  background: rgba(0, 0, 0, 0.7);
   color: #c5c8c6;
   margin: 3px 0px 3px 0px;
   padding: 5px 5px 5px 7px;
 }
 
+#custom-headset.critical {
+    animation-name: blink-critical;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
+    animation-duration: 3s;
+}
+
+#custom-headset.warning {
+    animation-name: blink-notification-mode;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
+    animation-duration: 5s;
+}
+
 #idle_inhibitor {
-  background: #1d1f21;
+  /* background: #1d1f21; */
+  background: rgba(0, 0, 0, 0.7);
   color: #c5c8c6;
   font-family: "Fira Mono for Powerline", "TerminessTTF Nerd Font";
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
   margin: 3px 0px 3px 0px;
   padding: 5px 10px 5px 7px;
 }
