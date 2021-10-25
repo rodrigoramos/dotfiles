@@ -83,7 +83,9 @@
      "tooltip": true,
      "return-type": "json",
      "format-icons": {
-        "default": [ "󰥇 ", "󰤾 ", "󰤿 ", "󰥀 ", "󰥁 ", "󰥂 ", "󰥃 ", "󰥄 ", "󰥅 ", "󰥆 "], 
+        /* 󰂄 󰉁*/
+        "charging": "󰥉󱐋",
+        "default": [ "󰥇 ", "󰤾 ", "󰤿 ", "󰥀 ", "󰥁 ", "󰥂 ", "󰥃 ", "󰥄 ", "󰥅 ", "󰥆 ", "󰥈 "], 
       },
      "exec": "$HOME/git/dotfiles/waybar/scripts/headset-output.sh $(headsetcontrol -bc)" 
     },
