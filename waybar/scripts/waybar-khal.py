@@ -22,10 +22,17 @@ for line in lines:
     if len(clean_line) and not clean_line[0] in ['0', '1', '2']:
         clean_line = "\n<b>"+clean_line+"</b>"
     new_lines.append(clean_line)
+
 output = "\n".join(new_lines).strip()
 
+
 if today in output:
-    data['text'] = " " + output.split('\n')[1]
+    textOnBar = output.split('\n')[1]
+
+    if len(textOnBar) > 60:
+        data['text'] = " " + textOnBar[:57] + "..."
+    else:
+        data['text'] = " " + textOnBar
 else:
     data['text'] = ""
 

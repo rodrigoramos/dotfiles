@@ -8,7 +8,7 @@ set nobackup
 set nowritebackup
 
 set nowrap                      " don't wrap lines
-set tabstop=2 shiftwidth=2      " a tab is two spaces (or set this to 4)
+set tabstop=4 shiftwidth=4      " a tab is two spaces (or set this to 4)
 set expandtab                   " use spaces, not tabs (optional)
 
 set nocompatible                " no compatibility legacy v1

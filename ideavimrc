@@ -1,7 +1,6 @@
 source ~/.vimrc
 
 set surround
-set commentary
 set multiple-cursors
 set highlightedyank
 
@@ -9,5 +8,11 @@ set highlightedyank
 nmap gD :action GotoImplementation<CR>
 
 " Commentary that actually works on Rider
-nmap gcc :action CommentByLineComment<CR>
-vmap gc :action CommentByBlockComment<CR>
+:map gcc <Action>(CommentByLineComment)
+:map gc <Action>(CommentByBlockComment)
+
+" Folding shortcuts
+:map zr <Action>(RiderCollapseToDefinitions)
+:map zc <Action>(CollapseRegion)
+:map zo <Action>(ExpandRegion)
+

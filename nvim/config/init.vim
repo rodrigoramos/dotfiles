@@ -4,13 +4,14 @@ source ~/.vimrc
 
 source ~/.config/nvim/coc.vim
 
-
 call plug#begin("~/.vim/plugged")
   "Plugin Section
   
-  " Theme
+  " Themes
   Plug 'dikiaap/minimalist'
   Plug 'kaicataldo/material.vim', { 'branch': 'main' }
+  Plug 'artanikin/vim-synthwave84'
+  Plug 'yassinebridi/vim-purpura'
 
   "" File Explorer
   Plug 'scrooloose/nerdtree'
@@ -29,7 +30,7 @@ call plug#begin("~/.vim/plugged")
   Plug 'pangloss/vim-javascript'
 
   Plug 'kyazdani42/nvim-web-devicons'
-  "Plug 'romgrk/barbar.nvim'
+  Plug 'romgrk/barbar.nvim'
 
   Plug 'machakann/vim-highlightedyank'
 
@@ -37,9 +38,9 @@ call plug#begin("~/.vim/plugged")
 
   Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
 
+  Plug 'sheerun/vim-polyglot'
 call plug#end()
 
-let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-angular', 'coc-tslint', 'coc-omnisharp']
 " Config Section
 
 " For Neovim 0.1.3 and 0.1.4 - https://github.com/neovim/neovim/pull/2198
@@ -51,12 +52,14 @@ if (has('termguicolors'))
   set termguicolors
 endif
 
+let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-angular', 'coc-tslint', 'coc-omnisharp']
+
 " Highlight Yank
 let g:highlightedyank_highlight_duration = 500
 
-let g:material_terminal_italics = 1
-let g:material_theme_style = 'darker'
-colorscheme material
+" let g:material_terminal_italics = 1
+" let g:material_theme_style = 'darker'
+colorscheme purpura 
 
 " Theme
 syntax on
@@ -86,12 +89,10 @@ nnoremap <A-j> <C-w>j
 nnoremap <A-k> <C-w>k
 nnoremap <A-l> <C-w>l
 
-nnoremap <C-k> :tabprevious<CR>
-nnoremap <C-j> :tabnext<CR>
 
 " Move to previous/next
-"nnoremap <silent>    <C-k> :BufferPrevious<CR>
-"nnoremap <silent>    <C-j> :BufferNext<CR>
+nnoremap <silent>    <C-k> :BufferPrevious<CR>
+nnoremap <silent>    <C-j> :BufferNext<CR>
 
 " Goto buffer in position...
 nnoremap <silent>    <A-1> :BufferGoto 1<CR>
@@ -105,7 +106,7 @@ nnoremap <silent>    <A-8> :BufferGoto 8<CR>
 nnoremap <silent>    <A-9> :BufferLast<CR>
 
 " Close buffer
-nnoremap <silent>    <C-w> :BufferClose<CR>
+nnoremap <silent>    <A-q> :BufferClose<CR>
 
 nnoremap <C-p> :FZF<CR>
 let g:fzf_action = {
@@ -212,3 +213,7 @@ function! s:denite_my_settings() abort
   \ denite#do_map('toggle_select').'j'
 endfunction
 
+
+" COC Restore PUM Navigatino with TAB
+inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
