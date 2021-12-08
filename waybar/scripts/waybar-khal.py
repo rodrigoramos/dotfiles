@@ -27,10 +27,10 @@ output = "\n".join(new_lines).strip()
 
 
 if today in output:
-    textOnBar = output.split('\n')[1]
+    textOnBar = output.split('\n')[2]
 
-    if len(textOnBar) > 60:
-        data['text'] = " " + textOnBar[:57] + "..."
+    if len(textOnBar) > 50:
+        data['text'] = " " + textOnBar[:47].replace('<b>', '').replace('</b>', '') + "..."
     else:
         data['text'] = " " + textOnBar
 else:

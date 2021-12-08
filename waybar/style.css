@@ -4,15 +4,14 @@
 }
 
 widget > box, widget > label {
-  color: #c5c8c6;
+  color: #dadadc;
   padding: 0 6px;
+  text-shadow: 1px 1px #0C0E15;
 }
 
 box.horizontal:dir(ltr) > box.horizontal:dir(ltr) {
-  background: rgba(0, 0, 0, 0.7);
-  border-radius: 10px;
   margin: 3px;
-  padding: 3px 5px; 
+  padding: 3px 5px 1px 5px; 
 }
 
 
@@ -40,7 +39,7 @@ box.horizontal:dir(ltr) > box.horizontal:dir(ltr) {
 }
 
 window#waybar {
-  background: rgba(0,0,0,0);
+  background: rgba(9, 14, 17, 0.5);
 }
 
 #battery.critical.discharging {
@@ -80,9 +79,12 @@ window#waybar {
 }
 
 #workspaces button {
-  color: #b8b8b8;
+  color: #aaaaac;
   margin: 0;
   padding: 0 6px;
+  text-shadow: 1px 1px #0C0E15;
+  border-radius: 0;
+  border-bottom-width: 2px;
 }
 
 #workspaces button:hover {
@@ -91,7 +93,9 @@ window#waybar {
 }
 
 #workspaces button.focused {
-  color: #63bcff;
+  color: #00F6C8;
+  border-bottom-color: #e011d6;
+  border-bottom-width: 2px;
 }
 
 #workspaces button.urgent {

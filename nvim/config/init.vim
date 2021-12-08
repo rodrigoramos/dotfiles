@@ -39,6 +39,9 @@ call plug#begin("~/.vim/plugged")
   Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
 
   Plug 'sheerun/vim-polyglot'
+
+  " Show hexa colors
+  Plug 'gko/vim-coloresque'
 call plug#end()
 
 " Config Section
