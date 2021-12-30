@@ -42,6 +42,10 @@ call plug#begin("~/.vim/plugged")
 
   " Show hexa colors
   Plug 'gko/vim-coloresque'
+
+  Plug 'softoika/ngswitcher.vim'
+
+  Plug 'tpope/vim-surround'
 call plug#end()
 
 " Config Section
