@@ -2,7 +2,8 @@
 
 vo() 
 {
-  kitty --detach --working-directory=${1:-$PWD} -T=NeoVim nvim
+  # kitty --detach --working-directory=${1:-$PWD} -T=NeoVim nvim
+    wezterm start --cwd ${1:-$PWD} --class nvim-vo -- nvim &
 }
 
 alias cat="bat"
@@ -18,3 +19,6 @@ alias code="code --enable-features=UseOzonePlatform --ozone-platform=wayland"
 # Git
 alias gs="git status"
 alias gpuoc='git push --set-upstream origin $(git symbolic-ref --short HEAD)'
+
+
+alias mssql-cli="python3.9 /home/rramos/.local/lib/python3.9/site-packages/mssqlcli/main.py"

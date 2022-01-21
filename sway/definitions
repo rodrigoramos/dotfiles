@@ -24,4 +24,4 @@ set $ws9 9 
 set $theme /usr/share/sway/themes/matcha-blue
 
 # Your preferred terminal emulator
-set $term /usr/bin/kitty
+set $term /usr/bin/wezterm

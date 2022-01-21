@@ -1,16 +1,16 @@
 set runtimepath^=~/.vim runtimepath+=~/.vim/after
 let &packpath=&runtimepath
-source ~/.vimrc
 
+source ~/.vimrc
 source ~/.config/nvim/coc.vim
 
 call plug#begin("~/.vim/plugged")
   "Plugin Section
   
   " Themes
-  Plug 'dikiaap/minimalist'
-  Plug 'kaicataldo/material.vim', { 'branch': 'main' }
-  Plug 'artanikin/vim-synthwave84'
+  " Plug 'dikiaap/minimalist'
+  " Plug 'kaicataldo/material.vim', { 'branch': 'main' }
+  " Plug 'artanikin/vim-synthwave84'
   Plug 'yassinebridi/vim-purpura'
 
   "" File Explorer
@@ -20,33 +20,54 @@ call plug#begin("~/.vim/plugged")
   " File Search
   Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
   Plug 'junegunn/fzf.vim'
+
+  Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
   
   " Language Client
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  " Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} 
+  " Plug 'David-Kunz/jester'
+  " Plug 'sheerun/vim-polyglot'
+
+  Plug 'puremourning/vimspector'
+
+  Plug 'vim-test/vim-test'
 
   " Typescript highlighting
-  Plug 'leafgarland/typescript-vim'
-  Plug 'mxw/vim-jsx'
-  Plug 'pangloss/vim-javascript'
+  " Plug 'leafgarland/typescript-vim'
+  " Plug 'mxw/vim-jsx'
+  " Plug 'pangloss/vim-javascript'
 
+  " Barra Superior
   Plug 'kyazdani42/nvim-web-devicons'
   Plug 'romgrk/barbar.nvim'
 
-  Plug 'machakann/vim-highlightedyank'
 
-  Plug 'tpope/vim-commentary'
-
-  Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
-
-  Plug 'sheerun/vim-polyglot'
-
-  " Show hexa colors
-  Plug 'gko/vim-coloresque'
-
+  " Plugins Angular
   Plug 'softoika/ngswitcher.vim'
 
+  " Vim Enhancements
+  Plug 'machakann/vim-highlightedyank'
+  Plug 'tpope/vim-commentary'
   Plug 'tpope/vim-surround'
+  Plug 'gko/vim-coloresque' " Show hexa colors 
+
+
 call plug#end()
+
+function! VimspectorJestDebugOnCursor(cmd)
+    let testName = matchlist(a:cmd, '\v -t ''(.*)''')[1]
+    call vimspector#LaunchWithSettings( #{ configuration: 'jest', TestName: testName } )
+endfunction
+
+let g:test#javascript#runner = 'jest'
+let g:test#custom_strategies = {
+  \ 'jest-on-cursor': function('VimspectorJestDebugOnCursor')
+  \ }
+
+nnoremap <leader>rd "ty:TestNearest -strategy=jest-on-cursor<CR>
+nnoremap <leader>rr :TestNearest<CR>
+nnoremap <leader>rc :call vimspector#Reset()<CR>
 
 " Config Section
 
@@ -59,7 +80,7 @@ if (has('termguicolors'))
   set termguicolors
 endif
 
-let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-angular', 'coc-tslint', 'coc-omnisharp']
+let g:coc_global_extensions = ['coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-angular', 'coc-eslint']
 
 " Highlight Yank
 let g:highlightedyank_highlight_duration = 500
@@ -115,6 +136,8 @@ nnoremap <silent>    <A-9> :BufferLast<CR>
 " Close buffer
 nnoremap <silent>    <A-q> :BufferClose<CR>
 
+" List Buffers
+nnoremap <silent>    <A-p> :Buffers<CR>
 nnoremap <C-p> :FZF<CR>
 let g:fzf_action = {
   \ 'ctrl-t': 'tab split',
@@ -187,11 +210,10 @@ function! s:profile(opts) abort
 endfunction
 
 " === Denite shorcuts === "
-"   ;         - Browser currently open buffers
 "   <leader>t - Browse list of files in current directory
 "   <leader>g - Search current directory for occurences of given term and close window if no results
 "   <leader>j - Search current directory for occurences of word under cursor
-nmap ; :Denite buffer -split=floating -winrow=1 -statusline<CR>
+" nmap ; :Denite buffer -split=floating -winrow=1 -statusline<CR>
 nmap <leader>t :DeniteProjectDir file/rec -split=floating<CR>
 nnoremap <leader>g :<C-u>Denite grep:. -no-empty -split=floating<CR>
 nnoremap <leader>j :<C-u>DeniteCursorWord grep:. -split=floating<CR>
@@ -224,3 +246,4 @@ endfunction
 " COC Restore PUM Navigatino with TAB
 inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
