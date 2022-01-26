@@ -22,15 +22,15 @@
             "warning": 30,
             "critical": 15
         },
-        "format-charging": "󰂄{capacity}%", // Icon: bolt
-        "format": "{icon}{capacity}%",
+        "format-charging": " {capacity}%", // Icon: bolt
+        "format": "{icon} {capacity}%",
         "format-icons": [
-            "󰂃",
-            "󰁺", // Icon: battery-empty
-            "󰁻", // Icon: battery-quarter
-            "󰁽", // Icon: battery-half
-            "󰂀", // Icon: battery-three-quarters
-            "󰁹"  // Icon: battery-full
+            "",
+            "", // Icon: battery-empty
+            "", // Icon: battery-quarter
+            "", // Icon: battery-half
+            "", // Icon: battery-three-quarters
+            ""  // Icon: battery-full
         ],
         "tooltip": false,
         "bat": "BAT0"
@@ -48,9 +48,9 @@
     "pulseaudio": {
         "format": "{icon} {format_source}",
         "format-bluetooth": "{icon}",
-        "format-muted": "󰖁 {format_source}",
-        "format-source": "󰍬",
-        "format-source-muted": "󰍭",
+        "format-muted": " {format_source}",
+        "format-source": "",
+        "format-source-muted": "",
         "format-icons": {
             "headphone": "\uf7ca",
             "hands-free": "\uf7cd",
@@ -58,14 +58,14 @@
             "phone": "",
             "portable": "",
             "car": "",
-            "default": ["󰖁","󰕿","󰕿","󰕿","󰖀", "󰖀","󰖀", "󰕾","󰕾","󰕾"]
+            "default": ["", "", ""]
         },
         "scroll-step": 1,
         "on-click": "pavucontrol"
     },
     "cpu": {
       "interval": 10,
-      "format": "\uf0e4 {}%",
+      "format": " {}%",
       "max-length": 10
     },
     "memory": {
@@ -83,9 +83,8 @@
      "tooltip": true,
      "return-type": "json",
      "format-icons": {
-        /* 󰂄 󰉁*/
-        "charging": "󰥉󱐋",
-        "default": [ "󰥇 ", "󰤾 ", "󰤿 ", "󰥀 ", "󰥁 ", "󰥂 ", "󰥃 ", "󰥄 ", "󰥅 ", "󰥆 ", "󰥈 "], 
+        "charging": "",
+        "default": [ "", "", "", "", "" ]
       },
      "exec": "$HOME/git/dotfiles/waybar/scripts/headset-output.sh $(headsetcontrol -bc)" 
     },
@@ -94,15 +93,15 @@
      "interval": 2,
      "return-type": "json",
      "tooltip": true,
-     "format-icons": ["󰂜","󰂞"], 
+     "format-icons": ["",""], 
      "exec": "$HOME/git/dotfiles/waybar/scripts/notf.sh $(swaync-client -c)",
      "on-click": "swaync-client -t -sw"
     },
     "idle_inhibitor": {
         "format": "{icon}",
         "format-icons": {
-            "activated": "󰒳",
-            "deactivated": "󰒲"
+            "activated": "鈴",
+            "deactivated": "零"
         }
     },
     "custom/events": {

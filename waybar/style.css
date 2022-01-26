@@ -1,6 +1,6 @@
 * {
   font-size: 14px;
-  font-family: "Liberation Mono", "Fira Mono for Powerline","Font Awesome 5 Brands", "Icons";
+  font-family: "LiberationMono Nerd Font"
 }
 
 widget > box, widget > label {
@@ -106,22 +106,22 @@ window#waybar {
   color: #d80077;
 }
 
-#custom-headset {
-  font-family: "Material Design Icons";
+#custom-notifications, #idle_inhibitor {
+    font-size: 20px;
 }
 
-  #custom-headset.critical {
-      animation-name: blink-critical;
-      animation-direction: alternate;
-      animation-iteration-count: infinite;
-      animation-duration: 3s;
-  }
+#custom-headset.critical {
+  animation-name: blink-critical;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-duration: 3s;
+}
 
-  #custom-headset.warning {
-      animation-name: blink-notification-mode;
-      animation-direction: alternate;
-      animation-duration: 5s;
-  }
+#custom-headset.warning {
+  animation-name: blink-notification-mode;
+  animation-direction: alternate;
+  animation-duration: 5s;
+}
 
 tooltip label {
   font-size: 16px;
