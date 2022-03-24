@@ -1,0 +1,9 @@
+[Unit]
+Description=Davmail service as a server
+
+[Service]
+ExecStart=/usr/bin/davmail
+Restart=always
+
+[Install]
+WantedBy=multi.user.target

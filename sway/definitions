@@ -21,7 +21,6 @@ set $ws9 9 
 
 
 # styles - matcha-green or matcha-blue
-set $theme /usr/share/sway/themes/matcha-blue
 
 # Your preferred terminal emulator
 set $term /usr/bin/wezterm
@@ -31,3 +30,4 @@ set $term_cwd $term
 
 set $mic_mute $(exec "~/git/dotfiles/bin/mute-default-mic")
 
+set $menu /usr/bin/nwg-drawer -nofs

@@ -19,29 +19,36 @@
     "battery": {
         "interval": 30,
         "states": {
-            "warning": 30,
-            "critical": 15
+           "warning": 30,
+           "critical": 15
         },
-        "format-charging": " {capacity}%", // Icon: bolt
-        "format": "{icon} {capacity}%",
+        "format-charging": "{icon}\uf492", // Icon: bolt
+        "format": "{icon}",
         "format-icons": [
-            "",
-            "", // Icon: battery-empty
-            "", // Icon: battery-quarter
-            "", // Icon: battery-half
-            "", // Icon: battery-three-quarters
-            ""  // Icon: battery-full
+            "\uf582",
+            "\uf579",
+            "\uf57a",
+            "\uf57b",
+            "\uf57c",
+            "\uf57d",
+            "\uf57e",
+            "\uf57f",
+            "\uf580",
+            "\uf581",
+            "\uf578"
         ],
-        "tooltip": false,
+        "tooltip": true,
+        "tooltip-format": "Charge: {capacity}%\n{timeTo}",
+        "tooltip-format-charging": "Charging: {capacity}%",
         "bat": "BAT0"
     },
     "network": {
         "format": "{ifname}",
-        "format-wifi": "\ufaa8 {signalStrength}%",
-        "format-ethernet": "\uf9a9",
+        "format-wifi": "\ufaa8",
+        "format-ethernet": "\uf817",
         "tooltip-format-ethernet": "{ifname}",
-        "format-disconnected": "\ufaa9",
-        "tooltip-format-wifi": "{essid}",
+        "format-disconnected": "\uf818",
+        "tooltip-format-wifi": "{essid}\nStrength: {signalStrength}%",
         "max-length": 20
     },
 
@@ -65,13 +72,22 @@
     },
     "cpu": {
       "interval": 10,
-      "format": " {}%",
-      "max-length": 10
+      "format": "\uf463",
+      "max-length": 10,
+      "states": {
+          "critical": 95
+      }
     },
     "memory": {
       "interval": 30,
-      "format": "\uf2db {}%",
-      "max-length": 10
+      "format": "\uf9a6",
+      "max-length": 10,
+      "states":{
+          "warning": 90,
+          "critical": 99
+      },
+      "tooltip": true,
+      "tooltip-format": "Usage: {percentage}%\n{used:0.1f}G of {total:0.1f}G"
     },
     "tray": {
       "icon-size": 16,
@@ -93,15 +109,15 @@
      "interval": 2,
      "return-type": "json",
      "tooltip": true,
-     "format-icons": ["",""], 
+     "format-icons": ["\uf0a2","\uf0f3"], 
      "exec": "$HOME/git/dotfiles/waybar/scripts/notf.sh $(swaync-client -c)",
      "on-click": "swaync-client -t -sw"
     },
     "idle_inhibitor": {
         "format": "{icon}",
         "format-icons": {
-            "activated": "鈴",
-            "deactivated": "零"
+            "activated": "零",
+            "deactivated": "鈴"
         }
     },
     "custom/events": {

@@ -1,0 +1,10 @@
+[Unit]
+Description=Ayatana Notification service
+
+[Service]
+ExecStart=/usr/bin/ayatana-webmail
+Restart=always
+
+[Install]
+WantedBy=multi.user.target
+

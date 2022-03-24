@@ -1,6 +1,6 @@
 * {
   font-size: 14px;
-  font-family: "LiberationMono Nerd Font"
+  font-family: "CascadiaCode"
 }
 
 widget > box, widget > label {
@@ -38,6 +38,21 @@ box.horizontal:dir(ltr) > box.horizontal:dir(ltr) {
     }
 }
 
+#cpu.critical {
+  animation-name: blink-critical;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-duration: 3s;
+}
+
+#memory.critical {
+  animation-name: blink-critical;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-duration: 3s;
+}
+
+
 window#waybar {
   background: rgba(9, 14, 17, 0.5);
 }
@@ -58,12 +73,7 @@ window#waybar {
   border-bottom-right-radius: 10px;
 }
 
-#custom-notifications {
-  font-size: 16px;
-}
-
 #pulseaudio {
-  font-size: 17px;
   margin-top: 3px;
 }
 
@@ -104,10 +114,6 @@ window#waybar {
   animation-iteration-count: 8;
   animation-name: blink-critical;
   color: #d80077;
-}
-
-#custom-notifications, #idle_inhibitor {
-    font-size: 20px;
 }
 
 #custom-headset.critical {

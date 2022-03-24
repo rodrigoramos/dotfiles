@@ -52,7 +52,10 @@ call plug#begin("~/.vim/plugged")
   Plug 'tpope/vim-surround'
   Plug 'gko/vim-coloresque' " Show hexa colors 
 
-
+  " Notes!
+  Plug 'xolox/vim-misc'
+  Plug 'xolox/vim-notes'
+   
 call plug#end()
 
 function! VimspectorJestDebugOnCursor(cmd)
@@ -247,3 +250,6 @@ endfunction
 inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
+" Setup vim-notes Options
+filetype plugin on
+let g:notes_directories = ['~/Documents/l3/notes', '~/Documents/notes']
