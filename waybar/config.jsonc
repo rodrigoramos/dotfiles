@@ -7,12 +7,13 @@
     "clock#date": {
         "interval": 60,
         "format": "{:%a, %e %b %Y}",
-        "on-click": "swaymsg exec \\$calendar",
+        "on-click": "swaymsg exec gsimplecal",
         "tooltip": true,
         "tooltip-format": "<big>{:%B %Y}</big>\n<tt>{calendar}</tt>"
     },
     "clock#time": {
         "format": "{:%H:%M}",
+        "on-click": "swaymsg exec gsimplecal",
         "tooltip": true,
         "tooltip-format": "<big>{:%B %Y}</big>\n<tt>{calendar}</tt>"
     },
@@ -127,6 +128,7 @@
       "format-icons": {
         "default": ""
       },
+      "on-click": "swaymsg exec \\$calendar",
       "exec": "$HOME/git/dotfiles/waybar/scripts/waybar-khal.py",
       "return-type": "json"
     }

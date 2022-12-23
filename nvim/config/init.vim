@@ -2,7 +2,7 @@ set runtimepath^=~/.vim runtimepath+=~/.vim/after
 let &packpath=&runtimepath
 
 source ~/.vimrc
-source ~/.config/nvim/coc.vim
+"source ~/.config/nvim/coc.vim
 
 call plug#begin("~/.vim/plugged")
   "Plugin Section
@@ -15,7 +15,7 @@ call plug#begin("~/.vim/plugged")
 
   "" File Explorer
   Plug 'scrooloose/nerdtree'
-  Plug 'ryanoasis/vim-devicons'
+  "Plug 'ryanoasis/vim-devicons'
 
   " File Search
   Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -24,14 +24,15 @@ call plug#begin("~/.vim/plugged")
   Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
   
   " Language Client
-  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  "Plug 'neoclide/coc.nvim', {'branch': 'release'}
   " Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} 
   " Plug 'David-Kunz/jester'
   " Plug 'sheerun/vim-polyglot'
 
-  Plug 'puremourning/vimspector'
+  " Debug
+  "Plug 'puremourning/vimspector'
 
-  Plug 'vim-test/vim-test'
+  "Plug 'vim-test/vim-test'
 
   " Typescript highlighting
   " Plug 'leafgarland/typescript-vim'
@@ -44,7 +45,7 @@ call plug#begin("~/.vim/plugged")
 
 
   " Plugins Angular
-  Plug 'softoika/ngswitcher.vim'
+  "Plug 'softoika/ngswitcher.vim'
 
   " Vim Enhancements
   Plug 'machakann/vim-highlightedyank'
@@ -55,7 +56,10 @@ call plug#begin("~/.vim/plugged")
   " Notes!
   Plug 'xolox/vim-misc'
   Plug 'xolox/vim-notes'
-   
+
+  " Table
+  Plug 'dhruvasagar/vim-table-mode'
+
 call plug#end()
 
 function! VimspectorJestDebugOnCursor(cmd)

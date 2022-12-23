@@ -31,3 +31,5 @@ set $term_cwd $term
 set $mic_mute $(exec "~/git/dotfiles/bin/mute-default-mic")
 
 set $menu /usr/bin/nwg-drawer -nofs
+
+set $notifications swaync

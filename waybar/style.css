@@ -3,11 +3,21 @@
   font-family: "CascadiaCode"
 }
 
-widget > box, widget > label {
-  color: #dadadc;
+.text-button {
   padding: 0 6px;
-  text-shadow: 1px 1px #0C0E15;
+  border-radius: 0;
 }
+
+.modules-right label {
+  color: #dadadc;
+  text-shadow: 1px 1px #0C0E15;
+  padding: 0 6px;
+}
+
+button:hover {
+  background-color: transparent;
+}
+
 
 box.horizontal:dir(ltr) > box.horizontal:dir(ltr) {
   margin: 3px;
@@ -88,24 +98,34 @@ window#waybar {
   margin-right: 0;
 }
 
-#workspaces button {
-  color: #aaaaac;
-  margin: 0;
-  padding: 0 6px;
-  text-shadow: 1px 1px #0C0E15;
+#workspaces .text-button {
   border-radius: 0;
   border-bottom-width: 2px;
 }
 
+#workspaces .text-button > label {
+  color: #aaaaac;
+  margin: 0;
+  text-shadow: 1px 1px #0C0E15;
+  border-radius: 0;
+  border-bottom-width: 2px;
+  padding: 0 1px;
+}
+
 #workspaces button:hover {
+  background-color: #e011d6;
   box-shadow: inherit;
   text-shadow: inherit;
 }
 
-#workspaces button.focused {
-  color: #00F6C8;
+#workspaces .text-button.focused {
   border-bottom-color: #e011d6;
   border-bottom-width: 2px;
+  border-radius: 0;
+}
+
+#workspaces .text-button.focused > label {
+  color: #00F6C8;
 }
 
 #workspaces button.urgent {

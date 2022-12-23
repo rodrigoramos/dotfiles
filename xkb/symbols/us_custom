@@ -1,6 +1,6 @@
 xkb_symbols "basic" {
   include "us(intl)"
-  name[Group1] = "US (internaltion with tilde insted of esc";
+  name[Group1] = "US Custom (international with tilde insted of esc)";
 	key <ESC> { [ dead_grave, dead_tilde, grave, asciitilde ] };
 };
 

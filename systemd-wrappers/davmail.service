@@ -6,4 +6,4 @@ ExecStart=/usr/bin/davmail
 Restart=always
 
 [Install]
-WantedBy=multi.user.target
+WantedBy=default.target
