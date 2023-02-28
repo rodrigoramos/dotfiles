@@ -2,7 +2,7 @@ set runtimepath^=~/.vim runtimepath+=~/.vim/after
 let &packpath=&runtimepath
 
 source ~/.vimrc
-"source ~/.config/nvim/coc.vim
+source ~/.config/nvim/coc.vim
 
 call plug#begin("~/.vim/plugged")
   "Plugin Section
@@ -11,11 +11,17 @@ call plug#begin("~/.vim/plugged")
   " Plug 'dikiaap/minimalist'
   " Plug 'kaicataldo/material.vim', { 'branch': 'main' }
   " Plug 'artanikin/vim-synthwave84'
-  Plug 'yassinebridi/vim-purpura'
+  " Plug 'yassinebridi/vim-purpura'
+  " Plug 'flazz/vim-colorschemes'
 
   "" File Explorer
-  Plug 'scrooloose/nerdtree'
+  " NERD Tree
+  " Plug 'scrooloose/nerdtree'
   "Plug 'ryanoasis/vim-devicons'
+  
+ " Nvim Tree
+  Plug 'nvim-tree/nvim-web-devicons' 
+  Plug 'nvim-tree/nvim-tree.lua'
 
   " File Search
   Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -24,8 +30,8 @@ call plug#begin("~/.vim/plugged")
   Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
   
   " Language Client
-  "Plug 'neoclide/coc.nvim', {'branch': 'release'}
-  " Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} 
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} 
   " Plug 'David-Kunz/jester'
   " Plug 'sheerun/vim-polyglot'
 
@@ -35,9 +41,9 @@ call plug#begin("~/.vim/plugged")
   "Plug 'vim-test/vim-test'
 
   " Typescript highlighting
-  " Plug 'leafgarland/typescript-vim'
+   Plug 'leafgarland/typescript-vim'
   " Plug 'mxw/vim-jsx'
-  " Plug 'pangloss/vim-javascript'
+  Plug 'pangloss/vim-javascript'
 
   " Barra Superior
   Plug 'kyazdani42/nvim-web-devicons'
@@ -45,7 +51,9 @@ call plug#begin("~/.vim/plugged")
 
 
   " Plugins Angular
-  "Plug 'softoika/ngswitcher.vim'
+  " Plug 'softoika/ngswitcher.vim'
+  " Plug '~/git/fork/ngswitcher.vim'
+  Plug 'rodrigoramos/ngswitcher.vim'
 
   " Vim Enhancements
   Plug 'machakann/vim-highlightedyank'
@@ -87,14 +95,20 @@ if (has('termguicolors'))
   set termguicolors
 endif
 
-let g:coc_global_extensions = ['coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-angular', 'coc-eslint']
+let g:coc_global_extensions = ['coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-angular', 'coc-eslint', 'coc-highlight' ]
 
 " Highlight Yank
 let g:highlightedyank_highlight_duration = 500
 
 " let g:material_terminal_italics = 1
-" let g:material_theme_style = 'darker'
-colorscheme purpura 
+" let g:material_theme_style = 'darker-community'
+" colorscheme material
+" colorscheme minimalist
+" colorscheme purpura 
+
+colorscheme gruvbox
+colorscheme molokai
+
 
 " Theme
 syntax on
@@ -103,16 +117,21 @@ syntax enable
 " Make background transparent
 "hi Normal guibg=NONE ctermbg=NONE
 
-let g:NERDTreeShowHidden = 1
-let g:NERDTreeMinimalUI = 1
-let g:NERDTreeIgnore = []
-let g:NERDTreeStatusline = ''
-let g:NERDTreeChDirMode = 2
-" Automaticaly close nvim if NERDTree is only thing left open
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+"" == NERDTree configuration == 
+" let g:NERDTreeShowHidden = 1
+" let g:NERDTreeMinimalUI = 1
+" let g:NERDTreeIgnore = []
+" let g:NERDTreeStatusline = ''
+" let g:NERDTreeChDirMode = 2
+" " Automaticaly close nvim if NERDTree is only thing left open
+" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" " Toggle
+" nnoremap <silent> <C-b> :NERDTreeToggle<CR>
 
-" Toggle
-nnoremap <silent> <C-b> :NERDTreeToggle<CR>
+
+"" == NvimTree Configuration == 
+nnoremap <silent> <C-b> :NvimTreeFindFileToggle<CR>
+
 
 " use alt+hjkl to move between split/vsplit panels
 tnoremap <A-h> <C-\><C-n><C-w>h
@@ -142,6 +161,7 @@ nnoremap <silent>    <A-9> :BufferLast<CR>
 
 " Close buffer
 nnoremap <silent>    <A-q> :BufferClose<CR>
+nnoremap <silent>    <S-w> :BufferClose!<CR>
 
 " List Buffers
 nnoremap <silent>    <A-p> :Buffers<CR>
@@ -221,7 +241,7 @@ endfunction
 "   <leader>g - Search current directory for occurences of given term and close window if no results
 "   <leader>j - Search current directory for occurences of word under cursor
 " nmap ; :Denite buffer -split=floating -winrow=1 -statusline<CR>
-nmap <leader>t :DeniteProjectDir file/rec -split=floating<CR>
+"nmap <leader>t :DeniteProjectDir file/rec -split=floating<CR>
 nnoremap <leader>g :<C-u>Denite grep:. -no-empty -split=floating<CR>
 nnoremap <leader>j :<C-u>DeniteCursorWord grep:. -split=floating<CR>
 
@@ -257,3 +277,31 @@ inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 " Setup vim-notes Options
 filetype plugin on
 let g:notes_directories = ['~/Documents/l3/notes', '~/Documents/notes']
+
+
+" NgSwitcher Config
+nnoremap <Leader>st :<C-u>NgSwitchTS<CR>
+nnoremap <Leader>sc :<C-u>NgSwitchCSS<CR>
+nnoremap <Leader>sh :<C-u>NgSwitchHTML<CR>
+nnoremap <Leader>ss :<C-u>NgSwitchSpec<CR>
+
+" with horizontal split
+nnoremap <leader>hu :<C-u>SNgSwitchTS<CR>
+nnoremap <leader>hi :<C-u>SNgSwitchCSS<CR>
+nnoremap <leader>ho :<C-u>SNgSwitchHTML<CR>
+nnoremap <leader>hp :<C-u>SNgSwitchSpec<CR>
+
+" with vertical split
+nnoremap <leader>vu :<C-u>VNgSwitchTS<CR>
+nnoremap <leader>vi :<C-u>VNgSwitchCSS<CR>
+nnoremap <leader>vo :<C-u>VNgSwitchHTML<CR>
+nnoremap <leader>vp :<C-u>VNgSwitchSpec<CR>
+
+"" == Barbar Setup == 
+" NOTE: If barbar's option dict isn't created yet, create it
+let bufferline = get(g:, 'bufferline', {})
+
+let bufferline.highlight_alternate = v:false
+
+
+source ~/.config/nvim/lua/init.lua 
