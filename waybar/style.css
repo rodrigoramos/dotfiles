@@ -98,12 +98,12 @@ window#waybar {
   margin-right: 0;
 }
 
-#workspaces .text-button {
+#workspaces button {
   border-radius: 0;
   border-bottom-width: 2px;
 }
 
-#workspaces .text-button > label {
+#workspaces button > label {
   color: #aaaaac;
   margin: 0;
   text-shadow: 1px 1px #0C0E15;
@@ -118,13 +118,10 @@ window#waybar {
   text-shadow: inherit;
 }
 
-#workspaces .text-button.focused {
+#workspaces button.active {
   border-bottom-color: #e011d6;
   border-bottom-width: 2px;
   border-radius: 0;
-}
-
-#workspaces .text-button.focused > label {
   color: #00F6C8;
 }
 

@@ -1,13 +1,13 @@
 {
     "layer": "top",
     "position": "top",
-    "modules-left": ["sway/workspaces", "sway/mode"],
+    "modules-left": ["wlr/workspaces", "hyprland/submap"],
     "modules-center": ["clock#date"],
-    "modules-right": ["custom/events", "cpu", "memory", "network", "battery", "pulseaudio", "custom/headset", "custom/notifications", "tray", "idle_inhibitor", "clock#time"],
+    "modules-right": ["custom/events", "cpu", "memory", "network", "battery", "pulseaudio", "custom/headset", "tray", "idle_inhibitor", "clock#time"],
     "clock#date": {
         "interval": 60,
         "format": "{:%a, %e %b %Y}",
-        "on-click": "swaymsg exec gsimplecal",
+        "on-click": "gsimplecal",
         "tooltip": true,
         "tooltip-format": "<big>{:%B %Y}</big>\n<tt>{calendar}</tt>"
     },
@@ -128,8 +128,22 @@
       "format-icons": {
         "default": ""
       },
-      "on-click": "swaymsg exec \\$calendar",
+      "on-click": "footclient -a floating_shell calcurse",
       "exec": "$HOME/git/dotfiles/waybar/scripts/waybar-khal.py",
       "return-type": "json"
+    },
+    "wlr/workspaces": {
+      "format": "{icon}",
+      "on-click": "activate",
+      "format-icons": {
+        "1": "",
+        "2": "",
+        "3": "",
+        "4": "",
+        "9": ""
+      }
+    },
+    "hyprland/submap": {
+      "format": "Map to: {}"
     }
 }
