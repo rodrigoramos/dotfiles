@@ -1,0 +1,61 @@
+# based on Base16 Seti UI
+# Author: Appelgriebsch
+
+
+# some global theme specific variables
+set $gtk-theme Sweet-Dark-v40
+set $icon-theme candy-icons
+set $cursor-theme xcursor-breeze
+set $gui-font Roboto 11
+set $term-font RobotoMono Nerd Font 14
+set $kvantum-theme Sweet
+
+# OK
+set $color0  #161925 
+# OK
+set $color1  #654ea3
+
+set $color2  #3B758C
+
+# OK
+set $color3  #7f8c8d
+
+set $color4  #43a5d5
+
+# OK
+set $color5  #aaaaac
+
+set $color6  #c50ed2
+
+# OK
+set $color7  #0C0E15 
+set $color8  #654ea3 
+
+set $color9  #db7b55
+set $color10 #e6cd69
+set $color11 #9fca56
+
+# OK
+set $color12 #c50ed2
+
+set $color13 #55b5db
+set $color14 #a074c4
+set $color15 #8a553f
+
+#$color0
+set $background-color $color0
+#$color6
+set $text-color $color6
+#color1
+set $selection-color $color1
+#color12
+set $accent-color $color12
+
+# Basic color configuration using the Base16 variables for windows and borders.
+# Property Name         Border  BG      Text    Indicator Child Border
+client.focused          $color5 $color12 $color0 $color12 $color12
+client.focused_inactive $color1 $color1 $color5 $color3 $color1
+client.unfocused        $color1 $color0 $color5 $color1 $color1
+client.urgent           $color8 $color8 $color0 $color8 $color8
+client.placeholder      $color0 $color0 $color5 $color0 $color0
+client.background       $color7
