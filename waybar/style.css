@@ -1,6 +1,12 @@
+/*
+ * Miami Vice Color Palette
+ * https://www.color-hex.com/color-palette/80537
+ */
+
 * {
-  font-size: 14px;
-  font-family: "CascadiaCode"
+  font-size: 13px;
+  color: #d0d0d0;
+  text-shadow: 1px 1px #0C0E15;
 }
 
 .text-button {
@@ -9,9 +15,9 @@
 }
 
 .modules-right label {
-  color: #dadadc;
+  color: #d0d0d0;
   text-shadow: 1px 1px #0C0E15;
-  padding: 0 6px;
+  padding: 1px 8px;
 }
 
 button:hover {
@@ -21,30 +27,26 @@ button:hover {
 
 box.horizontal:dir(ltr) > box.horizontal:dir(ltr) {
   margin: 3px;
-  padding: 3px 5px 1px 5px; 
+  padding: 3px 3px 1px 5px; 
 }
 
 
 @keyframes blink-critical {
-    70% {
-      color: white;
-    }
-
     to {
-        color: white;
-        background-color: #af005f;
+        color: #d0d0d0;
+        background-color: #ff4df0;
     }
 }
 
 @keyframes blink-notification-mode {
     70% {
-      color: #c5c8c6;
+      color: #d0d0d0;
       background: #1d1f21;
     }
 
     to {
-      background: #c5c8c6;
-      color: black;
+      background: #d0d0d0;
+      color: #1d1f21;
     }
 }
 
@@ -84,7 +86,8 @@ window#waybar {
 }
 
 #pulseaudio {
-  margin-top: 3px;
+  margin-right: 4px;
+  padding-right: 0px;
 }
 
 
@@ -104,7 +107,7 @@ window#waybar {
 }
 
 #workspaces .text-button > label {
-  color: #aaaaac;
+  color: #d0d0d0;
   margin: 0;
   text-shadow: 1px 1px #0C0E15;
   border-radius: 0;
@@ -112,20 +115,20 @@ window#waybar {
   padding: 0 1px;
 }
 
-#workspaces button:hover {
-  background-color: #e011d6;
+#workspaces:hover {
+  background-color: #ff4df0;
   box-shadow: inherit;
   text-shadow: inherit;
 }
 
 #workspaces .text-button.focused {
-  border-bottom-color: #e011d6;
+  border-bottom-color: #ff4df0;
   border-bottom-width: 2px;
   border-radius: 0;
 }
 
 #workspaces .text-button.focused > label {
-  color: #00F6C8;
+  color: #70ffdf;
 }
 
 #workspaces button.urgent {
@@ -133,7 +136,7 @@ window#waybar {
   animation-duration: 3s;
   animation-iteration-count: 8;
   animation-name: blink-critical;
-  color: #d80077;
+  color: #ff4df0;
 }
 
 #custom-headset.critical {
@@ -147,6 +150,13 @@ window#waybar {
   animation-name: blink-notification-mode;
   animation-direction: alternate;
   animation-duration: 5s;
+}
+
+#custom-headset.charging {
+  animation-name: charging;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-duration: 3s;
 }
 
 tooltip label {

@@ -14,23 +14,16 @@
         create: true
         glob: true
     ~/.local/share/nvim/site/autoload/plug.vim: nvim/autoload/plug.vim
-    ~/.config/rclone/OneDrive-Pessoal.env: rclone/OneDrive-Pessoal.env
-    ~/.config/rclone/OneDrive-L3.env: rclone/OneDrive-L3.env
-    ~/.config/sway/definitions.d/00-user-definitions.conf: 
-        path: 'sway/definitions'
-        force: true
-    ~/.config/sway/config:
-        path: 'sway/config'
-        force: true
     ~/.config/sway/config.d/:
         path: 'sway/config.d/*'
+        force: true
+        glob: true
+    ~/.config/sway/definitions.d/:
+        path: 'sway/definitions.d/*'
         force: true
         glob: true
     ~/.config/waybar:
         path: 'waybar/*'
         glob: true
-    ~/.config/kitty/kitty.conf:
-        create: true
-        path: 'kitty/kitty.conf'
 - shell:
     - [git submodule update --init --recursive, Installing submodules]

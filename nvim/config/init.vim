@@ -172,7 +172,7 @@ let g:fzf_action = {
   \ 'ctrl-v': 'vsplit'
   \}
 
-let $FZF_DEFAULT_COMMAND = 'rg --files . !.git !node_modules'
+let $FZF_DEFAULT_COMMAND = 'rg --files .'
 
 
 " === Denite setup ==="
@@ -296,12 +296,5 @@ nnoremap <leader>vu :<C-u>VNgSwitchTS<CR>
 nnoremap <leader>vi :<C-u>VNgSwitchCSS<CR>
 nnoremap <leader>vo :<C-u>VNgSwitchHTML<CR>
 nnoremap <leader>vp :<C-u>VNgSwitchSpec<CR>
-
-"" == Barbar Setup == 
-" NOTE: If barbar's option dict isn't created yet, create it
-let bufferline = get(g:, 'bufferline', {})
-
-let bufferline.highlight_alternate = v:false
-
 
 source ~/.config/nvim/lua/init.lua 

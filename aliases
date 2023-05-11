@@ -3,7 +3,7 @@
 vo() 
 {
   # kitty --detach --working-directory=${1:-$PWD} -T=NeoVim nvim
-    wezterm start --cwd ${1:-$PWD} --class nvim-vo -- nvim &
+    #wezterm start --cwd ${1:-$PWD} --class nvim-vo -- nvim &
 }
 
 alias cat="bat"
@@ -24,3 +24,26 @@ alias gpuoc='git push --set-upstream origin $(git symbolic-ref --short HEAD)'
 alias mssql-cli="python3.9 /home/rramos/.local/lib/python3.9/site-packages/mssqlcli/main.py"
 
 alias icones="cd /usr/share/applications"
+
+findc() 
+{
+  echo Find content in files \(Grep Wrapper\)
+  echo
+
+  if [ "$1" = "" ]; then
+    echo ERROR: Please specify pattern to be found
+    return 1
+  fi
+
+  if [[ "$1" =~ "help" ]]; then
+    echo This is a simple wrapper for grep command to look into files
+    echo
+    echo USAGE: findc PATTERN \[directory\]
+    echo
+    echo "The command is: grep --exclude-dir={node_modules,dist} -rnw 'path' -e 'pattern to be found'"
+
+    return 0
+  fi
+     
+  grep --exclude-dir={node_modules,dist} -rnw ${2:-.} -e $1
+}

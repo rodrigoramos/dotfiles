@@ -20,6 +20,8 @@ alt="Battery Level: $percentage%"
 
 if [ $percentage -eq -1 ]; then
   class="charging"
+  alt="Charging"
+  percentage=0
 elif [ $percentage -lt 8 ]; then
   class="critical"
 elif [ $percentage -lt 20 ]; then

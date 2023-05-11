@@ -3,7 +3,7 @@
     "position": "top",
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": ["clock#date"],
-    "modules-right": ["custom/events", "cpu", "memory", "network", "battery", "pulseaudio", "custom/headset", "custom/notifications", "tray", "idle_inhibitor", "clock#time"],
+    "modules-right": ["custom/events", "cpu", "memory", "network", "battery", "pulseaudio", "custom/headset", "tray", "idle_inhibitor", "clock#time"],
     "clock#date": {
         "interval": 60,
         "format": "{:%a, %e %b %Y}",
@@ -54,19 +54,16 @@
     },
 
     "pulseaudio": {
-        "format": "{icon} {format_source}",
+        "format": "<big>{icon} </big> {format_source}",
         "format-bluetooth": "{icon}",
         "format-muted": " {format_source}",
-        "format-source": "",
-        "format-source-muted": "",
+        "format-source": "<span bgcolor=\"#d0d0d0\" fgcolor=\"#1d1f21\">  </span>",
+        "format-source-muted": "<small> </small><span fgcolor=\"#70ffdf\" rise=\"-3.5pt\"></span><small> </small>",
         "format-icons": {
-            "headphone": "\uf7ca",
-            "hands-free": "\uf7cd",
-            "headset": "\uf7cd",
             "phone": "",
             "portable": "",
             "car": "",
-            "default": ["", "", ""]
+            "default": ["\uf026", "\uf027", "\udb81\udd7e", "\uf028"]
         },
         "scroll-step": 1,
         "on-click": "pavucontrol"
@@ -81,7 +78,7 @@
     },
     "memory": {
       "interval": 30,
-      "format": "\uf9a6",
+      "format": "\ue266",
       "max-length": 10,
       "states":{
           "warning": 90,
@@ -95,13 +92,25 @@
       "spacing": 10
     },
     "custom/headset": {
-     "format": "{icon}",
-     "interval": 30,
+     "format": "{icon}",
+     "interval": 1,
      "tooltip": true,
      "return-type": "json",
      "format-icons": {
-        "charging": "",
-        "default": [ "", "", "", "", "" ]
+        // "default": ["\udb80\udc85",  "\udb82\udd3e", "\udb82\udd3f", "\udb82\udd40", "\udb82\udd41", "\udb82\udd42", "\udb82\udd43", "\udb82\udd44", "\udb82\udd45", "\udb82\udd46", "\udb82\udd48" ]
+        "default": [
+            "\uf579<span rise=\"3.5pt\"><small></small></span>",
+            "\uf579",
+            "\uf57a",
+            "\uf57b",
+            "\uf57c",
+            "\uf57d",
+            "\uf57e",
+            "\uf57f",
+            "\uf580",
+            "\uf581",
+            "\udb80\udc79"
+        ]
       },
      "exec": "$HOME/git/dotfiles/waybar/scripts/headset-output.sh $(headsetcontrol -bc)" 
     },
@@ -117,8 +126,8 @@
     "idle_inhibitor": {
         "format": "{icon}",
         "format-icons": {
-            "activated": "零",
-            "deactivated": "鈴"
+            "activated": "\udb81\udcb3", 
+            "deactivated": "\udb81\udcb2"
         }
     },
     "custom/events": {
@@ -129,6 +138,7 @@
         "default": ""
       },
       "on-click": "swaymsg exec \\$calendar",
+      "exec-if": "command -v python",
       "exec": "$HOME/git/dotfiles/waybar/scripts/waybar-khal.py",
       "return-type": "json"
     }

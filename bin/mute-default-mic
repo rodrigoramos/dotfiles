@@ -1,17 +1,28 @@
 #!/bin/bash
 
-defaultSource=$(pactl info | grep -oP '(?<=Fonte padrão: ).+')
+# defaultSource=$(pactl info | grep -oP '(?<=Fonte padrão: ).+')
 
-if [ "$defaultsource" == "" ]; then
-  defaultSource=$(pactl info | grep -oP '(?<=Default Source: ).+')
+# if [ "$defaultSource" == "" ]; then
+#   echo entrou no if
+#   defaultSource=$(pactl info | grep -oP '(?<=Default Source: ).+')
+# fi
+
+# if [ "$defaultSource" = "" ]; then
+#   echo It was not possible to retrieve de source
+#   exit 1
+# fi
+
+# pactl set-source-mute $defaultSource toggle
+amixer -c 3 sset Mic toggle
+
+
+if [ "$(amixer controls | grep -o 'Dmic0')" != "" ] ; then
+  if [ "$(amixer -c 3 sget Mic | grep -o '\[off\]')" == "[off]" ]; then
+    amixer sset Dmic0 nocap
+  else
+    amixer sset Dmic0 cap
+  fi
 fi
-
-if [ "$defaultSource" = "" ]; then
-  echo It was not possible to retrieve de source
-  exit 1
-fi
-
-pactl set-source-mute $defaultSource toggle
 
 if [ $(amixer controls | grep -c 'Mic Mute-LED Mode') == 0 ]; then
   exit 0
