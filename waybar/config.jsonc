@@ -3,19 +3,56 @@
     "position": "top",
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": ["clock#date"],
-    "modules-right": ["custom/events", "cpu", "memory", "network", "battery", "pulseaudio", "custom/headset", "tray", "idle_inhibitor", "clock#time"],
+    "modules-right": ["custom/github", "custom/events", "cpu", "memory", "network", "battery", "pulseaudio", "custom/headset", "tray", "idle_inhibitor", "clock#time"],
     "clock#date": {
         "interval": 60,
         "format": "{:%a, %e %b %Y}",
-        "on-click": "swaymsg exec gsimplecal",
-        "tooltip": true,
-        "tooltip-format": "<big>{:%B %Y}</big>\n<tt>{calendar}</tt>"
+        "tooltip-format": "<tt><small>{calendar}</small></tt>",
+        "calendar": {
+           "mode"          : "month",
+           "mode-mon-col"  : 3,
+           "on-scroll"     : 1,
+           "on-click-right": "mode",
+           "format": {
+             "months":     "<span color='#ffead3'><b>{}</b></span>",
+             "days":       "<span color='#ecc6d9'><b>{}</b></span>",
+             "weeks":      "<span color='#99ffdd'><b>W{}</b></span>",
+             "weekdays":   "<span color='#ffcc66'><b>{}</b></span>",
+             "today":      "<span color='#ff6699'><b><u>{}</u></b></span>"
+           }
+        },
+        "actions":  {
+            "on-click-right": "mode",
+            "on-click-forward": "tz_up",
+            "on-click-backward": "tz_down",
+            "on-scroll-up": "shift_up",
+            "on-scroll-down": "shift_down"
+        }
     },
     "clock#time": {
         "format": "{:%H:%M}",
         "on-click": "swaymsg exec gsimplecal",
-        "tooltip": true,
-        "tooltip-format": "<big>{:%B %Y}</big>\n<tt>{calendar}</tt>"
+        "tooltip-format": "<tt><small>{calendar}</small></tt>",
+        "calendar": {
+           "mode"          : "year",
+           "mode-mon-col"  : 3,
+           "on-scroll"     : 1,
+           "on-click-right": "mode",
+           "format": {
+             "months":     "<span color='#ffead3'><b>{}</b></span>",
+             "days":       "<span color='#ecc6d9'><b>{}</b></span>",
+             "weeks":      "<span color='#99ffdd'><b>W{}</b></span>",
+             "weekdays":   "<span color='#ffcc66'><b>{}</b></span>",
+             "today":      "<span color='#ff6699'><b><u>{}</u></b></span>"
+           }
+        },
+        "actions":  {
+            "on-click-right": "mode",
+            "on-click-forward": "tz_up",
+            "on-click-backward": "tz_down",
+            "on-scroll-up": "shift_up",
+            "on-scroll-down": "shift_down"
+        }
     },
     "battery": {
         "interval": 30,
@@ -57,7 +94,7 @@
         "format": "<big>{icon} </big> {format_source}",
         "format-bluetooth": "{icon}",
         "format-muted": " {format_source}",
-        "format-source": "<span bgcolor=\"#d0d0d0\" fgcolor=\"#1d1f21\">  </span>",
+        "format-source": "<span fgcolor=\"#ff4df0\" rise=\"-3.5pt\"></span> ",
         "format-source-muted": "<small> </small><span fgcolor=\"#70ffdf\" rise=\"-3.5pt\"></span><small> </small>",
         "format-icons": {
             "phone": "",
@@ -112,7 +149,20 @@
             "\udb80\udc79"
         ]
       },
+     "exec-if": "headsetcontrol -b 2>1 1>/dev/null",
      "exec": "$HOME/git/dotfiles/waybar/scripts/headset-output.sh $(headsetcontrol -bc)" 
+    },
+    "custom/github": {
+      "format": "\uf113{icon}",
+      "exec": "$HOME/git/dotfiles/waybar/scripts/github-prs.sh",
+      "return-type": "json",
+      "interval": 240, // 2 min
+      "tooltip-format": "<tt>{alt}</tt>",
+      "on-click": "xdg-open https://github.com/pulls/review-requested",
+      "format-icons": {
+        "nothingtodo": "<span foreground=\"green\" rise=\"-3pt\"><small>\uf00c</small></span>",
+        "pending": "<span fgcolor=\"#ff4df0\" rise=\"-3pt\"><small></small></span>"
+      }
     },
     "custom/notifications": {
      "format": "{icon}",

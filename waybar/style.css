@@ -39,16 +39,11 @@ box.horizontal:dir(ltr) > box.horizontal:dir(ltr) {
 }
 
 @keyframes blink-notification-mode {
-    70% {
-      color: #d0d0d0;
-      background: #1d1f21;
-    }
-
-    to {
-      background: #d0d0d0;
-      color: #1d1f21;
-    }
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
 }
+
 
 #cpu.critical {
   animation-name: blink-critical;
@@ -77,12 +72,14 @@ window#waybar {
 }
 
 #mode {
-  animation-name: blink-notification-mode; 
-  animation-direction: alternate;
-  animation-iteration-count: infinite;
-  animation-duration: 3s;
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
+  animation: blink-notification-mode 5s ease infinite;
+  background: rgb(255,77,240);
+  background: linear-gradient(90deg, rgba(255,77,240,1) 0%, rgba(112,255,223,1) 100%); 
+  background-size: 300% 300%;
+  border-radius: 10px;
+  color: rgba(9, 14, 17, 0.5);
+  padding-left: 10px;
+  margin-left: 5px;
 }
 
 #pulseaudio {

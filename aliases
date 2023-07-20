@@ -9,7 +9,6 @@ vo()
 alias cat="bat"
 alias vim="nvim"
 alias fif="$HOME/git/dotfiles/bin/fit"
-alias vpn="$HOME/vpn_l3"
 alias my-rclone="$HOME/git/dotfiles/bin/rclone.sh"
 
 # Wayland
