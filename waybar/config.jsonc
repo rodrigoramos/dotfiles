@@ -149,7 +149,7 @@
             "\udb80\udc79"
         ]
       },
-     "exec-if": "headsetcontrol -b 2>1 1>/dev/null",
+     "exec-if": "headsetcontrol -b >/dev/null 2>&1",
      "exec": "$HOME/git/dotfiles/waybar/scripts/headset-output.sh $(headsetcontrol -bc)" 
     },
     "custom/github": {
