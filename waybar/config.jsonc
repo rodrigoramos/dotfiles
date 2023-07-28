@@ -3,7 +3,7 @@
     "position": "top",
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": ["clock#date"],
-    "modules-right": ["custom/github", "custom/events", "cpu", "memory", "network", "battery", "pulseaudio", "custom/headset", "tray", "idle_inhibitor", "clock#time"],
+    "modules-right": [ "custom/events", "custom/github", "cpu", "memory", "network", "battery", "pulseaudio", "custom/headset", "tray", "idle_inhibitor", "clock#time"],
     "clock#date": {
         "interval": 60,
         "format": "{:%a, %e %b %Y}",
@@ -188,8 +188,7 @@
         "default": ""
       },
       "on-click": "swaymsg exec \\$calendar",
-      "exec-if": "command -v python",
-      "exec": "$HOME/git/dotfiles/waybar/scripts/waybar-khal.py",
+      "exec": "python3 $HOME/git/dotfiles/waybar/scripts/waybar-khal.py",
       "return-type": "json"
     }
 }
