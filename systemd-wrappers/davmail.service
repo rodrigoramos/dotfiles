@@ -2,7 +2,7 @@
 Description=Davmail service as a server
 
 [Service]
-ExecStart=/usr/bin/davmail
+ExecStart=/usr/bin/davmail /home/rodrigosilva/.davmail.properties
 Restart=always
 
 [Install]
