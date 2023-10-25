@@ -120,7 +120,7 @@ class Sway extends Service {
       null,
       [command].concat(args),
       null,
-      GLib.SpawnFlags.SEARCH_PATH | GLib.SpawnFlags.LEAVE_DESCRIPTORS_OPEN,
+      GLib.SpawnFlags.SEARCH_PATH,
       null
     );
 

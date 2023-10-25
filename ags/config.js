@@ -9,8 +9,9 @@ import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import { execAsync } from "resource:///com/github/Aylur/ags/utils.js";
 import Sway from "./sway.js";
 import Network from "resource:///com/github/Aylur/ags/service/network.js";
-import PopupWindow from './popupWindow.js';
+import PopupWindow from "./popupWindow.js";
 import GLib from "gi://GLib";
+import KhalService from "./khalService.js";
 
 // widgets can be only assigned as a child in one container
 // so to make a reuseable widget, just make it a function
@@ -30,9 +31,7 @@ const Workspaces = (monitorName) =>
         Sway.active.workspace,
         (self) => {
           self.children = Sway.workspaces
-            .filter(
-              (w) => w.output === monitorName
-            )
+            .filter((w) => w.output === monitorName)
             .map((i) => {
               return Widget.Button({
                 onClicked: () => execAsync(`swaymsg workspace ${i.name}`),
@@ -49,11 +48,6 @@ const Clock = () =>
   Widget.Label({
     className: "clock",
     connections: [
-      // this is bad practice, since exec() will block the main event loop
-      // in the case of a simple date its not really a problem
-      // [1000, self => self.label = exec('date "+%H:%M:%S %b %e."')],
-
-      // this is what you should do
       [
         1000,
         (self) =>
@@ -67,13 +61,8 @@ const Clock = () =>
 const Date = () =>
   Widget.Button({
     className: "date",
-    onClicked: () => App.toggleWindow('dashboard'),
+    onClicked: () => App.toggleWindow("dashboard"),
     connections: [
-      // this is bad practice, since exec() will block the main event loop
-      // in the case of a simple date its not really a problem
-      // [1000, self => self.label = exec('date "+%H:%M:%S %b %e."')],
-
-      // this is wDateButtonhat you should do
       [
         60000,
         (self) =>
@@ -299,7 +288,7 @@ const GithubPR = () =>
             (self) =>
               execAsync("/home/rodrigosilva/.config/ags/github-pr.sh")
                 .then((output) => {
-                  output = output.replace('\u000d', ''); // Remove color
+                  output = output.replace("\u000d", ""); // Remove color
                   const jsonOutput = JSON.parse(output);
                   self.shown = jsonOutput.count ? "PendingPR" : "NoPending";
                 })
@@ -310,49 +299,61 @@ const GithubPR = () =>
     ],
   });
 
-let TestBox = Widget.Window({
-  name: "Teste",
-  anchor: ["top"],
-  layer: "overlay",
-  margin: [1],
-  popup: true,
-  focusable: true,
-  visible: false,
-  child: Widget.Box({
-    vertical: true,
-    children: [Widget.Label("Rodirgo"), Widget.Label("Ramos")],
-  }),
-});
+const CalendarEvents = ({ anchor = ["top", "right"], layout = "top" } = {}) =>
+  PopupWindow({
+    name: "calendarEvents",
+    layout,
+    anchor,
+    content: Widget.Box({
+      className: "calendar-events",
+      vertical: true,
+      connections: [
+        [
+          KhalService,
+          (self) => {
+            if (!KhalService.calendarEvents?.length) {
+              return;
+            }
 
-const Calendar = () =>
+            self.children = KhalService.calendarEvents.map((event) =>
+              Widget.Label(
+                `${event.startTime}-${event.endTime}: ${event.title}`
+              )
+            );
+          },
+        ],
+      ],
+    }),
+  });
+
+const CalendarNextEvent = () =>
   Widget.EventBox({
     onPrimaryClick: () => {
       TestBox.visible = true;
     },
-    child: Widget.Box({
-      spacing: 5,
-      children: [
-        Widget.Icon("x-office-calendar-symbolic"),
-        Widget.Label({
-          connections: [
-            [
-              120000, // 2mins
-              (self) =>
-                execAsync(
-                  "python3 /home/rodrigosilva/.config/ags/waybar-khal.py"
-                )
-                  .then((output) => {
-                    const jsonOutput = JSON.parse(output);
-
-                    if (jsonOutput?.length)
-                      self.label = `${jsonOutput[0].startTime}-${jsonOutput[0].endTime}: ${jsonOutput[0].title}`;
-                    else self.label = "No Next Event";
-                  })
-                  .catch(console.error),
+    child: Widget.Button({
+      onClicked: () => App.toggleWindow("calendarEvents"),
+      child: Widget.Box({
+        spacing: 5,
+        children: [
+          Widget.Icon("x-office-calendar-symbolic"),
+          Widget.Label({
+            connections: [
+              [
+                KhalService,
+                (self) => {
+                  if (!KhalService.calendarEvents?.length) {
+                    self.label = "No Next Event";
+                    return;
+                  }
+                  const event = KhalService.calendarEvents[0];
+                  self.label = `${event.startTime}-${event.endTime}: ${event.title}`;
+                },
+              ],
             ],
-          ],
-        }),
-      ],
+          }),
+        ],
+      }),
     }),
   });
 
@@ -372,7 +373,7 @@ const Right = () =>
     spacing: 12,
     halign: "end",
     children: [
-      Calendar(),
+      CalendarNextEvent(),
       GithubPR(),
       ComputerResources(),
       NetworkIndicator(),
@@ -398,60 +399,63 @@ const Bar = (monitorName) =>
   });
 
 const Clock2 = ({
-    format = '%H:%M:%S %B %e. %A',
-    interval = 1000,
-    ...props
-} = {}) => Widget.Label({
-    className: 'clock',
+  format = "%H:%M:%S %B %e. %A",
+  interval = 1000,
+  ...props
+} = {}) =>
+  Widget.Label({
+    className: "clock",
     ...props,
-    connections: [[interval, label =>
-        label.label = GLib.DateTime.new_now_local().format(format),
-    ]],
-});
-const DateColumn = () => Widget.Box({
-    vertical: true,
-    className: 'datemenu',
-    children: [
-        Clock2({ format: '%H:%M' }),
-        Widget.Box({
-            className: 'calendar',
-            children: [
-                Widget({
-                    type: imports.gi.Gtk.Calendar,
-                    hexpand: true,
-                    halign: 'center',
-                }),
-            ],
-        }),
+    connections: [
+      [
+        interval,
+        (label) => (label.label = GLib.DateTime.new_now_local().format(format)),
+      ],
     ],
-});
+  });
+const DateColumn = () =>
+  Widget.Box({
+    vertical: true,
+    className: "datemenu",
+    children: [
+      Clock2({ format: "%H:%M" }),
+      Widget.Box({
+        className: "calendar",
+        children: [
+          Widget({
+            type: imports.gi.Gtk.Calendar,
+            hexpand: true,
+            halign: "center",
+          }),
+        ],
+      }),
+    ],
+  });
 
-const Dashboard = ({ anchor = ['top'], layout = 'top' } = {}) => PopupWindow({
-    name: 'dashboard',
+const Calendar = ({ anchor = ["top"], layout = "top" } = {}) =>
+  PopupWindow({
+    name: "dashboard",
     layout,
     anchor,
     content: Widget.Box({
-        className: 'dashboard',
-        children: [
-            // NotificationColumn(),
-            // Separator({ orientation: 'vertical' }),
-            DateColumn(),
-        ],
+      className: "dashboard",
+      children: [
+        DateColumn(),
+      ],
     }),
-});
-
+  });
 
 // TODO: Add defensive code
 const monitors = JSON.parse(await execAsync("swaymsg -r -t get_outputs"));
 
 function forAllMonitors(widget) {
-    return monitors.map(mon => widget(mon.name));
+  return monitors.map((mon) => widget(mon.name));
 }
 
 // exporting the config so ags can manage the windows
 export default {
   style: App.configDir + "/style.css",
-  windows: 
-    forAllMonitors(Bar).concat(TestBox).concat(Dashboard())
-  ,
+  windows: forAllMonitors(Bar)
+    .concat(Calendar())
+    .concat(CalendarEvents()),
 };
