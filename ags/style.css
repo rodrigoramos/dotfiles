@@ -2,6 +2,19 @@ label {
     font-weight: bold;
 }
 
+.emblem {
+  padding-top: 10px;
+}
+
+.ok {
+  color: green;
+}
+
+.nok {
+  color: gold;
+  font-size: 10px;
+}
+
 .workspaces button,
 .media {
     background-color: transparent;

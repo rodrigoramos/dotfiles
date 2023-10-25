@@ -84,7 +84,7 @@ class Sway extends Service {
   }
 
   _active;
-  _monitors;
+  _monitors = new Map();
   _workspaces;
   _decoder = new TextDecoder();
 
