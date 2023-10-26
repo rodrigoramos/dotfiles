@@ -162,7 +162,7 @@ const Volume = () =>
     ],
   });
 
-const Mic = () => 
+const Mic = () =>
   Widget.Box({
     className: "mic",
     children: [
@@ -178,7 +178,9 @@ const Mic = () =>
             (self) => {
               if (!Audio.microphone) return;
 
-              self.shown = Audio.microphone.stream.isMuted ? "muted" : "unmuted";
+              self.shown = Audio.microphone.stream.isMuted
+                ? "muted"
+                : "unmuted";
             },
             "microphone-changed",
           ],
@@ -235,24 +237,26 @@ const SsidPopup = ({ anchor = ["top", "right"], layout = "top" } = {}) =>
       children: [
         Widget.Label({
           connections: [
-            [Network,
-              (self) => { 
-                self.label = Network.wifi?.ssid; 
-              }
-            ]
-          ]
+            [
+              Network,
+              (self) => {
+                self.label = Network.wifi?.ssid;
+              },
+            ],
+          ],
         }),
         Widget.Label({
           connections: [
-            [Network,
-              (self) => { 
-                self.label = Network.wifi?.strength.toString() + '%'; 
-              }
-            ]
-          ]
-        })
-      ]
-    })
+            [
+              Network,
+              (self) => {
+                self.label = Network.wifi?.strength.toString() + "%";
+              },
+            ],
+          ],
+        }),
+      ],
+    }),
   });
 
 const WifiIndicator = () =>
@@ -291,20 +295,21 @@ const NetworkIndicator = () =>
     binds: [["shown", Network, "primary", (p) => p || "wifi"]],
   });
 
-const VpnIndicator = () => 
+const VpnIndicator = () =>
   Widget.Icon({
     icon: "network-vpn-symbolic",
     connections: [
-      [60000,
+      [
+        60000,
         (self) => {
-          execAsync('openvpn3 sessions-list')
-          .then((out) => {
-            self.visible = !out.includes("No sessions available");
-          })
-          .catch(console.error);
-        }
-      ]
-    ]
+          execAsync("openvpn3 sessions-list")
+            .then((out) => {
+              self.visible = !out.includes("No sessions available");
+            })
+            .catch(console.error);
+        },
+      ],
+    ],
   });
 
 // const memoryIcon = "\ue266";
@@ -317,39 +322,47 @@ const ComputerResources = () =>
     ],
   });
 
+const githubIcon = "\uf113";
 const GithubPR = () =>
-  Widget.Box({
-    children: [
-      Widget.Label("\uf113"),
-      Widget.Stack({
-        items: [
-          [
-            "NoPending",
-            Widget.Icon({ icon: "emblem-ok-symbolic", className: "emblem ok" }),
+  Widget.Button({
+    onClicked: () =>
+      execAsync("xdg-open https://github.com/pulls/review-requested"),
+    child: Widget.Box({
+      children: [
+        Widget.Label(githubIcon),
+        Widget.Stack({
+          items: [
+            [
+              "NoPending",
+              Widget.Icon({
+                icon: "emblem-ok-symbolic",
+                className: "emblem ok",
+              }),
+            ],
+            [
+              "PendingPR",
+              Widget.Icon({
+                icon: "dialog-warning-symbolic",
+                className: "emblem nok",
+              }),
+            ],
           ],
-          [
-            "PendingPR",
-            Widget.Icon({
-              icon: "dialog-warning-symbolic",
-              className: "emblem nok",
-            }),
+          connections: [
+            [
+              120000, // 2mins
+              (self) =>
+                execAsync("/home/rodrigosilva/.config/ags/github-pr.sh")
+                  .then((output) => {
+                    output = output.replace("\u000d", ""); // Remove color
+                    const jsonOutput = JSON.parse(output);
+                    self.shown = jsonOutput.count ? "PendingPR" : "NoPending";
+                  })
+                  .catch(console.error),
+            ],
           ],
-        ],
-        connections: [
-          [
-            120000, // 2mins
-            (self) =>
-              execAsync("/home/rodrigosilva/.config/ags/github-pr.sh")
-                .then((output) => {
-                  output = output.replace("\u000d", ""); // Remove color
-                  const jsonOutput = JSON.parse(output);
-                  self.shown = jsonOutput.count ? "PendingPR" : "NoPending";
-                })
-                .catch(console.error),
-          ],
-        ],
-      }),
-    ],
+        }),
+      ],
+    }),
   });
 
 const CalendarEvents = ({ anchor = ["top", "right"], layout = "top" } = {}) =>
@@ -380,7 +393,13 @@ const CalendarEvents = ({ anchor = ["top", "right"], layout = "top" } = {}) =>
                 spacing: 10,
                 children: [
                   // Add function to format date
-                  Widget.Label(date.toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric', month: 'short' })),
+                  Widget.Label(
+                    date.toLocaleDateString("pt-BR", {
+                      weekday: "short",
+                      day: "numeric",
+                      month: "short",
+                    })
+                  ),
                   Widget.Box({
                     vertical: true,
                     children: eventDay.events.map((event) =>
@@ -522,5 +541,8 @@ function forAllMonitors(widget) {
 // exporting the config so ags can manage the windows
 export default {
   style: App.configDir + "/style.css",
-  windows: forAllMonitors(Bar).concat(Calendar()).concat(CalendarEvents()).concat(SsidPopup()),
+  windows: forAllMonitors(Bar)
+    .concat(Calendar())
+    .concat(CalendarEvents())
+    .concat(SsidPopup()),
 };

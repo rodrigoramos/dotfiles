@@ -223,37 +223,40 @@ class Sway extends Service {
   async _onEvent(event) {
     if (!event) return;
 
-    const { change } = event;
+    try {
+      const { change } = event;
 
-    switch (change) {
-      case "focus":
-        if (event.old) this._updateWorkspace(event.old);
+      switch (change) {
+        case "focus":
+          if (event.old) this._updateWorkspace(event.old);
+          this._updateWorkspace({ ...event.current, focused: true });
+          break;
+        case "init":
+          await this._syncWorkspaces();
+          await this._syncMonitors();
+          this.emit("workspace-added", "");
+          break;
+        case "empty":
+          await this._syncWorkspaces();
+          await this._syncMonitors();
+          this.emit("workspace-removed", "");
+          break;
+        case "move":
+        case "reload":
+          await this._syncWorkspaces();
+          await this._syncMonitors();
+          break;
+        case "urgent":
+          this._updateWorkspace(event.current);
+          this.emit("urgent-window", event.current.name);
+        default:
+          break;
+      }
 
-        this._updateWorkspace({ ...event.current, focused: true });
-        break;
-      case "init":
-        await this._syncWorkspaces();
-        await this._syncMonitors();
-        this.emit("workspace-added", event);
-        break;
-      case "empty":
-        await this._syncWorkspaces();
-        await this._syncMonitors();
-        this.emit("workspace-removed", event);
-        break;
-      case "move":
-      case "reload":
-        await this._syncWorkspaces();
-        await this._syncMonitors();
-        break;
-      case "urgent":
-        this._updateWorkspace(event.current);
-        this.emit("urgent-window", event);
-      default:
-        break;
+      this.emit("changed");
+    } catch (err) {
+      console.error(err);
     }
-
-    this.emit("changed");
   }
 }
 
