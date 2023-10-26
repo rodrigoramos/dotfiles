@@ -116,25 +116,29 @@ class Sway extends Service {
     const command = "/usr/bin/swaymsg";
     const args = ["-m", "-t", "subscribe", '["workspace"]'];
 
-    const [success, _, __, out_fd] = GLib.spawn_async_with_pipes(
-      null,
-      [command].concat(args),
-      null,
-      GLib.SpawnFlags.SEARCH_PATH,
-      null
-    );
-
-    if (!success) {
-      console.error(
-        "Error trying to listen to Sway changes (swaymsg -t subscribe)."
+    try {
+      const [success, _, __, out_fd] = GLib.spawn_async_with_pipes(
+        null,
+        [command].concat(args),
+        null,
+        GLib.SpawnFlags.SEARCH_PATH,
+        null
       );
-      return;
-    }
 
-    const stdoutPipe = new Gio.DataInputStream({
-      base_stream: new Gio.UnixInputStream({ fd: out_fd }),
-    });
-    this._watchSubscribeCommand(stdoutPipe);
+      if (!success) {
+        console.error(
+          "Error trying to listen to Sway changes (swaymsg -t subscribe)."
+        );
+        return;
+      }
+
+      const stdoutPipe = new Gio.DataInputStream({
+        base_stream: new Gio.UnixInputStream({ fd: out_fd }),
+      });
+      this._watchSubscribeCommand(stdoutPipe);
+    } catch (err) {
+      console.error(err);
+    }
 
     this._active.connect("changed", () => this.emit("changed"));
     ["monitor", "workspace"].forEach((active) =>

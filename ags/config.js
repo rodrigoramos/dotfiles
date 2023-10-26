@@ -58,7 +58,7 @@ const Clock = () =>
     ],
   });
 
-const Date = () =>
+const DateBox = () =>
   Widget.Button({
     className: "date",
     onClicked: () => App.toggleWindow("dashboard"),
@@ -144,7 +144,7 @@ const Volume = () =>
             (self) => {
               if (!Audio.speaker) return;
 
-              if (Audio.speaker.isMuted) {
+              if (Audio.speaker.stream.isMuted) {
                 self.shown = "0";
                 return;
               }
@@ -156,6 +156,31 @@ const Volume = () =>
               self.shown = `${show}`;
             },
             "speaker-changed",
+          ],
+        ],
+      }),
+    ],
+  });
+
+const Mic = () => 
+  Widget.Box({
+    className: "mic",
+    children: [
+      Widget.Stack({
+        items: [
+          // tuples of [string, Widget]
+          ["unmuted", Widget.Icon("microphone-sensitivity-high-symbolic")],
+          ["muted", Widget.Icon("microphone-sensitivity-muted-symbolic")],
+        ],
+        connections: [
+          [
+            Audio,
+            (self) => {
+              if (!Audio.microphone) return;
+
+              self.shown = Audio.microphone.stream.isMuted ? "muted" : "unmuted";
+            },
+            "microphone-changed",
           ],
         ],
       }),
@@ -200,8 +225,38 @@ const SysTray = () =>
     ],
   });
 
+const SsidPopup = ({ anchor = ["top", "right"], layout = "top" } = {}) =>
+  PopupWindow({
+    name: "ssidPopup",
+    layout,
+    anchor,
+    content: Widget.Box({
+      vertical: true,
+      children: [
+        Widget.Label({
+          connections: [
+            [Network,
+              (self) => { 
+                self.label = Network.wifi?.ssid; 
+              }
+            ]
+          ]
+        }),
+        Widget.Label({
+          connections: [
+            [Network,
+              (self) => { 
+                self.label = Network.wifi?.strength.toString() + '%'; 
+              }
+            ]
+          ]
+        })
+      ]
+    })
+  });
+
 const WifiIndicator = () =>
-  Widget.EventBox({
+  Widget.Button({
     child: Widget.Icon({
       connections: [
         [
@@ -212,25 +267,7 @@ const WifiIndicator = () =>
         ],
       ],
     }),
-    onPrimaryClick: (_, event) => {
-      return Widget.Menu({
-        children: [
-          Widget.MenuItem({
-            child: Widget.Label({
-              style: "min-width: 80px",
-              connections: [
-                [
-                  Network,
-                  (self) => {
-                    self.label = Network.wifi.ssid;
-                  },
-                ],
-              ],
-            }),
-          }),
-        ],
-      }).popup_at_pointer(event);
-    },
+    onClicked: () => App.toggleWindow("ssidPopup"),
   });
 
 const WiredIndicator = () =>
@@ -252,6 +289,22 @@ const NetworkIndicator = () =>
       ["wired", WiredIndicator()],
     ],
     binds: [["shown", Network, "primary", (p) => p || "wifi"]],
+  });
+
+const VpnIndicator = () => 
+  Widget.Icon({
+    icon: "network-vpn-symbolic",
+    connections: [
+      [60000,
+        (self) => {
+          execAsync('openvpn3 sessions-list')
+          .then((out) => {
+            self.visible = !out.includes("No sessions available");
+          })
+          .catch(console.error);
+        }
+      ]
+    ]
   });
 
 // const memoryIcon = "\ue266";
@@ -307,19 +360,38 @@ const CalendarEvents = ({ anchor = ["top", "right"], layout = "top" } = {}) =>
     content: Widget.Box({
       className: "calendar-events",
       vertical: true,
+      spacing: 15,
       connections: [
         [
           KhalService,
           (self) => {
-            if (!KhalService.calendarEvents?.length) {
+            if (!KhalService.eventsByDay?.length) {
               return;
             }
 
-            self.children = KhalService.calendarEvents.map((event) =>
-              Widget.Label(
-                `${event.startTime}-${event.endTime}: ${event.title}`
-              )
-            );
+            self.children = KhalService.eventsByDay.map((eventDay) => {
+              // Add move this code to KhalService and add defensive code;
+              const regex = /(\d\d)\/(\d\d)\/(\d\d\d\d)/;
+              const match = regex.exec(eventDay.day);
+              const date = new Date(match[3], match[2] - 1, match[1]);
+
+              return Widget.Box({
+                vertical: true,
+                spacing: 10,
+                children: [
+                  // Add function to format date
+                  Widget.Label(date.toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric', month: 'short' })),
+                  Widget.Box({
+                    vertical: true,
+                    children: eventDay.events.map((event) =>
+                      Widget.Label(
+                        `${event.startTime}-${event.endTime}: ${event.title}`
+                      )
+                    ),
+                  }),
+                ],
+              });
+            });
           },
         ],
       ],
@@ -327,33 +399,28 @@ const CalendarEvents = ({ anchor = ["top", "right"], layout = "top" } = {}) =>
   });
 
 const CalendarNextEvent = () =>
-  Widget.EventBox({
-    onPrimaryClick: () => {
-      TestBox.visible = true;
-    },
-    child: Widget.Button({
-      onClicked: () => App.toggleWindow("calendarEvents"),
-      child: Widget.Box({
-        spacing: 5,
-        children: [
-          Widget.Icon("x-office-calendar-symbolic"),
-          Widget.Label({
-            connections: [
-              [
-                KhalService,
-                (self) => {
-                  if (!KhalService.calendarEvents?.length) {
-                    self.label = "No Next Event";
-                    return;
-                  }
-                  const event = KhalService.calendarEvents[0];
-                  self.label = `${event.startTime}-${event.endTime}: ${event.title}`;
-                },
-              ],
+  Widget.Button({
+    onClicked: () => App.toggleWindow("calendarEvents"),
+    child: Widget.Box({
+      spacing: 5,
+      children: [
+        Widget.Icon("x-office-calendar-symbolic"),
+        Widget.Label({
+          connections: [
+            [
+              KhalService,
+              (self) => {
+                if (!KhalService.calendarEvents?.length) {
+                  self.label = "No Next Event";
+                  return;
+                }
+                const event = KhalService.calendarEvents[0];
+                self.label = `${event.startTime}-${event.endTime}: ${event.title}`;
+              },
             ],
-          }),
-        ],
-      }),
+          ],
+        }),
+      ],
     }),
   });
 
@@ -365,7 +432,7 @@ const Left = (monitorName) =>
 
 const Center = () =>
   Widget.Box({
-    children: [Date()],
+    children: [DateBox()],
   });
 
 const Right = () =>
@@ -377,18 +444,20 @@ const Right = () =>
       GithubPR(),
       ComputerResources(),
       NetworkIndicator(),
+      VpnIndicator(),
       BatteryLabel(),
       Volume(),
+      Mic(),
       SysTray(),
       Clock(),
     ],
   });
 
-const Bar = (monitorName) =>
+const Bar = (monitorId, monitorName) =>
   Widget.Window({
     name: `bar-${monitorName}`, // name has to be unique
     className: "bar",
-    monitor: monitorName,
+    monitor: monitorId,
     anchor: ["top", "left", "right"],
     exclusive: true,
     child: Widget.CenterBox({
@@ -439,9 +508,7 @@ const Calendar = ({ anchor = ["top"], layout = "top" } = {}) =>
     anchor,
     content: Widget.Box({
       className: "dashboard",
-      children: [
-        DateColumn(),
-      ],
+      children: [DateColumn()],
     }),
   });
 
@@ -449,13 +516,11 @@ const Calendar = ({ anchor = ["top"], layout = "top" } = {}) =>
 const monitors = JSON.parse(await execAsync("swaymsg -r -t get_outputs"));
 
 function forAllMonitors(widget) {
-  return monitors.map((mon) => widget(mon.name));
+  return monitors.map((mon, index) => widget(index, mon.name));
 }
 
 // exporting the config so ags can manage the windows
 export default {
   style: App.configDir + "/style.css",
-  windows: forAllMonitors(Bar)
-    .concat(Calendar())
-    .concat(CalendarEvents()),
+  windows: forAllMonitors(Bar).concat(Calendar()).concat(CalendarEvents()).concat(SsidPopup()),
 };
