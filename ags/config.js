@@ -12,6 +12,12 @@ import Network from "resource:///com/github/Aylur/ags/service/network.js";
 import PopupWindow from "./popupWindow.js";
 import GLib from "gi://GLib";
 import KhalService from "./khalService.js";
+import {
+  NotificationList,
+  DNDSwitch,
+  ClearButton,
+  PopupList,
+} from "./notifications-widget.js";
 
 // widgets can be only assigned as a child in one container
 // so to make a reuseable widget, just make it a function
@@ -76,29 +82,42 @@ const DateBox = () =>
 // we don't need dunst or any other notification daemon
 // because the Notifications module is a notification daemon itself
 const Notification = () =>
-  Widget.Box({
+  Widget.Button({
     className: "notification",
-    children: [
-      Widget.Icon({
-        icon: "preferences-system-notifications-symbolic",
-        connections: [
-          [
-            Notifications,
-            (self) => (self.visible = Notifications.popups.length > 0),
+    onClicked: () => App.toggleWindow("notification-center"),
+    child: Widget.Box({
+      spacing: 0,
+      children: [
+        Widget.Stack({
+          items: [
+            [
+              "enabled",
+              Widget.Icon("preferences-system-notifications-symbolic"),
+            ],
+            ["disabled", Widget.Icon("notifications-disabled-symbolic")],
           ],
-        ],
-      }),
-      Widget.Label({
-        connections: [
-          [
-            Notifications,
-            (self) => {
-              self.label = Notifications.popups[0]?.summary || "";
-            },
+          connections: [
+            [
+              Notifications,
+              (self) => {
+                self.shown = Notifications.dnd ? "disabled" : "enabled";
+              },
+            ],
           ],
-        ],
-      }),
-    ],
+        }),
+        Widget.Label({
+          className: "emblem",
+          binds: [
+            [
+              "label",
+              Notifications,
+              "notifications",
+              (p) => p.length.toString(),
+            ],
+          ],
+        }),
+      ],
+    }),
   });
 
 const Media = () =>
@@ -353,7 +372,8 @@ const GithubPR = () =>
               (self) =>
                 execAsync("/home/rodrigosilva/.config/ags/github-pr.sh")
                   .then((output) => {
-                    output = output.replace("\u000d", ""); // Remove color
+                    // TODO: Move this code to its Service
+                    output = output.replaceAll("\u000d", ""); // Remove color
                     const jsonOutput = JSON.parse(output);
                     self.shown = jsonOutput.count ? "PendingPR" : "NoPending";
                   })
@@ -365,15 +385,14 @@ const GithubPR = () =>
     }),
   });
 
-const CalendarEvents = ({ anchor = ["top", "right"], layout = "top" } = {}) =>
+const CalendarEvents = ({ anchor = ["top", "right"], layout = "top right" } = {}) =>
   PopupWindow({
     name: "calendarEvents",
     layout,
     anchor,
     content: Widget.Box({
-      className: "calendar-events",
       vertical: true,
-      spacing: 15,
+      className: "calender-events-container",
       connections: [
         [
           KhalService,
@@ -388,24 +407,51 @@ const CalendarEvents = ({ anchor = ["top", "right"], layout = "top" } = {}) =>
               const match = regex.exec(eventDay.day);
               const date = new Date(match[3], match[2] - 1, match[1]);
 
+              const dayName =
+                date.getDate() == new Date().getDate()
+                  ? "Today"
+                  : date.getDate() == new Date().getDate() + 1
+                  ? "Tomorrow"
+                  : "Day after Tomorrow";
+
               return Widget.Box({
                 vertical: true,
                 spacing: 10,
+                className: "event-day",
                 children: [
-                  // Add function to format date
-                  Widget.Label(
-                    date.toLocaleDateString("pt-BR", {
-                      weekday: "short",
-                      day: "numeric",
-                      month: "short",
-                    })
-                  ),
+                  Widget.Box({
+                    hexpand: true,
+                    children: [
+                      // Add function to format date
+                      Widget.Label({
+                        className: "header",
+                        justification: "left",
+                        xalign: 0,
+                        hexpand: true,
+                        label: dayName,
+                        visible: dayName != "",
+                      }),
+                      Widget.Label({
+                        className: "header",
+                        justification: "right",
+                        xalign: 1,
+                        label: date.toLocaleDateString("pt-BR", {
+                          weekday: "short",
+                          day: "numeric",
+                          month: "short",
+                        }),
+                      }),
+                    ],
+                  }),
                   Widget.Box({
                     vertical: true,
                     children: eventDay.events.map((event) =>
-                      Widget.Label(
-                        `${event.startTime}-${event.endTime}: ${event.title}`
-                      )
+                      Widget.Label({
+                        className: "event-line",
+                        label: `${event.startTime}-${event.endTime}: ${event.title}`,
+                        justification: "left",
+                        xalign: 0,
+                      })
                     ),
                   }),
                 ],
@@ -443,19 +489,68 @@ const CalendarNextEvent = () =>
     }),
   });
 
+const Header = () =>
+  Widget.Box({
+    className: "header",
+    children: [
+      Widget.Label("Do Not Disturb"),
+      DNDSwitch(),
+      Widget.Box({ hexpand: true }),
+      ClearButton(),
+    ],
+  });
+
+const NotificationCenter = () =>
+  Widget.Window({
+    name: "notification-center",
+    className: "notification-feat",
+    anchor: ["right", "top", "bottom"],
+    popup: true,
+    focusable: true,
+    visible: false,
+    child: Widget.Box({
+      children: [
+        Widget.EventBox({
+          hexpand: true,
+          connections: [
+            [
+              "button-press-event",
+              () => App.closeWindow("notification-center"),
+            ],
+          ],
+        }),
+        Widget.Box({
+          vertical: true,
+          children: [Header(), NotificationList()],
+        }),
+      ],
+    }),
+  });
+
+const NotificationsPopupWindow = () =>
+  Widget.Window({
+    name: "popup-window",
+    className: "notification-feat",
+    anchor: ["top"],
+    child: PopupList(),
+  });
+
 // layout of the bar
 const Left = (monitorName) =>
   Widget.Box({
+    className: "left",
     children: [Workspaces(monitorName)],
   });
 
 const Center = () =>
   Widget.Box({
+    className: "center",
     children: [DateBox()],
   });
 
 const Right = () =>
   Widget.Box({
+    className: "right",
     spacing: 12,
     halign: "end",
     children: [
@@ -467,6 +562,7 @@ const Right = () =>
       BatteryLabel(),
       Volume(),
       Mic(),
+      Notification(),
       SysTray(),
       Clock(),
     ],
@@ -544,5 +640,7 @@ export default {
   windows: forAllMonitors(Bar)
     .concat(Calendar())
     .concat(CalendarEvents())
-    .concat(SsidPopup()),
+    .concat(SsidPopup())
+    .concat(NotificationsPopupWindow())
+    .concat(NotificationCenter()),
 };
