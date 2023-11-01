@@ -1,6 +1,5 @@
 // importing
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
-import Mpris from "resource:///com/github/Aylur/ags/service/mpris.js";
 import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
 import Battery from "resource:///com/github/Aylur/ags/service/battery.js";
 import SystemTray from "resource:///com/github/Aylur/ags/service/systemtray.js";
@@ -116,30 +115,6 @@ const Notification = () =>
             ],
           ],
         }),
-      ],
-    }),
-  });
-
-const Media = () =>
-  Widget.Button({
-    className: "media",
-    onPrimaryClick: () => Mpris.getPlayer("")?.playPause(),
-    onScrollUp: () => Mpris.getPlayer("")?.next(),
-    onScrollDown: () => Mpris.getPlayer("")?.previous(),
-    child: Widget.Label({
-      connections: [
-        [
-          Mpris,
-          (self) => {
-            const mpris = Mpris.getPlayer("");
-            // mpris player can be undefined
-            if (mpris)
-              self.label = `${mpris.trackArtists.join(", ")} - ${
-                mpris.trackTitle
-              }`;
-            else self.label = "Nothing is playing";
-          },
-        ],
       ],
     }),
   });
@@ -385,6 +360,14 @@ const GithubPR = () =>
     }),
   });
 
+const markupTransform = (unsafe) => {
+  if (!unsafe) return unsafe;
+
+  return unsafe.replaceAll('&', '&amp;')
+   .replaceAll('<', '&lt;')
+   .replaceAll('>', '&gt;');
+};
+
 const CalendarEvents = ({ anchor = ["top", "right"], layout = "top right" } = {}) =>
   PopupWindow({
     name: "calendarEvents",
@@ -447,10 +430,12 @@ const CalendarEvents = ({ anchor = ["top", "right"], layout = "top right" } = {}
                     vertical: true,
                     children: eventDay.events.map((event) =>
                       Widget.Label({
+                        name: "id-" + event.uid,
                         className: "event-line",
-                        label: `${event.startTime}-${event.endTime}: ${event.title}`,
+                        label: `${event.startTime}-${event.endTime}: ${markupTransform(event.title)}${event.repeatSymbol}`,
                         justification: "left",
                         xalign: 0,
+                        useMarkup: true,
                       })
                     ),
                   }),
@@ -471,6 +456,7 @@ const CalendarNextEvent = () =>
       children: [
         Widget.Icon("x-office-calendar-symbolic"),
         Widget.Label({
+          useMarkup: true,
           connections: [
             [
               KhalService,
@@ -480,7 +466,7 @@ const CalendarNextEvent = () =>
                   return;
                 }
                 const event = KhalService.calendarEvents[0];
-                self.label = `${event.startTime}-${event.endTime}: ${event.title}`;
+                self.label = `${event.startTime}-${event.endTime}: ${markupTransform(event.title)}${event.repeatSymbol}`;
               },
             ],
           ],
