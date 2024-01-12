@@ -11,7 +11,9 @@ const Padding = windowName => Widget.EventBox({
 });
 
 const PopupRevealer = (windowName, transition, child) => Widget.Box({
-    style: 'padding: 1px;',
+    style: {
+      padding: "1px",
+    },
     child: Widget.Revealer({
         transition,
         child,

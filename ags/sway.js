@@ -74,6 +74,9 @@ class Sway extends Service {
         submap: ["string"],
         "workspace-added": ["string"],
         "workspace-removed": ["string"],
+        "monitor-added": ['string'],
+        "monitor-removed": ['string'],
+        "refreshed-monitors": [],
       },
       {
         active: ["jsobject"],
@@ -116,29 +119,22 @@ class Sway extends Service {
     const command = "/usr/bin/swaymsg";
     const args = ["-m", "-t", "subscribe", '["workspace"]'];
 
-    try {
-      const [success, _, __, out_fd] = GLib.spawn_async_with_pipes(
-        null,
-        [command].concat(args),
-        null,
-        GLib.SpawnFlags.SEARCH_PATH,
-        null
-      );
+    const [success, _, __, out_fd] = GLib.spawn_async_with_pipes(
+      null,
+      [command].concat(args),
+      null,
+      GLib.SpawnFlags.SEARCH_PATH,
+      null
+    );
 
-      if (!success) {
-        console.error(
-          "Error trying to listen to Sway changes (swaymsg -t subscribe)."
-        );
-        return;
-      }
-
-      const stdoutPipe = new Gio.DataInputStream({
-        base_stream: new Gio.UnixInputStream({ fd: out_fd }),
-      });
-      this._watchSubscribeCommand(stdoutPipe);
-    } catch (err) {
-      console.error(err);
+    if (!success) {
+      return;
     }
+
+    const stdoutPipe = new Gio.DataInputStream({
+      base_stream: new Gio.UnixInputStream({ fd: out_fd }),
+    });
+    this._watchSubscribeCommand(stdoutPipe);
 
     this._active.connect("changed", () => this.emit("changed"));
     ["monitor", "workspace"].forEach((active) =>
@@ -169,6 +165,7 @@ class Sway extends Service {
       this._monitors = new Map();
       const json = JSON.parse(monitors);
       let focusedData = null;
+
       json.forEach((monitor, index) => {
         this._monitors.set(monitor.id, { ...monitor, index });
         if (monitor.focused) {
@@ -239,6 +236,7 @@ class Sway extends Service {
         case "empty":
           await this._syncWorkspaces();
           await this._syncMonitors();
+          // this.emit('refreshed-monitors');
           this.emit("workspace-removed", "");
           break;
         case "move":

@@ -2,13 +2,17 @@
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
 import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
 import Battery from "resource:///com/github/Aylur/ags/service/battery.js";
+
 import SystemTray from "resource:///com/github/Aylur/ags/service/systemtray.js";
+
 import App from "resource:///com/github/Aylur/ags/app.js";
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import { execAsync } from "resource:///com/github/Aylur/ags/utils.js";
 import Sway from "./sway.js";
 import Network from "resource:///com/github/Aylur/ags/service/network.js";
-import PopupWindow from "./popupWindow.js";
+
+import PopupWindow from "./PopupWindow2.js";
+
 import GLib from "gi://GLib";
 import KhalService from "./khalService.js";
 import {
@@ -30,7 +34,7 @@ const getWorkspaceClassName = (ws) => {
 
 const Workspaces = (monitorName) =>
   Widget.Box({
-    className: "workspaces",
+    class_name: "workspaces",
     connections: [
       [
         Sway.active.workspace,
@@ -41,7 +45,7 @@ const Workspaces = (monitorName) =>
               return Widget.Button({
                 onClicked: () => execAsync(`swaymsg workspace ${i.name}`),
                 child: Widget.Label(`${i.name}`),
-                className: getWorkspaceClassName(i),
+                class_name: getWorkspaceClassName(i),
               });
             });
         },
@@ -51,7 +55,7 @@ const Workspaces = (monitorName) =>
 
 const Clock = () =>
   Widget.Label({
-    className: "clock",
+    class_name: "clock",
     connections: [
       [
         1000,
@@ -65,7 +69,7 @@ const Clock = () =>
 
 const DateBox = () =>
   Widget.Button({
-    className: "date",
+    class_name: "date",
     onClicked: () => App.toggleWindow("dashboard"),
     connections: [
       [
@@ -82,7 +86,7 @@ const DateBox = () =>
 // because the Notifications module is a notification daemon itself
 const Notification = () =>
   Widget.Button({
-    className: "notification",
+    class_name: "notification",
     onClicked: () => App.toggleWindow("notification-center"),
     child: Widget.Box({
       spacing: 0,
@@ -105,7 +109,7 @@ const Notification = () =>
           ],
         }),
         Widget.Label({
-          className: "emblem",
+          class_name: "emblem",
           binds: [
             [
               "label",
@@ -121,7 +125,7 @@ const Notification = () =>
 
 const Volume = () =>
   Widget.Box({
-    className: "volume",
+    class_name: "volume",
     children: [
       Widget.Stack({
         items: [
@@ -158,7 +162,7 @@ const Volume = () =>
 
 const Mic = () =>
   Widget.Box({
-    className: "mic",
+    class_name: "mic",
     children: [
       Widget.Stack({
         items: [
@@ -185,7 +189,7 @@ const Mic = () =>
 
 const BatteryLabel = () =>
   Widget.Box({
-    className: "battery",
+    class_name: "battery",
     children: [
       Widget.Icon({
         connections: [
@@ -208,25 +212,27 @@ const SysTray = () =>
       [
         SystemTray,
         (self) => {
-          self.children = SystemTray.items.map((item) =>
-            Widget.Button({
-              child: Widget.Icon({ binds: [["icon", item, "icon"]] }),
+          self.children = SystemTray.items.map((item) => {
+            return Widget.Button({
+              child: Widget.Icon({
+                binds: [["icon", item, "icon"]]
+              }),
               onPrimaryClick: (_, event) => item.activate(event),
               onSecondaryClick: (_, event) => item.openMenu(event),
               binds: [["tooltip-markup", item, "tooltip-markup"]],
-            })
-          );
+            });
+          });
         },
       ],
     ],
   });
 
-const SsidPopup = ({ anchor = ["top", "right"], layout = "top" } = {}) =>
+const SsidPopup = () =>
   PopupWindow({
     name: "ssidPopup",
-    layout,
-    anchor,
-    content: Widget.Box({
+    anchor: ['top', 'right'],
+    transition: 'slide_down',
+    child: Widget.Box({
       vertical: true,
       children: [
         Widget.Label({
@@ -330,14 +336,14 @@ const GithubPR = () =>
               "NoPending",
               Widget.Icon({
                 icon: "emblem-ok-symbolic",
-                className: "emblem ok",
+                class_name: "emblem ok",
               }),
             ],
             [
               "PendingPR",
               Widget.Icon({
                 icon: "dialog-warning-symbolic",
-                className: "emblem nok",
+                class_name: "emblem nok",
               }),
             ],
           ],
@@ -363,19 +369,20 @@ const GithubPR = () =>
 const markupTransform = (unsafe) => {
   if (!unsafe) return unsafe;
 
-  return unsafe.replaceAll('&', '&amp;')
-   .replaceAll('<', '&lt;')
-   .replaceAll('>', '&gt;');
+  return unsafe
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
 };
 
-const CalendarEvents = ({ anchor = ["top", "right"], layout = "top right" } = {}) =>
+const CalendarEvents = () =>
   PopupWindow({
-    name: "calendarEvents",
-    layout,
-    anchor,
-    content: Widget.Box({
+    name: "calendar-events",
+    anchor:["top", "right"],
+    transition: 'slide_down',
+    child: Widget.Box({
       vertical: true,
-      className: "calender-events-container",
+      class_name: "calender-events-container",
       connections: [
         [
           KhalService,
@@ -400,14 +407,14 @@ const CalendarEvents = ({ anchor = ["top", "right"], layout = "top right" } = {}
               return Widget.Box({
                 vertical: true,
                 spacing: 10,
-                className: "event-day",
+                class_name: "event-day",
                 children: [
                   Widget.Box({
                     hexpand: true,
                     children: [
                       // Add function to format date
                       Widget.Label({
-                        className: "header",
+                        class_name: "header",
                         justification: "left",
                         xalign: 0,
                         hexpand: true,
@@ -415,7 +422,7 @@ const CalendarEvents = ({ anchor = ["top", "right"], layout = "top right" } = {}
                         visible: dayName != "",
                       }),
                       Widget.Label({
-                        className: "header",
+                        class_name: "header",
                         justification: "right",
                         xalign: 1,
                         label: date.toLocaleDateString("pt-BR", {
@@ -431,8 +438,12 @@ const CalendarEvents = ({ anchor = ["top", "right"], layout = "top right" } = {}
                     children: eventDay.events.map((event) =>
                       Widget.Label({
                         name: "id-" + event.uid,
-                        className: "event-line",
-                        label: `${event.startTime}-${event.endTime}: ${markupTransform(event.title)}${event.repeatSymbol}`,
+                        class_name: "event-line",
+                        label: `${event.startTime}-${
+                          event.endTime
+                        }: ${markupTransform(event.title)}${
+                          event.repeatSymbol
+                        }`,
                         justification: "left",
                         xalign: 0,
                         useMarkup: true,
@@ -450,34 +461,39 @@ const CalendarEvents = ({ anchor = ["top", "right"], layout = "top right" } = {}
 
 const CalendarNextEvent = () =>
   Widget.Button({
-    onClicked: () => App.toggleWindow("calendarEvents"),
+    onClicked: () => App.toggleWindow("calendar-events"),
     child: Widget.Box({
       spacing: 5,
-      children: [
-        Widget.Icon("x-office-calendar-symbolic"),
-        Widget.Label({
-          useMarkup: true,
-          connections: [
-            [
-              KhalService,
-              (self) => {
-                if (!KhalService.calendarEvents?.length) {
-                  self.label = "No Next Event";
-                  return;
-                }
-                const event = KhalService.calendarEvents[0];
-                self.label = `${event.startTime}-${event.endTime}: ${markupTransform(event.title)}${event.repeatSymbol}`;
-              },
-            ],
-          ],
-        }),
+      connections: [
+        [
+          KhalService,
+          (self) => {
+            const nextEvent = !KhalService.calendarEvents?.length
+              ? null
+              : KhalService.calendarEvents[0];
+
+            self.children = [
+              Widget.Icon("x-office-calendar-symbolic"),
+              Widget.Label({
+                useMarkup: true,
+                label: !nextEvent
+                  ? "No Next Event"
+                  : `${nextEvent.startTime}-${
+                      nextEvent.endTime
+                    }: ${markupTransform(nextEvent.title)}${
+                      nextEvent.repeatSymbol
+                    }`,
+              }),
+            ];
+          },
+        ],
       ],
     }),
   });
 
 const Header = () =>
   Widget.Box({
-    className: "header",
+    class_name: "header",
     children: [
       Widget.Label("Do Not Disturb"),
       DNDSwitch(),
@@ -487,13 +503,11 @@ const Header = () =>
   });
 
 const NotificationCenter = () =>
-  Widget.Window({
+  PopupWindow({
     name: "notification-center",
-    className: "notification-feat",
+    class_name: "notification-feat",
     anchor: ["right", "top", "bottom"],
-    popup: true,
-    focusable: true,
-    visible: false,
+    transition: 'slide_down',
     child: Widget.Box({
       children: [
         Widget.EventBox({
@@ -516,7 +530,7 @@ const NotificationCenter = () =>
 const NotificationsPopupWindow = () =>
   Widget.Window({
     name: "popup-window",
-    className: "notification-feat",
+    class_name: "notification-feat",
     anchor: ["top"],
     child: PopupList(),
   });
@@ -524,22 +538,23 @@ const NotificationsPopupWindow = () =>
 // layout of the bar
 const Left = (monitorName) =>
   Widget.Box({
-    className: "left",
+    class_name: "left",
     children: [Workspaces(monitorName)],
   });
 
 const Center = () =>
   Widget.Box({
-    className: "center",
+    class_name: "center",
+    hexpand: true,
     children: [DateBox()],
   });
 
 const Right = () =>
   Widget.Box({
-    className: "right",
+    class_name: "end",
     spacing: 12,
-    halign: "end",
     children: [
+      Widget.Box({ hexpand: true }),
       CalendarNextEvent(),
       GithubPR(),
       ComputerResources(),
@@ -557,14 +572,14 @@ const Right = () =>
 const Bar = (monitorId, monitorName) =>
   Widget.Window({
     name: `bar-${monitorName}`, // name has to be unique
-    className: "bar",
+    class_name: "bar",
     monitor: monitorId,
     anchor: ["top", "left", "right"],
-    exclusive: true,
+    exclusivity: 'exclusive',
     child: Widget.CenterBox({
-      startWidget: Left(monitorName),
-      centerWidget: Center(),
-      endWidget: Right(),
+      start_widget: Left(monitorName),
+      center_widget: Center(),
+      end_widget: Right(),
     }),
   });
 
@@ -574,7 +589,7 @@ const Clock2 = ({
   ...props
 } = {}) =>
   Widget.Label({
-    className: "clock",
+    class_name: "clock",
     ...props,
     connections: [
       [
@@ -586,11 +601,11 @@ const Clock2 = ({
 const DateColumn = () =>
   Widget.Box({
     vertical: true,
-    className: "datemenu",
+    class_name: "datemenu",
     children: [
       Clock2({ format: "%H:%M" }),
       Widget.Box({
-        className: "calendar",
+        class_name: "calendar",
         children: [
           Widget({
             type: imports.gi.Gtk.Calendar,
@@ -602,13 +617,13 @@ const DateColumn = () =>
     ],
   });
 
-const Calendar = ({ anchor = ["top"], layout = "top" } = {}) =>
+const Calendar = () =>
   PopupWindow({
     name: "dashboard",
-    layout,
-    anchor,
-    content: Widget.Box({
-      className: "dashboard",
+    anchor: ['top'],
+    transition: 'slide_down',
+    child: Widget.Box({
+      class_name: "dashboard",
       children: [DateColumn()],
     }),
   });
@@ -623,10 +638,13 @@ function forAllMonitors(widget) {
 // exporting the config so ags can manage the windows
 export default {
   style: App.configDir + "/style.css",
-  windows: forAllMonitors(Bar)
+  windows: 
+  forAllMonitors(Bar)
     .concat(Calendar())
     .concat(CalendarEvents())
     .concat(SsidPopup())
     .concat(NotificationsPopupWindow())
     .concat(NotificationCenter()),
 };
+
+
