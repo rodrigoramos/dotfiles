@@ -77,6 +77,7 @@ class Sway extends Service {
         "monitor-added": ['string'],
         "monitor-removed": ['string'],
         "refreshed-monitors": [],
+        "window-changed": ["string"],
       },
       {
         active: ["jsobject"],
@@ -117,7 +118,7 @@ class Sway extends Service {
     this._syncWorkspaces();
 
     const command = "/usr/bin/swaymsg";
-    const args = ["-m", "-t", "subscribe", '["workspace"]'];
+    const args = ["-m", "-t", "subscribe", '["workspace", "window"]'];
 
     const [success, _, __, out_fd] = GLib.spawn_async_with_pipes(
       null,
@@ -226,7 +227,9 @@ class Sway extends Service {
       switch (change) {
         case "focus":
           if (event.old) this._updateWorkspace(event.old);
-          this._updateWorkspace({ ...event.current, focused: true });
+          if (event.current) this._updateWorkspace({ ...event.current, focused: true });
+          if (event.container) this.emit("window-changed", event.container.app_id);
+
           break;
         case "init":
           await this._syncWorkspaces();

@@ -11,7 +11,7 @@ import { execAsync } from "resource:///com/github/Aylur/ags/utils.js";
 import Sway from "./sway.js";
 import Network from "resource:///com/github/Aylur/ags/service/network.js";
 
-import PopupWindow from "./PopupWindow2.js";
+import PopupWindow from "./popupWindow3.js";
 
 import GLib from "gi://GLib";
 import KhalService from "./khalService.js";
@@ -312,6 +312,7 @@ const VpnIndicator = () =>
     ],
   });
 
+
 // const memoryIcon = "\ue266";
 const ComputerResources = () =>
   Widget.Box({
@@ -508,6 +509,11 @@ const NotificationCenter = () =>
     class_name: "notification-feat",
     anchor: ["right", "top", "bottom"],
     transition: 'slide_down',
+    setup: (self) => self.hook(Sway, (_, value) => {
+      // Close notifications when open application
+      for (let pendingNotification of Notifications.notifications) {
+        if (pendingNotification.app_name.toUpperCase() == value?.toUpperCase()) pendingNotification.close();
+    }, "window-changed"),
     child: Widget.Box({
       children: [
         Widget.EventBox({
@@ -534,6 +540,8 @@ const NotificationsPopupWindow = () =>
     anchor: ["top"],
     child: PopupList(),
   });
+
+
 
 // layout of the bar
 const Left = (monitorName) =>
@@ -583,40 +591,6 @@ const Bar = (monitorId, monitorName) =>
     }),
   });
 
-const Clock2 = ({
-  format = "%H:%M:%S %B %e. %A",
-  interval = 1000,
-  ...props
-} = {}) =>
-  Widget.Label({
-    class_name: "clock",
-    ...props,
-    connections: [
-      [
-        interval,
-        (label) => (label.label = GLib.DateTime.new_now_local().format(format)),
-      ],
-    ],
-  });
-const DateColumn = () =>
-  Widget.Box({
-    vertical: true,
-    class_name: "datemenu",
-    children: [
-      Clock2({ format: "%H:%M" }),
-      Widget.Box({
-        class_name: "calendar",
-        children: [
-          Widget({
-            type: imports.gi.Gtk.Calendar,
-            hexpand: true,
-            halign: "center",
-          }),
-        ],
-      }),
-    ],
-  });
-
 const Calendar = () =>
   PopupWindow({
     name: "dashboard",
@@ -624,7 +598,7 @@ const Calendar = () =>
     transition: 'slide_down',
     child: Widget.Box({
       class_name: "dashboard",
-      children: [DateColumn()],
+      children: [Widget.Calendar()],
     }),
   });
 
