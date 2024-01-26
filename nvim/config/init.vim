@@ -1,8 +1,11 @@
 set runtimepath^=~/.vim runtimepath+=~/.vim/after
 let &packpath=&runtimepath
 
+let g:loaded_node_provider=1
 source ~/.vimrc
 source ~/.config/nvim/coc.vim
+
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 call plug#begin("~/.vim/plugged")
   "Plugin Section
@@ -13,13 +16,15 @@ call plug#begin("~/.vim/plugged")
   " Plug 'artanikin/vim-synthwave84'
   " Plug 'yassinebridi/vim-purpura'
   " Plug 'flazz/vim-colorschemes'
+  Plug 'bluz71/vim-nightfly-guicolors', { 'as': 'nightfly' }
+  Plug 'mhartington/oceanic-next'
 
   "" File Explorer
   " NERD Tree
-  " Plug 'scrooloose/nerdtree'
+  "Plug 'scrooloose/nerdtree'
   "Plug 'ryanoasis/vim-devicons'
   
- " Nvim Tree
+  " Nvim Tree
   Plug 'nvim-tree/nvim-web-devicons' 
   Plug 'nvim-tree/nvim-tree.lua'
 
@@ -31,19 +36,18 @@ call plug#begin("~/.vim/plugged")
   
   " Language Client
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
-  Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} 
+  Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
   " Plug 'David-Kunz/jester'
   " Plug 'sheerun/vim-polyglot'
 
   " Debug
   "Plug 'puremourning/vimspector'
-
   "Plug 'vim-test/vim-test'
 
   " Typescript highlighting
-   Plug 'leafgarland/typescript-vim'
+  " Plug 'leafgarland/typescript-vim'
   " Plug 'mxw/vim-jsx'
-  Plug 'pangloss/vim-javascript'
+  " Plug 'pangloss/vim-javascript'
 
   " Barra Superior
   Plug 'kyazdani42/nvim-web-devicons'
@@ -62,12 +66,14 @@ call plug#begin("~/.vim/plugged")
   Plug 'gko/vim-coloresque' " Show hexa colors 
 
   " Notes!
-  Plug 'xolox/vim-misc'
-  Plug 'xolox/vim-notes'
+  " Plug 'xolox/vim-misc'
+  " Plug 'xolox/vim-notes'
 
   " Table
-  Plug 'dhruvasagar/vim-table-mode'
+  " Plug 'dhruvasagar/vim-table-mode'
 
+  " Linha de rodapé
+  Plug 'itchyny/lightline.vim'
 call plug#end()
 
 function! VimspectorJestDebugOnCursor(cmd)
@@ -95,24 +101,29 @@ if (has('termguicolors'))
   set termguicolors
 endif
 
-let g:coc_global_extensions = ['coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-angular', 'coc-eslint', 'coc-highlight' ]
+let g:coc_global_extensions = ['coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-angular', 'coc-eslint', 'coc-highlight', 'coc-elixir' ]
 
 " Highlight Yank
 let g:highlightedyank_highlight_duration = 500
 
+" Theme
+syntax enable
+syntax on
+
+" let g:oceanic_next_terminal_bold = 1
+" let g:oceanic_next_terminal_italic = 1
 " let g:material_terminal_italics = 1
 " let g:material_theme_style = 'darker-community'
 " colorscheme material
 " colorscheme minimalist
 " colorscheme purpura 
 
-colorscheme gruvbox
+" colorscheme gruvbox
 colorscheme molokai
+" colorscheme nightfly
+" colorscheme OceanicNext
 
 
-" Theme
-syntax on
-syntax enable
 
 " Make background transparent
 "hi Normal guibg=NONE ctermbg=NONE

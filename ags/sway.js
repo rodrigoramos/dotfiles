@@ -248,6 +248,7 @@ class Sway extends Service {
           await this._syncMonitors();
           break;
         case "urgent":
+          if (!event.current) break;
           this._updateWorkspace(event.current);
           this.emit("urgent-window", event.current.name);
         default:

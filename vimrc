@@ -15,8 +15,7 @@ set nocompatible                " no compatibility legacy v1
 syntax enable
 set encoding=utf-8
 
-set background=dark
-"colorscheme gruvbox
+" set background=dark
 
 set clipboard=unnamedplus
 
@@ -27,3 +26,6 @@ if exists('+termguicolors')
 endif
 
 set guitablabel=%N/\ %t\ %M
+
+set t_ZH=[3m
+set t_ZR=[23m

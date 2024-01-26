@@ -39,6 +39,11 @@
   font-size: 10px;
 }
 
+.error {
+  color: red;
+  font-weight: bold;
+  font-size: 10px;
+}
 .notification {
   color: rgba(247, 247, 247, 1);
 }

@@ -10,10 +10,10 @@ import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import { execAsync } from "resource:///com/github/Aylur/ags/utils.js";
 import Sway from "./sway.js";
 import Network from "resource:///com/github/Aylur/ags/service/network.js";
+import Variable from 'resource:///com/github/Aylur/ags/variable.js';
 
 import PopupWindow from "./popupWindow3.js";
 
-import GLib from "gi://GLib";
 import KhalService from "./khalService.js";
 import {
   NotificationList,
@@ -27,7 +27,7 @@ import {
 // then you can use it by calling simply calling it
 
 const getWorkspaceClassName = (ws) => {
-  if (Sway.active.workspace.name == ws.name) return "focused";
+  if (Sway.active.workspace.name == ws?.name) return "focused";
   else if (ws.urgent) return "urgent";
   return "";
 };
@@ -35,52 +35,39 @@ const getWorkspaceClassName = (ws) => {
 const Workspaces = (monitorName) =>
   Widget.Box({
     class_name: "workspaces",
-    connections: [
-      [
-        Sway.active.workspace,
-        (self) => {
-          self.children = Sway.workspaces
-            .filter((w) => w.output === monitorName)
-            .map((i) => {
-              return Widget.Button({
-                onClicked: () => execAsync(`swaymsg workspace ${i.name}`),
-                child: Widget.Label(`${i.name}`),
-                class_name: getWorkspaceClassName(i),
-              });
+  }).hook(
+    Sway.active.workspace,
+      (self) => {
+        self.children = Sway.workspaces
+          .filter((w) => w.output === monitorName)
+          .map((i) => {
+            return Widget.Button({
+              onClicked: () => execAsync(`swaymsg workspace ${i.name}`),
+              child: Widget.Label(`${i.name}`),
+              class_name: getWorkspaceClassName(i),
             });
-        },
-      ],
-    ],
-  });
+          });
+        }
+    );
+
+const time = Variable("", {
+    poll: [1000, "date +%H:%M"],
+});
 
 const Clock = () =>
   Widget.Label({
     class_name: "clock",
-    connections: [
-      [
-        1000,
-        (self) =>
-          execAsync(["date", "+%H:%M"])
-            .then((date) => (self.label = date))
-            .catch(console.error),
-      ],
-    ],
-  });
+  }).bind("label", time);
+
+const date = Variable("", {
+    poll: [1000, "date '+%a, %e %b %Y'"],
+});
 
 const DateBox = () =>
   Widget.Button({
     class_name: "date",
     onClicked: () => App.toggleWindow("dashboard"),
-    connections: [
-      [
-        60000,
-        (self) =>
-          execAsync(["date", "+%a, %e %b %Y"])
-            .then((date) => (self.label = date))
-            .catch(console.error),
-      ],
-    ],
-  });
+  }).bind("label", date);
 
 // we don't need dunst or any other notification daemon
 // because the Notifications module is a notification daemon itself
@@ -93,31 +80,19 @@ const Notification = () =>
       children: [
         Widget.Stack({
           items: [
-            [
-              "enabled",
-              Widget.Icon("preferences-system-notifications-symbolic"),
-            ],
+            ["enabled", Widget.Icon("preferences-system-notifications-symbolic")],
             ["disabled", Widget.Icon("notifications-disabled-symbolic")],
-          ],
-          connections: [
-            [
+          ]}).hook(
               Notifications,
               (self) => {
                 self.shown = Notifications.dnd ? "disabled" : "enabled";
               },
-            ],
-          ],
-        }),
+            ),
         Widget.Label({
           class_name: "emblem",
-          binds: [
-            [
-              "label",
-              Notifications,
-              "notifications",
-              (p) => p.length.toString(),
-            ],
-          ],
+          label: Notifications
+            .bind("notifications")
+            .transform(m => m.length.toString())
         }),
       ],
     }),
@@ -129,34 +104,29 @@ const Volume = () =>
     children: [
       Widget.Stack({
         items: [
-          // tuples of [string, Widget]
           ["101", Widget.Icon("audio-volume-overamplified-symbolic")],
           ["67", Widget.Icon("audio-volume-high-symbolic")],
           ["34", Widget.Icon("audio-volume-medium-symbolic")],
           ["1", Widget.Icon("audio-volume-low-symbolic")],
           ["0", Widget.Icon("audio-volume-muted-symbolic")],
-        ],
-        connections: [
-          [
-            Audio,
-            (self) => {
-              if (!Audio.speaker) return;
+        ]
+      }).hook(Audio,
+        (self) => {
+          if (!Audio.speaker) return;
 
-              if (Audio.speaker.stream.isMuted) {
-                self.shown = "0";
-                return;
-              }
+          if (Audio.speaker.stream.isMuted) {
+            self.shown = "0";
+            return;
+          }
 
-              const show = [101, 67, 34, 1, 0].find(
-                (threshold) => threshold <= Audio.speaker.volume * 100
-              );
+          const show = [101, 67, 34, 1, 0].find(
+            (threshold) => threshold <= Audio.speaker.volume * 100
+          );
 
-              self.shown = `${show}`;
-            },
-            "speaker-changed",
-          ],
-        ],
-      }),
+          self.shown = `${show}`;
+        },
+        "speaker-changed",
+      ),
     ],
   });
 
@@ -169,21 +139,17 @@ const Mic = () =>
           // tuples of [string, Widget]
           ["unmuted", Widget.Icon("microphone-sensitivity-high-symbolic")],
           ["muted", Widget.Icon("microphone-sensitivity-muted-symbolic")],
-        ],
-        connections: [
-          [
-            Audio,
-            (self) => {
-              if (!Audio.microphone) return;
+        ]})
+      .hook(Audio,
+        (self) => {
+          if (!Audio.microphone) return;
 
-              self.shown = Audio.microphone.stream.isMuted
-                ? "muted"
-                : "unmuted";
-            },
-            "microphone-changed",
-          ],
-        ],
-      }),
+          self.shown = Audio.microphone.stream.isMuted
+            ? "muted"
+            : "unmuted";
+        },
+        "microphone-changed"
+      )
     ],
   });
 
@@ -191,41 +157,34 @@ const BatteryLabel = () =>
   Widget.Box({
     class_name: "battery",
     children: [
-      Widget.Icon({
-        connections: [
-          [
-            Battery,
-            (self) => {
-              self.icon = `battery-level-${
-                Math.floor(Battery.percent / 10) * 10
-              }-symbolic`;
-            },
-          ],
-        ],
-      }),
+      Widget
+        .Icon()
+        .bind(
+          'icon',
+          Battery,
+          'percent',
+          (p) => `battery-level-${Math.floor(p / 10) * 10}-symbolic`)
     ],
   });
 
 const SysTray = () =>
-  Widget.Box({
-    connections: [
-      [
-        SystemTray,
-        (self) => {
-          self.children = SystemTray.items.map((item) => {
-            return Widget.Button({
-              child: Widget.Icon({
-                binds: [["icon", item, "icon"]]
-              }),
-              onPrimaryClick: (_, event) => item.activate(event),
-              onSecondaryClick: (_, event) => item.openMenu(event),
-              binds: [["tooltip-markup", item, "tooltip-markup"]],
-            });
-          });
-        },
-      ],
-    ],
-  });
+  Widget
+    .Box()
+    .bind(
+      'children',
+      SystemTray,
+      'item',
+      (children) => {
+        children = SystemTray.items.map((item) => {
+          return Widget.Button({
+            child: Widget.Icon().bind("icon", item, "icon"),
+            onPrimaryClick: (_, event) => item.activate(event),
+            onSecondaryClick: (_, event) => item.openMenu(event),
+          })
+          .bind("tooltip-markup", item, "tooltip-markup");
+        });
+      },
+  );
 
 const SsidPopup = () =>
   PopupWindow({
@@ -235,82 +194,46 @@ const SsidPopup = () =>
     child: Widget.Box({
       vertical: true,
       children: [
-        Widget.Label({
-          connections: [
-            [
-              Network,
-              (self) => {
-                self.label = Network.wifi?.ssid;
-              },
-            ],
-          ],
-        }),
-        Widget.Label({
-          connections: [
-            [
-              Network,
-              (self) => {
-                self.label = Network.wifi?.strength.toString() + "%";
-              },
-            ],
-          ],
-        }),
-      ],
-    }),
+        Widget.Label().bind('label', Network, 'wifi', (wifi) => wifi?.ssid),
+        Widget.Label().bind('label', Network, 'wifi', (wifi) => wifi?.strength.toString() + "%")
+      ]
+    })
   });
 
 const WifiIndicator = () =>
   Widget.Button({
-    child: Widget.Icon({
-      connections: [
-        [
-          Network,
-          (self) => {
-            if (Network.wifi?.iconName) self.icon = Network.wifi.iconName;
-          },
-        ],
-      ],
-    }),
-    onClicked: () => App.toggleWindow("ssidPopup"),
+    child: Widget
+      .Icon()
+      .bind('icon', Network, 'wifi',
+        (wifi) => wifi?.iconName)
   });
 
 const WiredIndicator = () =>
-  Widget.Icon({
-    connections: [
-      [
-        Network,
-        (self) => {
-          self.icon = Network.wired.iconName;
-        },
-      ],
-    ],
-  });
+  Widget
+    .Icon()
+    .bind('icon', Network, 'wired',
+      (wired) => wired?.iconName);
 
 const NetworkIndicator = () =>
   Widget.Stack({
     items: [
       ["wifi", WifiIndicator()],
       ["wired", WiredIndicator()],
-    ],
-    binds: [["shown", Network, "primary", (p) => p || "wifi"]],
-  });
+    ]})
+  .bind("shown", Network, "primary", (p) => p || "wifi");
+
+
+const vpnSessionList = Variable("", {
+    poll: [60000, "openvpn3 sessions-list"],
+});
 
 const VpnIndicator = () =>
   Widget.Icon({
     icon: "network-vpn-symbolic",
-    connections: [
-      [
-        60000,
-        (self) => {
-          execAsync("openvpn3 sessions-list")
-            .then((out) => {
-              self.visible = !out.includes("No sessions available");
-            })
-            .catch(console.error);
-        },
-      ],
-    ],
-  });
+    visible: vpnSessionList
+      .bind()
+      .transform(out => !out.includes("No sessions available"))
+  })
 
 
 // const memoryIcon = "\ue266";
@@ -324,6 +247,10 @@ const ComputerResources = () =>
   });
 
 const githubIcon = "\uf113";
+const ghPrStatusOutput = Variable("", {
+  poll: [120000, "/home/rodrigosilva/.config/ags/github-pr.sh"],
+});
+
 const GithubPR = () =>
   Widget.Button({
     onClicked: () =>
@@ -347,21 +274,21 @@ const GithubPR = () =>
                 class_name: "emblem nok",
               }),
             ],
-          ],
-          connections: [
             [
-              120000, // 2mins
-              (self) =>
-                execAsync("/home/rodrigosilva/.config/ags/github-pr.sh")
-                  .then((output) => {
-                    // TODO: Move this code to its Service
-                    output = output.replaceAll("\u000d", ""); // Remove color
-                    const jsonOutput = JSON.parse(output);
-                    self.shown = jsonOutput.count ? "PendingPR" : "NoPending";
-                  })
-                  .catch(console.error),
+              "error",
+              Widget.Icon({
+                icon: "dialog-error-symbolic",
+                class_name: "emblem error",
+              }),
             ],
           ],
+          shown: ghPrStatusOutput.bind().transform(out => {
+            if (!out) return "error";
+            // TODO: Move this code to its Service
+            const outNoColor = out.replaceAll("\u000d", ""); // Remove color
+            const jsonOutput = JSON.parse(outNoColor);
+            return jsonOutput.count ? "PendingPR" : "NoPending";
+          })
         }),
       ],
     }),
@@ -383,113 +310,105 @@ const CalendarEvents = () =>
     transition: 'slide_down',
     child: Widget.Box({
       vertical: true,
-      class_name: "calender-events-container",
-      connections: [
-        [
-          KhalService,
-          (self) => {
-            if (!KhalService.eventsByDay?.length) {
-              return;
-            }
+      class_name: "calender-events-container"
+    }).hook(
+      KhalService,
+      (self) => {
+        if (!KhalService.eventsByDay?.length) {
+          return;
+        }
 
-            self.children = KhalService.eventsByDay.map((eventDay) => {
-              // Add move this code to KhalService and add defensive code;
-              const regex = /(\d\d)\/(\d\d)\/(\d\d\d\d)/;
-              const match = regex.exec(eventDay.day);
-              const date = new Date(match[3], match[2] - 1, match[1]);
+        self.children = KhalService.eventsByDay.map((eventDay) => {
+          // Add move this code to KhalService and add defensive code;
+          const regex = /(\d\d)\/(\d\d)\/(\d\d\d\d)/;
+          const match = regex.exec(eventDay.day);
+          const date = new Date(match[3], match[2] - 1, match[1]);
 
-              const dayName =
-                date.getDate() == new Date().getDate()
-                  ? "Today"
-                  : date.getDate() == new Date().getDate() + 1
-                  ? "Tomorrow"
-                  : "Day after Tomorrow";
+          const dayName =
+            date.getDate() == new Date().getDate()
+              ? "Today"
+              : date.getDate() == new Date().getDate() + 1
+              ? "Tomorrow"
+              : "Day after Tomorrow";
 
-              return Widget.Box({
-                vertical: true,
-                spacing: 10,
-                class_name: "event-day",
+          return Widget.Box({
+            vertical: true,
+            spacing: 10,
+            class_name: "event-day",
+            children: [
+              Widget.Box({
+                hexpand: true,
                 children: [
-                  Widget.Box({
+                  Widget.Label({
+                    class_name: "header",
+                    justification: "left",
+                    xalign: 0,
                     hexpand: true,
-                    children: [
-                      // Add function to format date
-                      Widget.Label({
-                        class_name: "header",
-                        justification: "left",
-                        xalign: 0,
-                        hexpand: true,
-                        label: dayName,
-                        visible: dayName != "",
-                      }),
-                      Widget.Label({
-                        class_name: "header",
-                        justification: "right",
-                        xalign: 1,
-                        label: date.toLocaleDateString("pt-BR", {
-                          weekday: "short",
-                          day: "numeric",
-                          month: "short",
-                        }),
-                      }),
-                    ],
+                    label: dayName,
+                    visible: dayName != "",
                   }),
-                  Widget.Box({
-                    vertical: true,
-                    children: eventDay.events.map((event) =>
-                      Widget.Label({
-                        name: "id-" + event.uid,
-                        class_name: "event-line",
-                        label: `${event.startTime}-${
-                          event.endTime
-                        }: ${markupTransform(event.title)}${
-                          event.repeatSymbol
-                        }`,
-                        justification: "left",
-                        xalign: 0,
-                        useMarkup: true,
-                      })
-                    ),
+                  Widget.Label({
+                    class_name: "header",
+                    justification: "right",
+                    xalign: 1,
+                    label: date.toLocaleDateString("pt-BR", {
+                      weekday: "short",
+                      day: "numeric",
+                      month: "short",
+                    }),
                   }),
                 ],
-              });
-            });
-          },
-        ],
-      ],
-    }),
+              }),
+              Widget.Box({
+                vertical: true,
+                children: eventDay.events.map((event) =>
+                  Widget.Label({
+                    name: "id-" + event.uid,
+                    class_name: "event-line",
+                    label: `${event.startTime}-${
+                      event.endTime
+                    }: ${markupTransform(event.title)}${
+                      event.repeatSymbol
+                    }`,
+                    justification: "left",
+                    xalign: 0,
+                    useMarkup: true,
+                  })
+                ),
+              }),
+            ],
+          })
+        })
+      })
   });
 
 const CalendarNextEvent = () =>
   Widget.Button({
     onClicked: () => App.toggleWindow("calendar-events"),
     child: Widget.Box({
-      spacing: 5,
-      connections: [
-        [
-          KhalService,
-          (self) => {
-            const nextEvent = !KhalService.calendarEvents?.length
-              ? null
-              : KhalService.calendarEvents[0];
+      spacing: 5
+    }).hook(
+      KhalService,
+      (self) => {
+        const nextEvent = !KhalService.calendarEvents?.length
+          ? null
+          : KhalService.calendarEvents[0];
 
-            self.children = [
-              Widget.Icon("x-office-calendar-symbolic"),
-              Widget.Label({
-                useMarkup: true,
-                label: !nextEvent
-                  ? "No Next Event"
-                  : `${nextEvent.startTime}-${
-                      nextEvent.endTime
-                    }: ${markupTransform(nextEvent.title)}${
-                      nextEvent.repeatSymbol
-                    }`,
-              }),
-            ];
-          },
-        ],
-      ],
-    }),
+        self.children = [
+          Widget.Icon("x-office-calendar-symbolic"),
+          Widget.Label({
+            useMarkup: true,
+            label: !nextEvent
+              ? "No Next Event"
+              : `${nextEvent.startTime}-${
+                  nextEvent.endTime
+                }: ${markupTransform(nextEvent.title)}${
+                  nextEvent.repeatSymbol
+                }`,
+          }),
+        ];
+      },
+    ),
   });
 
 const Header = () =>
@@ -513,18 +432,14 @@ const NotificationCenter = () =>
       // Close notifications when open application
       for (let pendingNotification of Notifications.notifications) {
         if (pendingNotification.app_name.toUpperCase() == value?.toUpperCase()) pendingNotification.close();
+      }
     }, "window-changed"),
     child: Widget.Box({
       children: [
         Widget.EventBox({
           hexpand: true,
-          connections: [
-            [
-              "button-press-event",
-              () => App.closeWindow("notification-center"),
-            ],
-          ],
-        }),
+        }).on("button-press-event", 
+          () => App.closeWindow("notification-center")),
         Widget.Box({
           vertical: true,
           children: [Header(), NotificationList()],
