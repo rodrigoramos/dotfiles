@@ -173,9 +173,9 @@ const SysTray = () =>
     .bind(
       'children',
       SystemTray,
-      'item',
-      (children) => {
-        children = SystemTray.items.map((item) => {
+      'items',
+      (sysItems) => {
+        return sysItems.map((item) => {
           return Widget.Button({
             child: Widget.Icon().bind("icon", item, "icon"),
             onPrimaryClick: (_, event) => item.activate(event),

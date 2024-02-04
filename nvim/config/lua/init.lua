@@ -19,10 +19,15 @@ require("nvim-tree").setup({
     group_empty = true,
   },
   filters = {
-    dotfiles = true,
+    dotfiles = false,
+    custom = { "^.git$", "^node_modules" } 
   },
+  actions = {
+    open_file = {
+      quit_on_open = true
+    }
+  }
 })
-
 
 -- -- == Barbar Setup == 
 -- require'barbar'.setup {
@@ -50,12 +55,10 @@ require("nvim-tree").setup({
 -- end)
 
 
--- -- Treesitter Setup
--- require'nvim-treesitter.configs'.setup {
---   ensure_installed = { "typescript", "javascript" },
---   highlight = {
---     enable = true,
---   },
--- }
-
+-- Treesitter Setup
+require'nvim-treesitter.configs'.setup {
+  highlight = {
+    enable = true,
+  },
+}
 

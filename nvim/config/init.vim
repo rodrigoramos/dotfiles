@@ -35,8 +35,10 @@ call plug#begin("~/.vim/plugged")
   Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
   
   " Language Client
+  Plug 'elixir-lsp/coc-elixir', {'do': 'yarn install && yarn prepack'}
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
   " Plug 'David-Kunz/jester'
   " Plug 'sheerun/vim-polyglot'
 
@@ -74,6 +76,7 @@ call plug#begin("~/.vim/plugged")
 
   " Linha de rodapé
   Plug 'itchyny/lightline.vim'
+  Plug 'itchyny/vim-gitbranch'
 call plug#end()
 
 function! VimspectorJestDebugOnCursor(cmd)
@@ -158,6 +161,9 @@ nnoremap <A-l> <C-w>l
 " Move to previous/next
 nnoremap <silent>    <C-k> :BufferPrevious<CR>
 nnoremap <silent>    <C-j> :BufferNext<CR>
+
+nnoremap <silent>    <C-h> :Buffers<CR>
+nnoremap <silent>    <C-l> :Buffers<CR>
 
 " Goto buffer in position...
 nnoremap <silent>    <A-1> :BufferGoto 1<CR>
@@ -308,4 +314,22 @@ nnoremap <leader>vi :<C-u>VNgSwitchCSS<CR>
 nnoremap <leader>vo :<C-u>VNgSwitchHTML<CR>
 nnoremap <leader>vp :<C-u>VNgSwitchSpec<CR>
 
+let g:lightline = {
+      \ 'active': {
+      \   'left':  [ [ 'mode', 'paste' ],
+      \              [ 'readonly', 'filename', 'modified', 'folder' ] ],
+      \   'right': [ [ 'gitbranch' ], [ 'fileformat', 'fileencoding', 'filetype', 'percent', 'lineinfo' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'gitbranch#name',
+      \   'folder': 'GitFolderName',
+      \ },
+      \ }
+
+function! GitFolderName ()
+    let dot_git_path = finddir(".git", ".;")
+    return fnamemodify(dot_git_path, ":s?.git??:p:h:t")
+endfunction
+
 source ~/.config/nvim/lua/init.lua 
+
