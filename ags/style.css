@@ -18,6 +18,43 @@
   font-size: 1.1em;
 }
 
+.default-box {
+  background-color: #141414;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  padding: 4px 8px 5px 8px;
+}
+
+.circular-progress-box {
+  margin: 10px;
+}
+
+.circular-progress-box > * {
+  margin: 10px;
+}
+
+.circular-progress {
+  min-width: 70px;
+  min-height: 70px;
+  font-size: 8px;
+  margin: 2px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: aqua;
+}
+
+.circular-progress .icon {
+  font-size: 20px;
+  color: #efefef;
+}
+
+.circular-progress-box .values {
+  font-size: 10px;
+  font-style: italic;
+}
+
+/* .circular-progress cpu { */
+/* } */
+
 .calender-events-container .event-day {
   margin: 8px;
   padding: 8px;
