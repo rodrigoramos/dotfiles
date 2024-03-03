@@ -4,80 +4,82 @@ let &packpath=&runtimepath
 let g:loaded_node_provider=1
 source ~/.vimrc
 source ~/.config/nvim/coc.vim
+source ~/.config/nvim/lua/init.lua 
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
-call plug#begin("~/.vim/plugged")
-  "Plugin Section
+
+"call plug#begin("~/.vim/plugged")
+"  "Plugin Section
   
-  " Themes
-  " Plug 'dikiaap/minimalist'
-  " Plug 'kaicataldo/material.vim', { 'branch': 'main' }
-  " Plug 'artanikin/vim-synthwave84'
-  " Plug 'yassinebridi/vim-purpura'
-  " Plug 'flazz/vim-colorschemes'
-  Plug 'bluz71/vim-nightfly-guicolors', { 'as': 'nightfly' }
-  Plug 'mhartington/oceanic-next'
+"  " Themes
+"  " Plug 'dikiaap/minimalist'
+"  " Plug 'kaicataldo/material.vim', { 'branch': 'main' }
+"  " Plug 'artanikin/vim-synthwave84'
+"  " Plug 'yassinebridi/vim-purpura'
+"  " Plug 'flazz/vim-colorschemes'
+"  Plug 'bluz71/vim-nightfly-guicolors', { 'as': 'nightfly' }
+"  " Plug 'mhartington/oceanic-next'
 
-  "" File Explorer
-  " NERD Tree
-  "Plug 'scrooloose/nerdtree'
-  "Plug 'ryanoasis/vim-devicons'
+"  "" File Explorer
+"  " NERD Tree
+"  "Plug 'scrooloose/nerdtree'
+"  "Plug 'ryanoasis/vim-devicons'
   
-  " Nvim Tree
-  Plug 'nvim-tree/nvim-web-devicons' 
-  Plug 'nvim-tree/nvim-tree.lua'
+"  " Nvim Tree
+"  Plug 'nvim-tree/nvim-web-devicons' 
+"  Plug 'nvim-tree/nvim-tree.lua'
 
-  " File Search
-  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-  Plug 'junegunn/fzf.vim'
+"  " File Search
+"  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+"  Plug 'junegunn/fzf.vim'
 
-  Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
+"  Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
   
-  " Language Client
-  Plug 'elixir-lsp/coc-elixir', {'do': 'yarn install && yarn prepack'}
-  Plug 'neoclide/coc.nvim', {'branch': 'release'}
-  Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+"  " Language Client
+"  Plug 'elixir-lsp/coc-elixir', {'do': 'yarn install && yarn prepack'}
+"  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+"  Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
-  " Plug 'David-Kunz/jester'
-  " Plug 'sheerun/vim-polyglot'
+"  " Plug 'David-Kunz/jester'
+"  " Plug 'sheerun/vim-polyglot'
 
-  " Debug
-  "Plug 'puremourning/vimspector'
-  "Plug 'vim-test/vim-test'
+"  " Debug
+"  "Plug 'puremourning/vimspector'
+"  "Plug 'vim-test/vim-test'
 
-  " Typescript highlighting
-  " Plug 'leafgarland/typescript-vim'
-  " Plug 'mxw/vim-jsx'
-  " Plug 'pangloss/vim-javascript'
+"  " Typescript highlighting
+"  " Plug 'leafgarland/typescript-vim'
+"  " Plug 'mxw/vim-jsx'
+"  " Plug 'pangloss/vim-javascript'
 
-  " Barra Superior
-  Plug 'kyazdani42/nvim-web-devicons'
-  Plug 'romgrk/barbar.nvim'
+"  " Barra Superior
+"  Plug 'kyazdani42/nvim-web-devicons'
+"  Plug 'romgrk/barbar.nvim'
 
 
-  " Plugins Angular
-  " Plug 'softoika/ngswitcher.vim'
-  " Plug '~/git/fork/ngswitcher.vim'
-  Plug 'rodrigoramos/ngswitcher.vim'
+"  " Plugins Angular
+"  " Plug 'softoika/ngswitcher.vim'
+"  " Plug '~/git/fork/ngswitcher.vim'
+"  Plug 'rodrigoramos/ngswitcher.vim'
 
-  " Vim Enhancements
-  Plug 'machakann/vim-highlightedyank'
-  Plug 'tpope/vim-commentary'
-  Plug 'tpope/vim-surround'
-  Plug 'gko/vim-coloresque' " Show hexa colors 
+"  " Vim Enhancements
+"  Plug 'machakann/vim-highlightedyank'
+"  Plug 'tpope/vim-commentary'
+"  Plug 'tpope/vim-surround'
+"  Plug 'gko/vim-coloresque' " Show hexa colors 
 
-  " Notes!
-  " Plug 'xolox/vim-misc'
-  " Plug 'xolox/vim-notes'
+"  " Notes!
+"  " Plug 'xolox/vim-misc'
+"  " Plug 'xolox/vim-notes'
 
-  " Table
-  " Plug 'dhruvasagar/vim-table-mode'
+"  " Table
+"  " Plug 'dhruvasagar/vim-table-mode'
 
-  " Linha de rodapé
-  Plug 'itchyny/lightline.vim'
-  Plug 'itchyny/vim-gitbranch'
-call plug#end()
+"  " Linha de rodapé
+"  Plug 'itchyny/lightline.vim'
+"  Plug 'itchyny/vim-gitbranch'
+"call plug#end()
 
 function! VimspectorJestDebugOnCursor(cmd)
     let testName = matchlist(a:cmd, '\v -t ''(.*)''')[1]
@@ -122,10 +124,9 @@ syntax on
 " colorscheme purpura 
 
 " colorscheme gruvbox
-colorscheme molokai
+" colorscheme molokai
 " colorscheme nightfly
 " colorscheme OceanicNext
-
 
 
 " Make background transparent
@@ -330,6 +331,4 @@ function! GitFolderName ()
     let dot_git_path = finddir(".git", ".;")
     return fnamemodify(dot_git_path, ":s?.git??:p:h:t")
 endfunction
-
-source ~/.config/nvim/lua/init.lua 
 

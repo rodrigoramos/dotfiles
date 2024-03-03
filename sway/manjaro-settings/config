@@ -4,6 +4,11 @@
 #
 # Read `man 5 sway` for a complete reference.
 
+for_window [instance=.*] border none
+default_floating_border none
+titlebar_padding 1
+titlebar_border_thickness 0
+
 # styles - set the folder for your theme defination file
 set $theme $HOME/git/dotfiles/sway/themes/sweet-dark
 
@@ -32,3 +37,9 @@ include $HOME/.config/sway/defaults/config.d/*
 # user config
 include $HOME/.config/sway/config.d/*.conf
 
+# SwayFX Settings
+corner_radius 10
+default_dim_inactive 0.2
+shadows enable
+blur enable
+titlebar_separator enable

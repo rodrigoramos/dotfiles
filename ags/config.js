@@ -54,6 +54,38 @@ const time = Variable("", {
     poll: [1000, "date +%H:%M"],
 });
 
+const intval = 5000;
+
+const cpu = Variable(0, {
+    poll: [intval, "top -bn1", out => { 
+      const value = out
+        .split('\n')
+        .find(line => line.includes("%CPU"))
+        .split(/\s+/);
+
+      return (!value || value.length < 2) ? 0 : parseFloat(value[1].replaceAll(',', '.'));
+    }]
+});
+
+const ram = Variable(0, {
+    poll: [intval, 'free', out => { 
+      const freeValues = out.split('\n')
+        .find(line => line.includes('Mem.:'))
+        ?.split(/\s+/);
+
+      return (freeValues[2] / freeValues[1]) * 100;
+    }],
+});
+
+const vars = { cpu, ram, battery: Battery.percent };
+
+const icons = {
+   system: {
+        cpu: 'org.gnome.SystemMonitor-symbolic',
+        ram: 'drive-harddisk-solidstate-symbolic',
+    }
+}
+
 const Clock = () =>
   Widget.Label({
     class_name: "clock",
@@ -98,45 +130,50 @@ const Notification = () =>
     }),
   });
 
+const VolumeIcon = () => Widget.Stack({
+    items: [
+      ["101", Widget.Icon("audio-volume-overamplified-symbolic")],
+      ["67", Widget.Icon("audio-volume-high-symbolic")],
+      ["34", Widget.Icon("audio-volume-medium-symbolic")],
+      ["1", Widget.Icon("audio-volume-low-symbolic")],
+      ["0", Widget.Icon("audio-volume-muted-symbolic")],
+    ]
+  }).hook(Audio,
+    (self) => {
+      if (!Audio.speaker) return;
+
+      if (Audio.speaker.stream.isMuted) {
+        self.shown = "0";
+        return;
+      }
+
+      const show = [101, 67, 34, 1, 0].find(
+        (threshold) => threshold <= Audio.speaker.volume * 100
+      );
+
+      self.shown = `${show}`;
+    },
+    "speaker-changed",
+  )
+
 const Volume = () =>
   Widget.Button({
-    onClicked: () =>
+    onPrimaryClick: () => App.toggleWindow('sys-status'),
+    onSecondaryClick: () =>
       execAsync("pavucontrol"),
+    tooltip_text: Audio.bind('speaker').transform(s => `Level: ${(s?.volume * 100).toFixed(0)}%`),
     child: Widget.Box({
       class_name: "volume",
       children: [
-        Widget.Stack({
-          items: [
-            ["101", Widget.Icon("audio-volume-overamplified-symbolic")],
-            ["67", Widget.Icon("audio-volume-high-symbolic")],
-            ["34", Widget.Icon("audio-volume-medium-symbolic")],
-            ["1", Widget.Icon("audio-volume-low-symbolic")],
-            ["0", Widget.Icon("audio-volume-muted-symbolic")],
-          ]
-        }).hook(Audio,
-          (self) => {
-            if (!Audio.speaker) return;
-
-            if (Audio.speaker.stream.isMuted) {
-              self.shown = "0";
-              return;
-            }
-
-            const show = [101, 67, 34, 1, 0].find(
-              (threshold) => threshold <= Audio.speaker.volume * 100
-            );
-
-            self.shown = `${show}`;
-          },
-          "speaker-changed",
-        ),
+        VolumeIcon()
       ],
     })
   });
 
 const Mic = () =>
   Widget.Button({
-    onClicked: () =>
+    onPrimaryClick: () => App.toggleWindow('sys-status'),
+    onSecondaryClick: () =>
       execAsync("pavucontrol"),
     child: Widget.Box({
       class_name: "mic",
@@ -159,20 +196,27 @@ const Mic = () =>
         )
       ],
     })
+    .hook(Audio,
+      (self) => {
+        if (!Audio.microphone) return;
+
+        self.tooltip_text = Audio.microphone.stream.isMuted
+          ? "Mudo"
+          : `Level: ${(Audio.microphone.volume *100).toFixed(0)}`;
+      },
+      "microphone-changed"
+    )
   });
 
 const BatteryLabel = () =>
-  Widget.Box({
+  Widget.Button({
     class_name: "battery",
-    children: [
-      Widget
-        .Icon()
-        .bind(
-          'icon',
-          Battery,
-          'percent',
-          (p) => `battery-level-${Math.floor(p / 10) * 10}-symbolic`)
-    ],
+    tooltip_text: Battery.bind('percent').transform(p => `Level: ${p}%`),
+    onClicked: () => App.toggleWindow('sys-status'),
+    child: 
+      Widget.Icon({
+          icon: Battery.bind('icon_name')
+      }),
   });
 
 const SysTray = () =>
@@ -194,22 +238,9 @@ const SysTray = () =>
       },
   );
 
-const SsidPopup = () =>
-  PopupWindow({
-    name: "ssidPopup",
-    anchor: ['top', 'right'],
-    transition: 'slide_down',
-    child: Widget.Box({
-      vertical: true,
-      children: [
-        Widget.Label().bind('label', Network, 'wifi', (wifi) => wifi?.ssid),
-        Widget.Label().bind('label', Network, 'wifi', (wifi) => wifi?.strength.toString() + "%")
-      ]
-    })
-  });
-
 const WifiIndicator = () =>
-  Widget.Button({
+  Widget.Box({
+    tooltip_text: Network.bind('wifi').transform(w => `${w.ssid} (${w.strength}%)`),
     child: Widget
       .Icon()
       .bind('icon', Network, 'wifi',
@@ -222,14 +253,19 @@ const WiredIndicator = () =>
     .bind('icon', Network, 'wired',
       (wired) => wired?.iconName);
 
-const NetworkIndicator = () =>
+const NetworkIcon = () =>
   Widget.Stack({
-    items: [
-      ["wifi", WifiIndicator()],
-      ["wired", WiredIndicator()],
-    ]})
-  .bind("shown", Network, "primary", (p) => p || "wifi");
+      items: [
+        ["wifi", WifiIndicator()],
+        ["wired", WiredIndicator()],
+      ]})
+    .bind("shown", Network, "primary", (p) => p || "wifi")
 
+const NetworkIndicator = () =>
+  Widget.Button({
+    onClicked: () => App.toggleWindow('sys-status'),
+    child: NetworkIcon()
+  })
 
 const vpnSessionList = Variable("", {
     poll: [60000, "openvpn3 sessions-list"],
@@ -245,17 +281,18 @@ const VpnIndicator = () =>
 
 
 // const memoryIcon = "\ue266";
-const ComputerResources = () =>
+const Cpu = () =>
+  Widget.Button({
+    onClicked: () => App.toggleWindow('sys-status'),
+    child: Widget.Icon("speedometer-symbolic"),
+    tooltip_text: cpu.bind().transform(v => `CPU: ${v.toFixed(2)}%`)
+  });
+
+const Memory = () =>
   Widget.Button({
     on_clicked: () => App.toggleWindow('sys-status'),
-    child: 
-      Widget.Box({
-        spacing: 12,
-        children: [
-          Widget.Icon("speedometer-symbolic"),
-          Widget.Icon("media-flash-symbolic"),
-        ],
-      })
+    child: Widget.Icon("media-flash-symbolic"),
+    tooltip_text: ram.bind().transform(v => `RAM: ${v.toFixed(2)}%`)
   });
 
 const githubIcon = "\uf113";
@@ -469,37 +506,6 @@ const NotificationsPopupWindow = () =>
   });
 
 
-const intval = 5000;
-
-const cpu = Variable(0, {
-    poll: [intval, "top -bn1", out => { 
-      const value = out
-        .split('\n')
-        .find(line => line.includes("%CPU"))
-        .split(/\s+/);
-
-      return (!value || value.length < 2) ? 0 : parseFloat(value[1].replaceAll(',', '.'));
-    }]
-});
-
-const ram = Variable(0, {
-    poll: [intval, 'free', out => { 
-      const freeValues = out.split('\n')
-        .find(line => line.includes('Mem.:'))
-        ?.split(/\s+/);
-
-      return (freeValues[2] / freeValues[1]) * 100;
-    }],
-});
-
-const vars = { cpu, ram };
-
-const icons = {
-   system: {
-        cpu: 'org.gnome.SystemMonitor-symbolic',
-        ram: 'drive-harddisk-solidstate-symbolic',
-    }
-}
 
 /**
  * @param {'cpu' | 'ram' } type
@@ -535,6 +541,50 @@ const SysProgress = (type, title, unit) => Widget.Box({
     ]
 });
 
+
+
+const BatteryProgress = () => Widget.Box({
+    class_name: `circular-progress-box battery`,
+    vertical: true,          
+    hexpand: true,
+    tooltip_text: Battery.bind('percent')
+        .transform(v => `Battery Level: ${v.toFixed(0)}%`),
+    children: [ 
+      Widget.Label('Battery'),
+      Widget.CircularProgress({
+        hexpand: true,
+        class_name: `circular-progress battery`,
+        child: 
+          Widget.Icon({
+            icon: Battery.bind('icon_name'),
+            class_name: 'icon'
+          }),
+        start_at: 0.75,
+        value: Battery.bind('percent').transform(v => v / 100),
+        rounded: 29,
+      }),
+      Widget.Label({ 
+        label: Battery.bind('percent')
+          .transform(v => v.toFixed(0) + "%"),
+        class_name: 'values'
+      })
+    ]
+});
+
+const VolumeSlider = (type = 'speaker') => Widget.Slider({
+  hexpand: true,
+  drawValue: false,
+  onChange: ({ value }) => Audio.speaker.volume = value,
+  class_name: Audio.bind('speaker').transform(s => s.stream.isMuted ? "muted" : ""),
+  value: Audio.bind('speaker').transform(s => `${s.volume}`)
+})
+
+// const VolumeSlider = () => Widget.ProgressBar({
+//   hexpand: true,
+//   value: Audio.bind('speaker').transform(s => `${s.volume}`),
+//   class_name: Audio.bind('speaker').transform(s => s.stream.isMuted ? "muted" : "")
+// })
+
 const SysStatusWindow = () => PopupWindow({
   name: 'sys-status',
   anchor:["top", "right"],
@@ -542,9 +592,38 @@ const SysStatusWindow = () => PopupWindow({
   class_name: 'status-window',
   child: Widget.Box({
     class_name: "default-box",
+    vertical: true,
+    spacing: 5,
     children: [
-      SysProgress('cpu', 'CPU', '%'),
-      SysProgress('ram', 'RAM', '%'),
+      Widget.Box({
+        children: [
+          SysProgress('cpu', 'CPU', '%'),
+          SysProgress('ram', 'RAM', '%'),
+          BatteryProgress()
+        ]
+      }),
+      Widget.Box({
+        spacing: 12,
+        tooltip_text: Network.bind('wifi').transform(w => `Strengh: ${w.strength}%`),
+        children: [
+          NetworkIcon(),
+          Widget.Label({
+            label: 
+              Network.bind('wifi').transform(w => w.ssid)
+          }),
+        ]
+      }),
+      Widget.Box({
+        children: [
+          VolumeIcon(),
+          VolumeSlider(),
+          Widget.Button({
+            child: Widget.Icon('settings-app-symbolic'),
+            onClicked: () =>
+              execAsync("pavucontrol"),
+          })
+        ]
+      })
     ]
   })
 });
@@ -571,7 +650,8 @@ const Right = () =>
       Widget.Box({ hexpand: true }),
       CalendarNextEvent(),
       GithubPR(),
-      ComputerResources(),
+      Cpu(),
+      Memory(),
       NetworkIndicator(),
       VpnIndicator(),
       BatteryLabel(),
@@ -622,7 +702,6 @@ export default {
   forAllMonitors(Bar)
     .concat(Calendar())
     .concat(CalendarEvents())
-    .concat(SsidPopup())
     .concat(NotificationsPopupWindow())
     .concat(SysStatusWindow())
     .concat(NotificationCenter()),
