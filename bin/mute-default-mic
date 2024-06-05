@@ -1,39 +1,47 @@
 #!/bin/bash
 
-# defaultSource=$(pactl info | grep -oP '(?<=Fonte padrão: ).+')
+defaultSource=$(pactl info | grep -oP '(?<=Fonte padrão: ).+')
+defaultCardNumber=$(LC_NUMERIC=en_US.UTF-8 pactl --format=json list sources | jq -c '.[] | select( .name == "'$defaultSource'") | .properties["alsa.card"] | tonumber')
 
-# if [ "$defaultSource" == "" ]; then
-#   echo entrou no if
-#   defaultSource=$(pactl info | grep -oP '(?<=Default Source: ).+')
-# fi
+# tenta alterar o microfone
+amixer -c $defaultCardNumber sset Mic toggle &> /dev/null
 
-# if [ "$defaultSource" = "" ]; then
-#   echo It was not possible to retrieve de source
-#   exit 1
-# fi
+# Se não funcionar
+if [ $? == 0 ] ; then
+  micType=Mic
+else
+  # vai pro capture
+  amixer -c $defaultCardNumber sset Capture toggle
 
-# pactl set-source-mute $defaultSource toggle
-amixer -c 3 sset Mic toggle
+  if [ $? != 0 ]; then
+    echo não foi possível determinar como alternar o microfone default
+    echo Source: $defaultSource
+    echo Alsa Card Number: $defaultCardNumber
+    exit 1
+  fi
 
+  micType=Capture
+fi
 
 if [ "$(amixer controls | grep -o 'Dmic0')" != "" ] ; then
-  if [ "$(amixer -c 3 sget Mic | grep -o '\[off\]')" == "[off]" ]; then
+  defaultMicState=$(amixer -c $defaultCardNumber sget $micType | grep -o '\[off\]')
+  if [[ $defaultMicState == *"[off]"* ]]; then
     amixer sset Dmic0 nocap
   else
     amixer sset Dmic0 cap
   fi
 fi
 
-if [ $(amixer controls | grep -c 'Mic Mute-LED Mode') == 0 ]; then
-  exit 0
-fi
+# if [ $(amixer controls | grep -c 'Mic Mute-LED Mode') == 0 ]; then
+#   exit 0
+# fi
 
-if [ $(pactl list sources | grep HARDWARE -c) == 1 ]; then
-  amixer sset 'Mic Mute-LED Mode' 'Follow Mute'
-else
-  defaultMicIsMute=$(amixer get Capture | grep -wq off && echo 1 || echo 0)
-  countMicMuted=$(pactl list sources | grep -c "Mudo: sim")
+# if [ $(pactl list sources | grep HARDWARE -c) == 1 ]; then
+#   amixer sset 'Mic Mute-LED Mode' 'Follow Mute'
+# else
+#   defaultMicIsMute=$(amixer get Capture | grep -wq off && echo 1 || echo 0)
+#   countMicMuted=$(pactl list sources | grep -c "Mudo: sim")
 
-  amixer sset 'Mic Mute-LED Mode' $([[ $(($countMicMuted - $defaultMicIsMute)) > 0 ]] && echo "On" || echo "Off")
-fi
+#   amixer sset 'Mic Mute-LED Mode' $([[ $(($countMicMuted - $defaultMicIsMute)) > 0 ]] && echo "On" || echo "Off")
+# fi
 
