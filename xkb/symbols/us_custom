@@ -1,7 +1,8 @@
 xkb_symbols "basic" {
   include "us(intl)"
   name[Group1] = "US Custom (international with tilde insted of esc)";
-	key <ESC> { [ dead_grave, dead_tilde, grave, asciitilde ] };
+	key <ESC>  { [ dead_grave, dead_tilde, grave, asciitilde ] };
+  key <RCTL> { [ ISO_Level3_Shift ]};
+  key <AB03> { [ c, C, ccedilla, Ccedilla ]} ;
 };
-
 

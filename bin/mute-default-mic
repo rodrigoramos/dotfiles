@@ -1,6 +1,16 @@
 #!/bin/bash
 
 defaultSource=$(pactl info | grep -oP '(?<=Fonte padrão: ).+')
+
+if [[ "$defaultSource" == "" ]]; then
+  defaultSource=$(pactl info | grep -oP '(?<=Default Source: ).+')
+fi
+
+if [[ "$defaultSource" == "" ]]; then
+  echo não foi possível encontrar a fonte padrão.
+  exit 2
+fi
+
 defaultCardNumber=$(LC_NUMERIC=en_US.UTF-8 pactl --format=json list sources | jq -c '.[] | select( .name == "'$defaultSource'") | .properties["alsa.card"] | tonumber')
 
 # tenta alterar o microfone
