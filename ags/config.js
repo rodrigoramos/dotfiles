@@ -1,3 +1,4 @@
+
 // importing
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
 import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
@@ -8,10 +9,8 @@ import SystemTray from "resource:///com/github/Aylur/ags/service/systemtray.js";
 import App from "resource:///com/github/Aylur/ags/app.js";
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import { execAsync } from "resource:///com/github/Aylur/ags/utils.js";
-import Sway from "./sway.js";
 import Network from "resource:///com/github/Aylur/ags/service/network.js";
 import Variable from 'resource:///com/github/Aylur/ags/variable.js';
-
 import PopupWindow from "./popupWindow3.js";
 
 import KhalService from "./khalService.js";
@@ -22,33 +21,75 @@ import {
   PopupList,
 } from "./notifications-widget.js";
 
+import hyprland from "resource:///com/github/Aylur/ags/service/hyprland.js";
+import Gdk from "gi://Gdk";
+
+const dispatch = ws => execAsync(`hyprctl dispatch workspace ${ws}`);
 // widgets can be only assigned as a child in one container
 // so to make a reuseable widget, just make it a function
 // then you can use it by calling simply calling it
 
 const getWorkspaceClassName = (ws) => {
-  if (Sway.active.workspace.name == ws?.name) return "focused";
-  else if (ws.urgent) return "urgent";
+  if (hyprland.active.workspace.name == ws?.name) return "focused";
   return "";
 };
 
+const workspacesIcons = [ 
+   '', '', '', '󰒱', '󰊻', '󱓧', '7', '8', '', '10'
+]
+
+let urgent = -1;
 const Workspaces = (monitorName) =>
   Widget.Box({
     class_name: "workspaces",
-  }).hook(
-    Sway.active.workspace,
-      (self) => {
-        self.children = Sway.workspaces
-          .filter((w) => w.output === monitorName)
-          .map((i) => {
-            return Widget.Button({
-              onClicked: () => execAsync(`swaymsg workspace ${i.name}`),
-              child: Widget.Label(`${i.name}`),
-              class_name: getWorkspaceClassName(i),
-            });
-          });
-        }
-    );
+    children: Array
+      .from({ length: 10 }, (_, i) => i + 1)
+      .map(i => Widget.Button({ 
+        attribute: i,
+        label:`${workspacesIcons[i - 1]}`,
+        onClicked: () => dispatch(i),
+      })),
+    setup: self => self.hook(hyprland, () => 
+      self.children.forEach(btn => {
+        btn.visible = hyprland.workspaces.some(
+          ws => ws.id === btn.attribute &&
+                (!hyprland.monitors[monitorName]?.name ||
+                ws.monitor === hyprland.monitors[monitorName].name)
+        );
+
+        btn.hook(hyprland, (self, clientAddress) => { 
+          if (!clientAddress) return;
+
+          const client = hyprland.getClient(clientAddress);
+          if (client.workspace.id == self.attribute) {
+            self.class_name = "urgent";
+          }
+        }, "urgent-window")
+
+        btn.hook(hyprland, (self, eventName, eventData) => { 
+          let workspace;
+
+          switch (eventName) {
+            case "focusedmon":
+              const [ _, eventWorkspace ] = eventData.split(',');
+              workspace = parseInt(eventWorkspace, 10);
+              break;
+            case "workspace":
+              workspace = parseInt(eventData, 10);
+              break;
+            default:
+              return;
+          }
+
+          self.class_name = 
+            self.attribute === workspace 
+              ? "focused" 
+              : "";
+
+        }, "event")
+      })
+    )
+        });
 
 const time = Variable("", {
     poll: [1000, "date +%H:%M"],
@@ -60,7 +101,7 @@ const cpu = Variable(0, {
     poll: [intval, "top -bn1", out => { 
       const value = out
         .split('\n')
-        .find(line => line.includes("%CPU"))
+        .find(line => line.includes("%Cpu(s)"))
         .split(/\s+/);
 
       return (!value || value.length < 2) ? 0 : parseFloat(value[1].replaceAll(',', '.'));
@@ -70,7 +111,7 @@ const cpu = Variable(0, {
 const ram = Variable(0, {
     poll: [intval, 'free', out => { 
       const freeValues = out.split('\n')
-        .find(line => line.includes('Mem.:'))
+        .find(line => line.includes('Mem:'))
         ?.split(/\s+/);
 
       return (freeValues[2] / freeValues[1]) * 100;
@@ -477,12 +518,12 @@ const NotificationCenter = () =>
     class_name: "notification-feat",
     anchor: ["right", "top", "bottom"],
     transition: 'slide_down',
-    setup: (self) => self.hook(Sway, (_, value) => {
-      // Close notifications when open application
-      for (let pendingNotification of Notifications.notifications) {
-        if (pendingNotification.app_name.toUpperCase() == value?.toUpperCase()) pendingNotification.close();
-      }
-    }, "window-changed"),
+    // setup: (self) => self.hook(Sway, (_, value) => {
+    //   // Close notifications when open application
+    //   for (let pendingNotification of Notifications.notifications) {
+    //     if (pendingNotification.app_name.toUpperCase() == value?.toUpperCase()) pendingNotification.close();
+    //   }
+    // }, "window-changed"),
     child: Widget.Box({
       children: [
         Widget.EventBox({
@@ -689,10 +730,18 @@ const Calendar = () =>
   });
 
 // TODO: Add defensive code
-const monitors = JSON.parse(await execAsync("swaymsg -r -t get_outputs"));
+// const monitors = JSON.parse(await execAsync("swaymsg -r -t get_outputs"));
+
+// function forAllMonitors(widget) {
+//   return monitors.map((mon, index) => widget(index, mon.name));
+// }
+ function range(length, start = 1) {
+    return Array.from({ length }, (_, i) => i + start)
+}
 
 function forAllMonitors(widget) {
-  return monitors.map((mon, index) => widget(index, mon.name));
+    const n = Gdk.Display.get_default()?.get_n_monitors() || 1
+    return range(n, 0).flatMap(widget)
 }
 
 // exporting the config so ags can manage the windows
@@ -706,5 +755,10 @@ export default {
     .concat(SysStatusWindow())
     .concat(NotificationCenter()),
 };
+
+
+
+
+
 
 
