@@ -38,7 +38,6 @@ const workspacesIcons = [
    '', '', '', '󰒱', '󰊻', '󱓧', '7', '8', '', '10'
 ]
 
-let urgent = -1;
 const Workspaces = (monitorName) =>
   Widget.Box({
     class_name: "workspaces",

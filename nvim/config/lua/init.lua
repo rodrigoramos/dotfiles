@@ -59,6 +59,15 @@ require('packer').startup(function(use)
   use { 'David-Kunz/jester' }
   use { 'sheerun/vim-polyglot' }
 
+  -- Tentei usar mas não consegui. Preciso investigar mais
+  -- use {
+  --   "pmizio/typescript-tools.nvim",
+  --   requires = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+  --   config = function()
+  --     require("typescript-tools").setup {}
+  --   end,
+  -- }
+
   -- " Debug
   use { 'puremourning/vimspector' }
   use { 'vim-test/vim-test' }
@@ -94,6 +103,12 @@ require('packer').startup(function(use)
   -- " Linha de rodapé
   use { 'itchyny/lightline.vim' }
   use { 'itchyny/vim-gitbranch' }
+
+  use {
+    'nvim-telescope/telescope.nvim', tag = '0.1.8',
+    requires = { {'nvim-lua/plenary.nvim'} }
+  }
+
 end)
 
 -- == NvimTree Setup == 
@@ -159,3 +174,47 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 
+local actions = require "telescope.actions"
+require('telescope').setup {
+  defaults = {
+    mappings = {
+      i = {
+        ['<C-j>'] = actions.move_selection_next,
+        ['<C-k>'] = actions.move_selection_previous,
+      }
+    }
+  }
+}
+
+
+local previewers = require('telescope.previewers')
+local builtin = require('telescope.builtin')
+local conf = require('telescope.config')
+
+local delta = previewers.new_termopen_previewer {
+  get_command = function(entry)
+    -- note we can't use pipes
+    -- this command is for git_commits and git_bcommits
+    return { 'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.value .. '^!' }
+
+    -- this is for status
+    -- You can get the AM things in entry.status. So we are displaying file if entry.status == '??' or 'A '
+    -- just do an if and return a different command
+    -- return { 'git', '-c', 'core.pager=delta', '-c', 'delta.side-by-side=false', 'diff', entry.value }
+  end
+}
+
+
+git_commits_delta = function(opts)
+  opts = opts or {}
+  opts.previewer = delta
+
+  builtin.git_commits(opts)
+end
+
+git_bcommits_delta = function(opts)
+  opts = opts or {}
+  opts.previewer = delta
+
+  builtin.git_bcommits(opts)
+end

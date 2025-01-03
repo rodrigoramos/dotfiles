@@ -49,8 +49,8 @@ local function save_profiles(threshold)
 end
 
 time([[Luarocks path setup]], true)
-local package_path_str = "/home/rodrigosilva/.cache/nvim/packer_hererocks/2.1.1692716794/share/lua/5.1/?.lua;/home/rodrigosilva/.cache/nvim/packer_hererocks/2.1.1692716794/share/lua/5.1/?/init.lua;/home/rodrigosilva/.cache/nvim/packer_hererocks/2.1.1692716794/lib/luarocks/rocks-5.1/?.lua;/home/rodrigosilva/.cache/nvim/packer_hererocks/2.1.1692716794/lib/luarocks/rocks-5.1/?/init.lua"
-local install_cpath_pattern = "/home/rodrigosilva/.cache/nvim/packer_hererocks/2.1.1692716794/lib/lua/5.1/?.so"
+local package_path_str = "/home/rodrigosilva/.cache/nvim/packer_hererocks/2.1.1703358377/share/lua/5.1/?.lua;/home/rodrigosilva/.cache/nvim/packer_hererocks/2.1.1703358377/share/lua/5.1/?/init.lua;/home/rodrigosilva/.cache/nvim/packer_hererocks/2.1.1703358377/lib/luarocks/rocks-5.1/?.lua;/home/rodrigosilva/.cache/nvim/packer_hererocks/2.1.1703358377/lib/luarocks/rocks-5.1/?/init.lua"
+local install_cpath_pattern = "/home/rodrigosilva/.cache/nvim/packer_hererocks/2.1.1703358377/lib/lua/5.1/?.so"
 if not string.find(package.path, package_path_str, 1, true) then
   package.path = package.path .. ';' .. package_path_str
 end
@@ -139,8 +139,18 @@ _G.packer_plugins = {
     path = "/home/rodrigosilva/.local/share/nvim/site/pack/packer/start/packer.nvim",
     url = "https://github.com/wbthomason/packer.nvim"
   },
+  ["plenary.nvim"] = {
+    loaded = true,
+    path = "/home/rodrigosilva/.local/share/nvim/site/pack/packer/start/plenary.nvim",
+    url = "https://github.com/nvim-lua/plenary.nvim"
+  },
+  ["telescope.nvim"] = {
+    loaded = true,
+    path = "/home/rodrigosilva/.local/share/nvim/site/pack/packer/start/telescope.nvim",
+    url = "https://github.com/nvim-telescope/telescope.nvim"
+  },
   ["tokyonight.nvim"] = {
-    config = { "\27LJ\2\nÁ\1\0\0\4\0\t\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0005\3\4\0=\3\5\2B\0\2\0016\0\6\0009\0\a\0'\2\b\0B\0\2\1K\0\1\0\27colorscheme tokyonight\bcmd\bvim\vstyles\1\0\2\vfloats\16transparent\rsidebars\16transparent\1\0\2\nstyle\nstorm\16transparent\2\nsetup\15tokyonight\frequire\0" },
+    config = { "\27LJ\2\nÁ\1\0\0\4\0\t\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0005\3\4\0=\3\5\2B\0\2\0016\0\6\0009\0\a\0'\2\b\0B\0\2\1K\0\1\0\27colorscheme tokyonight\bcmd\bvim\vstyles\1\0\2\vfloats\16transparent\rsidebars\16transparent\1\0\2\16transparent\2\nstyle\nstorm\nsetup\15tokyonight\frequire\0" },
     loaded = true,
     path = "/home/rodrigosilva/.local/share/nvim/site/pack/packer/start/tokyonight.nvim",
     url = "https://github.com/folke/tokyonight.nvim"
@@ -209,7 +219,7 @@ vim.o.runtimepath = vim.o.runtimepath .. ",/home/rodrigosilva/.local/share/nvim/
 time([[Runtimepath customization]], false)
 -- Config for: tokyonight.nvim
 time([[Config for tokyonight.nvim]], true)
-try_loadstring("\27LJ\2\nÁ\1\0\0\4\0\t\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0005\3\4\0=\3\5\2B\0\2\0016\0\6\0009\0\a\0'\2\b\0B\0\2\1K\0\1\0\27colorscheme tokyonight\bcmd\bvim\vstyles\1\0\2\vfloats\16transparent\rsidebars\16transparent\1\0\2\nstyle\nstorm\16transparent\2\nsetup\15tokyonight\frequire\0", "config", "tokyonight.nvim")
+try_loadstring("\27LJ\2\nÁ\1\0\0\4\0\t\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0005\3\4\0=\3\5\2B\0\2\0016\0\6\0009\0\a\0'\2\b\0B\0\2\1K\0\1\0\27colorscheme tokyonight\bcmd\bvim\vstyles\1\0\2\vfloats\16transparent\rsidebars\16transparent\1\0\2\16transparent\2\nstyle\nstorm\nsetup\15tokyonight\frequire\0", "config", "tokyonight.nvim")
 time([[Config for tokyonight.nvim]], false)
 
 _G._packer.inside_compile = false

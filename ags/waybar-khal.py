@@ -18,4 +18,7 @@ output = output.decode("utf-8")
 
 events = re.findall("-(.*)-\n", output)
 
-print("[{" + "},{".join(events) + "}]")
+if events == []:
+    print("[]")
+else:
+    print("[{" + "},{".join(events) + "}]")

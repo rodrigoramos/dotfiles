@@ -8,79 +8,6 @@ source ~/.config/nvim/lua/init.lua
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
-
-"call plug#begin("~/.vim/plugged")
-"  "Plugin Section
-  
-"  " Themes
-"  " Plug 'dikiaap/minimalist'
-"  " Plug 'kaicataldo/material.vim', { 'branch': 'main' }
-"  " Plug 'artanikin/vim-synthwave84'
-"  " Plug 'yassinebridi/vim-purpura'
-"  " Plug 'flazz/vim-colorschemes'
-"  Plug 'bluz71/vim-nightfly-guicolors', { 'as': 'nightfly' }
-"  " Plug 'mhartington/oceanic-next'
-
-"  "" File Explorer
-"  " NERD Tree
-"  "Plug 'scrooloose/nerdtree'
-"  "Plug 'ryanoasis/vim-devicons'
-  
-"  " Nvim Tree
-"  Plug 'nvim-tree/nvim-web-devicons' 
-"  Plug 'nvim-tree/nvim-tree.lua'
-
-"  " File Search
-"  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-"  Plug 'junegunn/fzf.vim'
-
-"  Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
-  
-"  " Language Client
-"  Plug 'elixir-lsp/coc-elixir', {'do': 'yarn install && yarn prepack'}
-"  Plug 'neoclide/coc.nvim', {'branch': 'release'}
-"  Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-
-"  " Plug 'David-Kunz/jester'
-"  " Plug 'sheerun/vim-polyglot'
-
-"  " Debug
-"  "Plug 'puremourning/vimspector'
-"  "Plug 'vim-test/vim-test'
-
-"  " Typescript highlighting
-"  " Plug 'leafgarland/typescript-vim'
-"  " Plug 'mxw/vim-jsx'
-"  " Plug 'pangloss/vim-javascript'
-
-"  " Barra Superior
-"  Plug 'kyazdani42/nvim-web-devicons'
-"  Plug 'romgrk/barbar.nvim'
-
-
-"  " Plugins Angular
-"  " Plug 'softoika/ngswitcher.vim'
-"  " Plug '~/git/fork/ngswitcher.vim'
-"  Plug 'rodrigoramos/ngswitcher.vim'
-
-"  " Vim Enhancements
-"  Plug 'machakann/vim-highlightedyank'
-"  Plug 'tpope/vim-commentary'
-"  Plug 'tpope/vim-surround'
-"  Plug 'gko/vim-coloresque' " Show hexa colors 
-
-"  " Notes!
-"  " Plug 'xolox/vim-misc'
-"  " Plug 'xolox/vim-notes'
-
-"  " Table
-"  " Plug 'dhruvasagar/vim-table-mode'
-
-"  " Linha de rodapé
-"  Plug 'itchyny/lightline.vim'
-"  Plug 'itchyny/vim-gitbranch'
-"call plug#end()
-
 function! VimspectorJestDebugOnCursor(cmd)
     let testName = matchlist(a:cmd, '\v -t ''(.*)''')[1]
     call vimspector#LaunchWithSettings( #{ configuration: 'jest', TestName: testName } )
@@ -183,12 +110,36 @@ nnoremap <silent>    <S-w> :BufferClose!<CR>
 
 " List Buffers
 nnoremap <silent>    <A-p> :Buffers<CR>
-nnoremap <C-p> :FZF<CR>
-let g:fzf_action = {
-  \ 'ctrl-t': 'tab split',
-  \ 'ctrl-s': 'split',
-  \ 'ctrl-v': 'vsplit'
-  \}
+
+" List Files
+" nnoremap <C-p> :FZF<CR>
+nnoremap <C-p> :Telescope find_files<CR>
+"
+" Find files using Telescope command-line sugar.
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+nnoremap <leader>fw <cmd>Telescope grep_string<cr>
+nnoremap <leader>fs <cmd>Telescope treesitter<cr>
+nnoremap gs <cmd>Telescope treesitter<cr>
+
+" Git Branch
+:command Gb Telescope git_branches
+:command Glg lua git_commits_delta()
+:command Gh lua git_bcommits_delta()
+:command Gsta Telescope git_stash
+:command Km Telescope keymaps
+:command Find Telescope live_grep
+:command Reg Telescope registers
+:command Cmd Telescope commands
+:command! Buffers Telescope buffers
+ 
+" let g:fzf_action = {
+"   \ 'ctrl-t': 'tab split',
+"   \ 'ctrl-s': 'split',
+"   \ 'ctrl-v': 'vsplit'
+"   \}
 
 let $FZF_DEFAULT_COMMAND = 'rg --files .'
 
