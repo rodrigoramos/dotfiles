@@ -580,7 +580,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 --             few_shots = "see [Prompt] section for the default value",
 --             chat_input = "See [Prompt Section for default value]",
 --             stream = true,
---             api_key = 'AIzaSyCtuSCyvxIwyF77xUkmtUcvevP94O5VjBM',
+--             api_key = '',
 --             optional = {},
 --         },
 --     }
