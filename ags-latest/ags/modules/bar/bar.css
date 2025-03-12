@@ -1,0 +1,90 @@
+@import '../../../../.config/waybar/wallust/colors-waybar.css';
+
+@define-color border-color @color12;
+@define-color border-color-alt @color1;
+@define-color text-color @color15;
+@define-color text-color-alt @color14;
+@define-color text-color-highlight @color12;
+@define-color text-shadow-color @color15;
+@define-color noti-bg rgba(0, 0, 0, 0.4);
+@define-color noti-bg-alt #111111;
+
+tooltip {
+	background-color: rgba(0, 0, 0, 0.8);
+  border: 2px solid @border-color;
+  border-radius: 5px;
+}
+
+.popup-window .window-content {
+	background-color: rgba(0, 0, 0, 0.8);
+  border: 2px solid @border-color;
+  border-radius: 5px;
+}
+
+.popup-window .window-content.calendar-events-container {
+	padding: 5px;
+  min-width: 360px;
+  margin-right: 60px;
+}
+
+
+#calendar-events .header {
+  font-weight: bold;
+  color: @text-color-highlight;
+  margin-top: 5px;
+}
+
+.bar > .horizontal {
+  background-color: rgba(0, 0, 0, 0.5);
+	padding: 3px;
+  text-shadow: 2px 1px 2px @text-shadow-color;
+}
+
+.bar .workspaces button {
+	padding: 0 3px 0 8px;
+	border-bottom: solid 3px transparent;
+  color: @text-color-alt;
+  text-shadow: none;
+}
+
+.bar .workspaces button.focused {
+  color: white;
+  border-bottom-color: @border-color;
+}
+
+.bar .workspaces button.urgent {
+  border-bottom-color: red;
+}
+
+/* Github Button */
+.emblem {
+  padding-top: 10px;
+}
+
+.ok {
+  color: green;
+}
+
+.nok {
+  color: gold;
+  font-size: 10px;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+  font-size: 10px;
+}
+
+.calendar{
+  font-weight: 600;
+}
+
+.calendar :selected {
+  background-color: @border-color;
+  text-shadow: 1px 1px 0 black;
+}
+
+.calendar :indeterminate {
+  color: @text-color-alt;
+}
