@@ -13,9 +13,17 @@ today = datetime.date.today().strftime("%d/%/%Y")
 until_date = (datetime.date.today() +
           datetime.timedelta(days=3)).strftime("%d/%m/%Y")
 
-output = subprocess.check_output(["/home/rodrigosilva/.local/bin/khal", "-c", "/home/rodrigosilva/.config/khal/config", "list", "now", until_date, "--format", "- \"startDate\": \"{start-date-long}\", \"endDate\": \"{end-date-long}\", \"startTime\": \"{start-time}\", \"endTime\": \"{end-time}\", \"uid\": \"{uid}\", \"repeatSymbol\": \"{repeat-symbol}\", \"title\": \"{title}\" -"])
+# Utiliza a sequência -| para determinar o começo e fim de cada campo
+output = subprocess.check_output(["/home/rodrigosilva/.local/bin/khal", "-c", "/home/rodrigosilva/.config/khal/config", "list", "now", until_date, "--format", "- -|startDate-|: -|{start-date-long}-|, -|endDate-|: -|{end-date-long}-|, -|startTime-|: -|{start-time}-|, -|endTime-|: -|{end-time}-|, -|uid-|: -|{uid}-|, -|repeatSymbol-|: -|{repeat-symbol}-|, -|title-|: -|{title}-| -"])
 output = output.decode("utf-8")
 
+# Faz o escape do caracter "
+output = output.replace("\"", "\\\"")
+
+# Substitui o caracter de fim de campo por aspas
+output = output.replace("-|", "\"")
+
+# Separa cada linha em um elemento do array
 events = re.findall("-(.*)-\n", output)
 
 if events == []:

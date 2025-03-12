@@ -162,4 +162,4 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
 "" Format on save
-autocmd BufWritePre *.ts,*.tsx,*.json,*.js,*.yaml,*.yml,*.md Format
+"autocmd BufWritePre *.ts,*.tsx,*.json,*.js,*.yaml,*.yml,*.md Format

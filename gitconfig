@@ -7,6 +7,7 @@
     log = delta
     reflog = delta
     show = delta
+	branch = false
 
 [delta]
     plus-style = "syntax #012800"
