@@ -8,6 +8,11 @@ source ~/.config/nvim/lua/init.lua
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
+set guitablabel=%N/\ %t\ %M
+
+set t_ZH=[3m
+set t_ZR=[23m
+
 function! VimspectorJestDebugOnCursor(cmd)
     let testName = matchlist(a:cmd, '\v -t ''(.*)''')[1]
     call vimspector#LaunchWithSettings( #{ configuration: 'jest', TestName: testName } )

@@ -25,7 +25,3 @@ if exists('+termguicolors')
   set termguicolors
 endif
 
-set guitablabel=%N/\ %t\ %M
-
-set t_ZH=[3m
-set t_ZR=[23m
