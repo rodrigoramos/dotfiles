@@ -1,0 +1,9 @@
+[Unit]
+Description=Sincronização de caldav para disco
+
+[Service]
+ExecStart=/home/rodrigosilva/.local/bin/vdirsyncer sync
+Restart=Never
+
+[Install]
+WantedBy=default.target
