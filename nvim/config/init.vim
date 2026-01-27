@@ -8,7 +8,7 @@ source ~/.config/nvim/lua/init.lua
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
-set guitablabel=%N/\ %t\ %M
+" set guitablabel=%N/\ %t\ %M
 
 set t_ZH=[3m
 set t_ZR=[23m

@@ -6,14 +6,10 @@ vo()
     #wezterm start --cwd ${1:-$PWD} --class nvim-vo -- nvim &
 }
 
-alias cat="bat"
+alias cat="batcat"
 alias vim="nvim"
 alias fif="$HOME/git/dotfiles/bin/fit"
 alias my-rclone="$HOME/git/dotfiles/bin/rclone.sh"
-
-# Wayland
-alias code="code --enable-features=UseOzonePlatform --ozone-platform=wayland"
-
 
 # Git
 alias gs="git status"

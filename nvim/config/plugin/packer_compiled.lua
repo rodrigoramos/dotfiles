@@ -49,8 +49,8 @@ local function save_profiles(threshold)
 end
 
 time([[Luarocks path setup]], true)
-local package_path_str = "/home/rodrigosilva/.cache/nvim/packer_hererocks/2.1.1703358377/share/lua/5.1/?.lua;/home/rodrigosilva/.cache/nvim/packer_hererocks/2.1.1703358377/share/lua/5.1/?/init.lua;/home/rodrigosilva/.cache/nvim/packer_hererocks/2.1.1703358377/lib/luarocks/rocks-5.1/?.lua;/home/rodrigosilva/.cache/nvim/packer_hererocks/2.1.1703358377/lib/luarocks/rocks-5.1/?/init.lua"
-local install_cpath_pattern = "/home/rodrigosilva/.cache/nvim/packer_hererocks/2.1.1703358377/lib/lua/5.1/?.so"
+local package_path_str = "/home/rodrigosilva/.cache/nvim/packer_hererocks/2.1.1741730670/share/lua/5.1/?.lua;/home/rodrigosilva/.cache/nvim/packer_hererocks/2.1.1741730670/share/lua/5.1/?/init.lua;/home/rodrigosilva/.cache/nvim/packer_hererocks/2.1.1741730670/lib/luarocks/rocks-5.1/?.lua;/home/rodrigosilva/.cache/nvim/packer_hererocks/2.1.1741730670/lib/luarocks/rocks-5.1/?/init.lua"
+local install_cpath_pattern = "/home/rodrigosilva/.cache/nvim/packer_hererocks/2.1.1741730670/lib/lua/5.1/?.so"
 if not string.find(package.path, package_path_str, 1, true) then
   package.path = package.path .. ';' .. package_path_str
 end
@@ -149,12 +149,6 @@ _G.packer_plugins = {
     path = "/home/rodrigosilva/.local/share/nvim/site/pack/packer/start/ngswitcher.vim",
     url = "https://github.com/rodrigoramos/ngswitcher.vim"
   },
-  ["null-ls.nvim"] = {
-    config = { "\27LJ\2\nŠ\2\0\0\6\0\14\0!6\0\0\0'\2\1\0B\0\2\0029\1\2\0005\3\3\0004\4\a\0009\5\4\0009\5\5\0059\5\6\5>\5\1\0049\5\4\0009\5\a\0059\5\6\5>\5\2\0049\5\4\0009\5\b\0059\5\6\5>\5\3\0049\5\4\0009\5\b\0059\5\t\5>\5\4\0049\5\4\0009\5\n\0059\5\v\5>\5\5\0049\5\4\0009\5\5\0059\5\f\5>\5\6\4=\4\r\3B\1\2\1K\0\1\0\fsources\btsc\nvsnip\15completion\rgitsigns\17code_actions\15formatting\reslint_d\16diagnostics\rbuiltins\1\0\1\fdebouce\3d\nsetup\fnull-ls\frequire\0" },
-    loaded = true,
-    path = "/home/rodrigosilva/.local/share/nvim/site/pack/packer/start/null-ls.nvim",
-    url = "https://github.com/jose-elias-alvarez/null-ls.nvim"
-  },
   ["nvim-cmp"] = {
     loaded = true,
     path = "/home/rodrigosilva/.local/share/nvim/site/pack/packer/start/nvim-cmp",
@@ -226,7 +220,7 @@ _G.packer_plugins = {
     url = "https://github.com/nvim-telescope/telescope.nvim"
   },
   ["tokyonight.nvim"] = {
-    config = { "\27LJ\2\nÁ\1\0\0\4\0\t\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0005\3\4\0=\3\5\2B\0\2\0016\0\6\0009\0\a\0'\2\b\0B\0\2\1K\0\1\0\27colorscheme tokyonight\bcmd\bvim\vstyles\1\0\2\rsidebars\16transparent\vfloats\16transparent\1\0\2\nstyle\nstorm\16transparent\2\nsetup\15tokyonight\frequire\0" },
+    config = { "\27LJ\2\nÉ\1\0\0\4\0\t\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0005\3\4\0=\3\5\2B\0\2\0016\0\6\0009\0\a\0'\2\b\0B\0\2\1K\0\1\0\27colorscheme tokyonight\bcmd\bvim\vstyles\1\0\2\rsidebars\16transparent\vfloats\16transparent\1\0\3\nstyle\nstorm\vstyles\0\16transparent\2\nsetup\15tokyonight\frequire\0" },
     loaded = true,
     path = "/home/rodrigosilva/.local/share/nvim/site/pack/packer/start/tokyonight.nvim",
     url = "https://github.com/folke/tokyonight.nvim"
@@ -276,12 +270,8 @@ _G.packer_plugins = {
 time([[Defining packer_plugins]], false)
 -- Config for: tokyonight.nvim
 time([[Config for tokyonight.nvim]], true)
-try_loadstring("\27LJ\2\nÁ\1\0\0\4\0\t\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0005\3\4\0=\3\5\2B\0\2\0016\0\6\0009\0\a\0'\2\b\0B\0\2\1K\0\1\0\27colorscheme tokyonight\bcmd\bvim\vstyles\1\0\2\rsidebars\16transparent\vfloats\16transparent\1\0\2\nstyle\nstorm\16transparent\2\nsetup\15tokyonight\frequire\0", "config", "tokyonight.nvim")
+try_loadstring("\27LJ\2\nÉ\1\0\0\4\0\t\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0005\3\4\0=\3\5\2B\0\2\0016\0\6\0009\0\a\0'\2\b\0B\0\2\1K\0\1\0\27colorscheme tokyonight\bcmd\bvim\vstyles\1\0\2\rsidebars\16transparent\vfloats\16transparent\1\0\3\nstyle\nstorm\vstyles\0\16transparent\2\nsetup\15tokyonight\frequire\0", "config", "tokyonight.nvim")
 time([[Config for tokyonight.nvim]], false)
--- Config for: null-ls.nvim
-time([[Config for null-ls.nvim]], true)
-try_loadstring("\27LJ\2\nŠ\2\0\0\6\0\14\0!6\0\0\0'\2\1\0B\0\2\0029\1\2\0005\3\3\0004\4\a\0009\5\4\0009\5\5\0059\5\6\5>\5\1\0049\5\4\0009\5\a\0059\5\6\5>\5\2\0049\5\4\0009\5\b\0059\5\6\5>\5\3\0049\5\4\0009\5\b\0059\5\t\5>\5\4\0049\5\4\0009\5\n\0059\5\v\5>\5\5\0049\5\4\0009\5\5\0059\5\f\5>\5\6\4=\4\r\3B\1\2\1K\0\1\0\fsources\btsc\nvsnip\15completion\rgitsigns\17code_actions\15formatting\reslint_d\16diagnostics\rbuiltins\1\0\1\fdebouce\3d\nsetup\fnull-ls\frequire\0", "config", "null-ls.nvim")
-time([[Config for null-ls.nvim]], false)
 
 _G._packer.inside_compile = false
 if _G._packer.needs_bufread == true then

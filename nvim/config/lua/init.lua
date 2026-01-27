@@ -84,24 +84,24 @@ packer.startup(function(use)
 
   -- Code formatter: Prettier and null-ls
   use { 'neovim/nvim-lspconfig' }
-  use({
-      "jose-elias-alvarez/null-ls.nvim",
-      config = function()
-        local null_ls = require("null-ls")
-        null_ls.setup({ 
-          debouce = 100,
-          sources = {
-            null_ls.builtins.diagnostics.eslint_d,
-            null_ls.builtins.formatting.eslint_d,
-            null_ls.builtins.code_actions.eslint_d,
-            null_ls.builtins.code_actions.gitsigns,
-            null_ls.builtins.completion.vsnip,
-            null_ls.builtins.diagnostics.tsc,
-          } 
-        })
-      end,
-      requires = { "nvim-lua/plenary.nvim" },
-  })
+  -- use({
+  --     "jose-elias-alvarez/null-ls.nvim",
+  --     config = function()
+  --       local null_ls = require("null-ls")
+  --       null_ls.setup({ 
+  --         debouce = 100,
+  --         sources = {
+  --           null_ls.builtins.diagnostics.eslint_d,
+  --           null_ls.builtins.formatting.eslint_d,
+  --           null_ls.builtins.code_actions.eslint_d,
+  --           null_ls.builtins.code_actions.gitsigns,
+  --           null_ls.builtins.completion.vsnip,
+  --           null_ls.builtins.diagnostics.tsc,
+  --         } 
+  --       })
+  --     end,
+  --     requires = { "nvim-lua/plenary.nvim" },
+  -- })
 
   use { 'MunifTanjim/prettier.nvim' }
 
@@ -471,15 +471,21 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 --   capabilities = capabilities
 -- }
 
-require('lspconfig')['eslint'].setup {
-  capabilities = capabilities
-}
-
 require("lspconfig.configs").vtsls = require("vtsls").lspconfig
 
-require('lspconfig')['vtsls'].setup {
+vim.lsp.enable({ 'eslint', 'vtsls' })
+vim.lsp.config('eslint', {
   capabilities = capabilities
-}
+})
+
+
+-- require('lspconfig')['vtsls'].setup {
+--   capabilities = capabilities
+-- }
+
+vim.lsp.config('vtsls', {
+  capabilities = capabilities
+})
 
 -- == Barbar Setup == 
 require'barbar'.setup {
