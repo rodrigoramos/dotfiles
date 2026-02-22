@@ -12,6 +12,6 @@ fi
 count_slack_client_ref=$(hyprctl clients | grep -cP 'Slack')
 
 
-if [ $count_teams_client_ref -gt 0 ]; then
+if [ $count_slack_client_ref -gt 0 ]; then
   hyprctl dispatch sendshortcut CTRL_SHIFT,SPACE, 'class:com.slack.Slack'
 fi

@@ -1,10 +1,10 @@
 #!/bin/bash
 
-vo() 
-{
+# vo() 
+# {
   # kitty --detach --working-directory=${1:-$PWD} -T=NeoVim nvim
     #wezterm start --cwd ${1:-$PWD} --class nvim-vo -- nvim &
-}
+# }
 
 alias cat="batcat"
 alias vim="nvim"
@@ -20,17 +20,45 @@ alias mssql-cli="python3.9 /home/rramos/.local/lib/python3.9/site-packages/mssql
 
 alias icones="cd /usr/share/applications"
 
-findc() 
-{
-  echo Find content in files \(Grep Wrapper\)
-  echo
+# Shell Version
+# findc() 
+# {
+#   echo Find content in files \(Grep Wrapper\)
+#   echo
 
-  if [ "$1" = "" ]; then
+#   if [ "$1" = "" ]
+#     echo ERROR: Please specify pattern to be found
+#     return 1
+#   end
+
+#   if "$1" =~ "help"; 
+#     echo This is a simple wrapper for grep command to look into files
+#     echo
+#     echo USAGE: findc PATTERN \[directory\]
+#     echo
+#     echo "The command is: grep --exclude-dir={node_modules,dist} -rnw 'path' -e 'pattern to be found'"
+
+#     return 0
+#   end
+     
+#   grep --exclude-dir={node_modules,dist} -rnw ${2:-.} -e $1
+# }
+
+# Fish version
+function findc 
+  echo "Find content in files (Grep Wrapper)"
+  echo ""
+
+  set -l pattern $argv[1]
+
+  echo Value: "$pattern"
+
+  if test -z "$pattern"
     echo ERROR: Please specify pattern to be found
     return 1
-  fi
+  end
 
-  if [[ "$1" =~ "help" ]]; then
+  if test "$pattern" = "help"; 
     echo This is a simple wrapper for grep command to look into files
     echo
     echo USAGE: findc PATTERN \[directory\]
@@ -38,7 +66,13 @@ findc()
     echo "The command is: grep --exclude-dir={node_modules,dist} -rnw 'path' -e 'pattern to be found'"
 
     return 0
-  fi
+  end
+  
+  set -l path $argv[2]
      
-  grep --exclude-dir={node_modules,dist} -rnw ${2:-.} -e $1
-}
+  if not set -q path
+    set path .
+  end
+
+  grep --exclude-dir={node_modules,dist} -rnw $path -e $pattern
+end
