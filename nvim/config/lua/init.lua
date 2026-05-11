@@ -67,10 +67,10 @@ packer.startup(function(use)
   use { "hrsh7th/nvim-cmp" }
 
   -- Syntaxe Highlight: Treesitter -- incompatível com nvim 0.9 :( bad Ubuntu
-  use { 'nvim-treesitter/nvim-treesitter' }
+  use { 'nvim-treesitter/nvim-treesitter', branch = 'main' }
 
   -- Fuzzy Finder: Telescope
-  use { 'nvim-telescope/telescope.nvim', tag = '0.1.8',
+  use { 'nvim-telescope/telescope.nvim', branch = 'master',
     requires = { {'nvim-lua/plenary.nvim'} }
   }
 
@@ -202,6 +202,24 @@ packer.startup(function(use)
   ----  'milanglacier/minuet-ai.nvim'
   ---- }
 
+  use({
+      'MeanderingProgrammer/render-markdown.nvim',
+      after = { 'nvim-treesitter' },
+      requires = { 'nvim-mini/mini.nvim', opt = true },            -- if you use the mini.nvim suite
+      -- requires = { 'nvim-mini/mini.icons', opt = true },        -- if you use standalone mini plugins
+      -- requires = { 'nvim-tree/nvim-web-devicons', opt = true }, -- if you prefer nvim-web-devicons
+      config = function()
+          require('render-markdown').setup({})
+      end,
+  })
+
+  -- install without yarn or npm
+  use({
+      "iamcco/markdown-preview.nvim",
+      run = function() vim.fn["mkdp#util#install"]() end,
+  })
+
+  use({ "iamcco/markdown-preview.nvim", run = "cd app && npm install", setup = function() vim.g.mkdp_filetypes = { "markdown" } end, ft = { "markdown" }, })
 end)
 
 -- == NvimTree Setup == 
@@ -323,36 +341,40 @@ vim.cmd [[
 ]]
 
 
--- == Syntaxe Highlight: Treesitter ==  CAREFUL not supported nvim 0.9 - Bad Ubuntu
-local status, ts = pcall(require, "nvim-treesitter.configs") 
-if (not status) then return end 
- 
-ts.setup { 
-  highlight = { 
-    enable = true, 
-    disable = {}, 
-  }, 
-  indent = { 
-    enable = true, 
-    disable = {}, 
-  }, 
-  ensure_installed = { 
-    "tsx", 
-    "json", 
-    "yaml", 
-    "css", 
-    "html", 
-    "lua",
-    "typescript",
-    "javascript"
-  }, 
-  autotag = { 
-    enable = true, 
-  }, 
-} 
- 
-local parser_config = require "nvim-treesitter.parsers".get_parser_configs() 
-parser_config.tsx.filetype_to_parsername = { "javascript", "typescript.tsx" }
+-- == Syntaxe Highlight: Treesitter ==
+local status, ts = pcall(require, "nvim-treesitter.configs")
+if status then
+  ts.setup {
+    highlight = {
+      enable = true,
+      disable = {},
+    },
+    indent = {
+      enable = true,
+      disable = {},
+    },
+    ensure_installed = {
+      "tsx",
+      "json",
+      "yaml",
+      "css",
+      "html",
+      "lua",
+      "typescript",
+      "javascript",
+      "markdown",
+      "markdown_inline",
+    },
+    autotag = {
+      enable = true,
+    },
+  }
+
+  local ok, parser_config = pcall(require, "nvim-treesitter.parsers")
+  if ok then
+    parser_config.get_parser_configs().tsx.filetype_to_parsername = { "javascript", "typescript.tsx" }
+  end
+end
 
 -- == Fuzzy Finder: Telescope == 
 local actions = require "telescope.actions"
@@ -466,25 +488,33 @@ lspconfig.setup {
 
 -- == LSP Config + Cmp == --
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
--- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
--- require('lspconfig')['ts_ls'].setup {
---   capabilities = capabilities
--- }
 
-require("lspconfig.configs").vtsls = require("vtsls").lspconfig
-
-vim.lsp.enable({ 'eslint', 'vtsls' })
-vim.lsp.config('eslint', {
+-- mason-lspconfig v2 calls vim.lsp.enable() automatically (automatic_enable = true default)
+-- Just patch server configs with capabilities and custom settings here
+vim.lsp.config('vtsls', {
   capabilities = capabilities
 })
 
-
--- require('lspconfig')['vtsls'].setup {
---   capabilities = capabilities
--- }
-
-vim.lsp.config('vtsls', {
-  capabilities = capabilities
+vim.lsp.config('eslint', {
+  capabilities = capabilities,
+  on_new_config = function(config, root_dir)
+    local flat_config_files = {
+      'eslint.config.js',
+      'eslint.config.mjs',
+      'eslint.config.cjs',
+      'eslint.config.ts',
+    }
+    local has_flat_config = false
+    for _, file in ipairs(flat_config_files) do
+      if vim.fn.filereadable(root_dir .. '/' .. file) == 1 then
+        has_flat_config = true
+        break
+      end
+    end
+    config.settings = config.settings or {}
+    config.settings.experimental = config.settings.experimental or {}
+    config.settings.experimental.useFlatConfig = has_flat_config
+  end,
 })
 
 -- == Barbar Setup == 
@@ -497,7 +527,8 @@ local nvim_tree_events = require('nvim-tree.events')
 local bufferline_api = require('bufferline.api')
 
 local function get_tree_size()
-  return require'nvim-tree.view'.View.width
+  local view = require('nvim-tree.view')
+  return view.get_width and view.get_width() or 30
 end
 
 nvim_tree_events.subscribe('TreeOpen', function()

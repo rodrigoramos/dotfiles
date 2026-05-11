@@ -1,7 +1,7 @@
 set runtimepath^=~/.vim runtimepath+=~/.vim/after
 let &packpath=&runtimepath
 
-let g:loaded_node_provider=1
+" let g:loaded_node_provider=1
 source ~/.vimrc
 "source ~/.config/nvim/coc.vim
 source ~/.config/nvim/lua/init.lua 
@@ -278,4 +278,14 @@ function! GitFolderName ()
     let dot_git_path = finddir(".git", ".;")
     return fnamemodify(dot_git_path, ":s?.git??:p:h:t")
 endfunction
+
+" Vimspector
+let g:vimspector_base_dir='/home/rodrigo.silva/.local/share/nvim/site/pack/packer/start/vimspector'
+
+
+nnoremap <Leader>ds <Plug>VimspectorContinue
+nnoremap <Leader>dp :VimspectorReset<CR>
+nnoremap <Leader>db <Plug>VimspectorToggleBreakpoint
+nnoremap <Leader>di <Plug>VimspectorStepInto
+nnoremap <Leader>do <Plug>VimspectorStepOver
 
