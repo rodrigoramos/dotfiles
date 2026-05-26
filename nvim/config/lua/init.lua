@@ -519,8 +519,13 @@ vim.lsp.config('eslint', {
 
 -- == Barbar Setup == 
 require'barbar'.setup {
-  highlight_alternate = true
-} 
+  highlight_alternate = false,
+  highlight_current_file_icon = true,
+}
+
+vim.api.nvim_set_hl(0, 'BufferCurrent',     { bold = true, bg = '#283457', fg = '#c0caf5' })
+vim.api.nvim_set_hl(0, 'BufferCurrentSign', { fg = '#7aa2f7', bg = '#283457' })
+vim.api.nvim_set_hl(0, 'BufferCurrentIcon', { bg = '#283457' })
 
 -- Barbar and NvimTree integration
 local nvim_tree_events = require('nvim-tree.events')
@@ -556,9 +561,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
     bufmap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>')
     bufmap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>')
     bufmap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>')
-    bufmap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>')
+    bufmap('n', 'gi', '<cmd>lua require("telescope.builtin").lsp_implementations()<cr>')
     bufmap('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>')
-    bufmap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>')
+    bufmap('n', 'gr', '<cmd>lua require("telescope.builtin").lsp_references()<cr>')
     -- bufmap('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>')
     bufmap('n', '<F2>', "<cmd>lua require'renamer'.rename()<cr>")
     bufmap({'n', 'x'}, '<F3>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>')
