@@ -66,6 +66,12 @@ packer.startup(function(use)
   use { "hrsh7th/cmp-buffer" }
   use { "hrsh7th/nvim-cmp" }
 
+  -- Refactor
+  use {
+    'theprimeagen/refactoring.nvim',
+    requires = { {'lewis6991/async.nvim'} }
+  }
+
   -- Syntaxe Highlight: Treesitter -- incompatível com nvim 0.9 :( bad Ubuntu
   use { 'nvim-treesitter/nvim-treesitter', branch = 'main' }
 
@@ -214,11 +220,6 @@ packer.startup(function(use)
   })
 
   -- install without yarn or npm
-  use({
-      "iamcco/markdown-preview.nvim",
-      run = function() vim.fn["mkdp#util#install"]() end,
-  })
-
   use({ "iamcco/markdown-preview.nvim", run = "cd app && npm install", setup = function() vim.g.mkdp_filetypes = { "markdown" } end, ft = { "markdown" }, })
 end)
 
@@ -627,3 +628,12 @@ vim.api.nvim_create_autocmd('LspAttach', {
 --         },
 --     }
 -- }
+--
+--
+local keymap = vim.keymap
+
+keymap.set({ "n", "x" }, "<leader>rs", function()
+  -- this keymap doesn't select any textobject by default, so you may need to provide one each time you use it.
+  require("refactoring").select_refactor()
+end, { desc = "Select refactor" })
+

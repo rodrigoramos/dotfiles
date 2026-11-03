@@ -1,9 +1,11 @@
 [Unit]
 Description=Davmail service as a server
+After=graphical-session.target
+PartOf=graphical-session.target
 
 [Service]
 ExecStart=/usr/bin/davmail
 Restart=always
 
 [Install]
-WantedBy=default.target
+WantedBy=graphical-session.target

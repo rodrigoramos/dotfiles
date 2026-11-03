@@ -74,6 +74,11 @@ end
 time([[try_loadstring definition]], false)
 time([[Defining packer_plugins]], true)
 _G.packer_plugins = {
+  ["async.nvim"] = {
+    loaded = true,
+    path = "/home/rodrigo.silva/.local/share/nvim/site/pack/packer/start/async.nvim",
+    url = "https://github.com/lewis6991/async.nvim"
+  },
   ["barbar.nvim"] = {
     loaded = true,
     path = "/home/rodrigo.silva/.local/share/nvim/site/pack/packer/start/barbar.nvim",
@@ -133,11 +138,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/rodrigo.silva/.local/share/nvim/site/pack/packer/start/lspkind-nvim",
     url = "https://github.com/onsails/lspkind-nvim"
-  },
-  ["markdown-preview.nvim"] = {
-    loaded = true,
-    path = "/home/rodrigo.silva/.local/share/nvim/site/pack/packer/start/markdown-preview.nvim",
-    url = "https://github.com/iamcco/markdown-preview.nvim"
   },
   ["mason-lspconfig.nvim"] = {
     loaded = true,
@@ -209,6 +209,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/rodrigo.silva/.local/share/nvim/site/pack/packer/start/prettier.nvim",
     url = "https://github.com/MunifTanjim/prettier.nvim"
+  },
+  ["refactoring.nvim"] = {
+    loaded = true,
+    path = "/home/rodrigo.silva/.local/share/nvim/site/pack/packer/start/refactoring.nvim",
+    url = "https://github.com/theprimeagen/refactoring.nvim"
   },
   ["renamer.nvim"] = {
     loaded = true,
