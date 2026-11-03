@@ -1,0 +1,59 @@
+//* ---- 💫 https://github.com/JaKooLit 💫 ---- *//
+/* Waybar Modules Extras */
+
+/* This is where you can add Extra Modules you wish. copy.sh will try to restore*/
+/* this file along with the unique configs and styles. */
+/* IMPORTANT, be mindful with , or ". else waybar will not start */
+
+{
+    "group/events": {
+      "orientation": "horizontal",
+      "drawer": {
+        "transition-duration": 500,
+        "transition-left-to-right": true
+      },
+      "modules": [
+        "custom/next-event-time",
+        "custom/separator#blank_2",
+        "custom/next-event-desc"
+      ]
+    },
+    "custom/next-event-time": {
+      "format": "{}",
+      "tooltip": true,
+      "interval": 10,
+      "class": "cpu",
+      "format-icons": {
+        "default": ""
+      },
+      "on-click": "swaymsg exec \\$calendar",
+      "exec": "python3 $HOME/git/dotfiles/waybar/scripts/waybar-khal-time.py",
+      "return-type": "json"
+    },
+    "custom/next-event-desc": {
+      "format": "{}",
+      "tooltip": true,
+      "class": "cpu",
+      "interval": 20,
+      "format-icons": {
+        "default": ""
+      },
+      "on-click": "swaymsg exec \\$calendar",
+      "exec": "python3 $HOME/git/dotfiles/waybar/scripts/waybar-khal.py",
+      "return-type": "json",
+    },
+    "custom/github": {
+      "format": "\uf113{icon}",
+      "exec": "$HOME/git/dotfiles/waybar/scripts/github-prs.sh",
+      "return-type": "json",
+      "interval": 240, // 2 min
+      "tooltip-format": "<tt>{alt}</tt>",
+      "on-click": "xdg-open https://github.com/pulls/review-requested",
+      "format-icons": {
+        "nothingtodo": "<span foreground=\"green\" rise=\"-3pt\"><small>\uf00c</small></span>",
+        "pending": "<span fgcolor=\"#ff4df0\" rise=\"-3pt\"><small></small></span>"
+      }
+    }
+}
+
+

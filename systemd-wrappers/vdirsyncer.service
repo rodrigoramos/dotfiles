@@ -2,8 +2,8 @@
 Description=Sincronização de caldav para disco
 
 [Service]
-ExecStart=/home/rodrigosilva/.local/bin/vdirsyncer sync
-Restart=Never
+ExecStart=/usr/bin/vdirsyncer sync
+Restart=no
 
 [Install]
 WantedBy=default.target

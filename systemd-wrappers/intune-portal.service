@@ -1,0 +1,10 @@
+[Unit]
+Description=Executar Keypass
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/keepassxc
+
+[Install]
+WantedBy=default.target

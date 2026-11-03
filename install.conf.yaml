@@ -2,28 +2,51 @@
     link:
       relink: true
 
-      
+
 - link:
     ~/.dotfiles: ''
-    ~/.xkb/symbols/us_custom: xkb/symbols/us_custom
+    ~/.xkb/symbols/us_custom:
+        path: xkb/symbols/us_custom
+        create: true
     ~/.vimrc: vimrc
     ~/.ideavimrc: ideavimrc
-    ~/.gitconfig: gitconfig
+    ~/.Xresources: .Xresources
+    ~/.gitconfig:
+        path: gitconfig
+        force: true
     ~/.config/nvim:
         path: 'nvim/config'
         create: true
         glob: true
-    ~/.local/share/nvim/site/autoload/plug.vim: nvim/autoload/plug.vim
+    ~/.local/share/nvim/site/autoload/plug.vim:
+        path: nvim/autoload/plug.vim
+        create: true
+    ~/.config/hypr:
+        path: hypr
+        force: true
+    ~/.config/kitty:
+        path: kitty
+        force: true
+    ~/.config/fish:
+        path: fish
+        force: true
+    ~/.config/waybar:
+        path: waybar
+        force: true
+    ~/.config/systemd/user/:
+        path: 'systemd-wrappers/*'
+        create: true
+        force: true
+        glob: true
     ~/.config/sway/config.d/:
         path: 'sway/config.d/*'
+        create: true
         force: true
         glob: true
     ~/.config/sway/definitions.d/:
         path: 'sway/definitions.d/*'
+        create: true
         force: true
-        glob: true
-    ~/.config/waybar:
-        path: 'waybar/*'
         glob: true
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
