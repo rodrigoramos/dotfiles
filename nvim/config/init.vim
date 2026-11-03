@@ -280,7 +280,7 @@ function! GitFolderName ()
 endfunction
 
 " Vimspector
-let g:vimspector_base_dir='/home/rodrigo.silva/.local/share/nvim/site/pack/packer/start/vimspector'
+let g:vimspector_base_dir=stdpath('data').'/site/pack/packer/start/vimspector'
 
 
 nnoremap <Leader>ds <Plug>VimspectorContinue

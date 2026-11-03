@@ -2,7 +2,11 @@
 
 set -e
 
-CONFIG="install.conf.yaml"
+case "$(uname -s)" in
+  Darwin) OS=macos ;;
+  *) OS=linux ;;
+esac
+CONFIGS=(install.conf.yaml "install.${OS}.yaml")
 DOTBOT_DIR="dotbot"
 
 DOTBOT_BIN="bin/dotbot"
@@ -12,4 +16,4 @@ cd "${BASEDIR}"
 git -C "${DOTBOT_DIR}" submodule sync --quiet --recursive
 git submodule update --init --recursive "${DOTBOT_DIR}"
 
-"${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"
+"${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIGS[@]}" "${@}"

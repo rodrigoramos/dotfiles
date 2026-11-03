@@ -1,19 +1,37 @@
 # Meus dotfiles
 
-NOTA: Esse repositório utilizar submodulo (dotbot).
+NOTA: Esse repositório utiliza submódulo (dotbot).
 
-Esse repositório possui meus arquivos de configuração bem como a montagem de ambiente.
+Esse repositório possui meus arquivos de configuração bem como a montagem de ambiente,
+para Linux e macOS na mesma branch (`master`).
 
-Componentes:
-- Sway
-- Alacritty
-- NeoVim
-- Waybar
-- Rider
-- Xkb
-- Tmux
-- Bash-it
+## Instalação
 
+```sh
+git clone --recursive git@github.com:rodrigoramos/dotfiles.git ~/git/dotfiles
+cd ~/git/dotfiles && ./install
+```
+
+O `./install` detecta o sistema e aplica:
+
+| Arquivo | Conteúdo |
+|---|---|
+| `install.conf.yaml` | comum: nvim, vim, ideavim, git, fish, kitty |
+| `install.linux.yaml` | Hyprland, Waybar, Sway, systemd, xkb, Xresources |
+| `install.macos.yaml` | AeroSpace + `brew bundle` com `macos/Brewfile` |
+
+Diferenças por sistema dentro de uma mesma config ficam no próprio arquivo:
+- fish: blocos `if test (uname) = Linux`
+- kitty: `kitty.conf` comum + `linux.conf` / `macos.conf` (via `include ${KITTY_OS}.conf`)
+
+Atalhos de janela compartilhados entre Hyprland e AeroSpace: ver `keymap.md`.
+
+### Primeira vez no macOS
+
+1. Instalar o [Homebrew](https://brew.sh) e rodar `./install`.
+2. Tornar o fish o shell padrão: `echo /opt/homebrew/bin/fish | sudo tee -a /etc/shells && chsh -s /opt/homebrew/bin/fish`.
+3. Instalar os plugins do fish (o fisher já vem no repo): `fisher update`.
+4. Abrir o AeroSpace e dar permissão de Acessibilidade.
 
 ## Manual Fixes
 

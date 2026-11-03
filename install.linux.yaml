@@ -1,0 +1,31 @@
+# Links só do Linux (Wayland/X11, systemd).
+- defaults:
+    link:
+      relink: true
+
+- link:
+    ~/.xkb/symbols/us_custom:
+        path: xkb/symbols/us_custom
+        create: true
+    ~/.Xresources: .Xresources
+    ~/.config/hypr:
+        path: hypr
+        force: true
+    ~/.config/waybar:
+        path: waybar
+        force: true
+    ~/.config/systemd/user/:
+        path: 'systemd-wrappers/*'
+        create: true
+        force: true
+        glob: true
+    ~/.config/sway/config.d/:
+        path: 'sway/config.d/*'
+        create: true
+        force: true
+        glob: true
+    ~/.config/sway/definitions.d/:
+        path: 'sway/definitions.d/*'
+        create: true
+        force: true
+        glob: true

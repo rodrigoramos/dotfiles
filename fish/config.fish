@@ -13,12 +13,19 @@ end
 #         (set_color $fish_color_cwd) (prompt_pwd) (_node_version) (set_color normal)
 # end
 
-set -xg XDG_DATA_DIRS $XDG_DATA_DIRS /home/rodrigo.silva/.local/share/applications /var/lib/snapd/desktop/applications
+# Homebrew (macOS) precisa vir antes do resto para o PATH achar os binários
+if test -x /opt/homebrew/bin/brew
+    /opt/homebrew/bin/brew shellenv | source
+end
+
+if test (uname) = Linux
+    set -xg XDG_DATA_DIRS $XDG_DATA_DIRS $HOME/.local/share/applications /var/lib/snapd/desktop/applications
+    set -gx QT_QPA_PLATFORMTHEME qt5ct
+end
 
 set -xg nvmrc_announce false
 set -xg PATH $PATH $HOME/.nix-profile/bin $HOME/.local/bin
 set -gx EDITOR nvim
-set -gx QT_QPA_PLATFORMTHEME qt5ct
 
 if status is-interactive # Commands to run in interactive sessions can go here
 
@@ -34,7 +41,9 @@ if status is-interactive # Commands to run in interactive sessions can go here
     # Aliases
     alias ls 'eza --icons=auto'
     alias clear "printf '\033[2J\033[3J\033[1;1H'"
-    alias q 'qs -c ii'
+    if test (uname) = Linux
+        alias q 'qs -c ii'
+    end
     source ~/git/dotfiles/aliases
 end
 

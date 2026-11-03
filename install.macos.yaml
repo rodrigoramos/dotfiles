@@ -1,0 +1,15 @@
+# Links só do macOS.
+- defaults:
+    link:
+      relink: true
+
+- link:
+    ~/.config/aerospace/aerospace.toml:
+        path: macos/aerospace/aerospace.toml
+        create: true
+
+- shell:
+    - command: 'if command -v brew >/dev/null; then brew bundle --file=macos/Brewfile; else echo "Homebrew não encontrado: instale em https://brew.sh e rode ./install de novo"; fi'
+      description: Installing Homebrew packages (macos/Brewfile)
+      stdout: true
+      stderr: true

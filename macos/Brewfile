@@ -1,0 +1,25 @@
+# Pacotes do macOS — instalados pelo ./install (brew bundle --file=macos/Brewfile)
+tap "nikitabobko/tap"
+
+# Shell e terminal
+brew "fish"
+brew "starship"
+brew "eza"
+cask "kitty"
+cask "font-jetbrains-mono-nerd-font"
+
+# Editor e ferramentas usadas pelo nvim (telescope etc.)
+brew "neovim"
+brew "ripgrep"
+brew "fd"
+brew "git"
+brew "git-delta"
+
+# Calendário (aliases/khal, equivalentes ao vdirsyncer do Linux)
+brew "vdirsyncer"
+brew "khal"
+
+# Janelas, teclado e launcher (equivalentes a Hyprland, xkb e rofi)
+cask "nikitabobko/tap/aerospace"
+cask "karabiner-elements"
+cask "raycast"
