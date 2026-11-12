@@ -1,3 +1,17 @@
 vim/pack
 hypr/wallpaper_effects/.wallpaper_*
 fish/fish_variables
+
+# fish: estado local e arquivos instalados pelo fisher (recriados com `fisher update` a partir de fish/fish_plugins)
+fish/conf.d/*.bak
+fish/functions/fisher.fish
+fish/completions/fisher.fish
+fish/functions/bass.fish
+fish/functions/__bass.py
+fish/functions/nvm.fish
+fish/conf.d/nvm.fish
+fish/completions/nvm.fish
+fish/functions/__git.*.fish
+fish/functions/g*.fish
+fish/conf.d/git.fish
+fish/auto-Hypr.fish

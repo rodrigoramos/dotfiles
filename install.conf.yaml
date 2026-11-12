@@ -29,3 +29,8 @@
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
+    - command: >-
+        command -v fish >/dev/null || exit 0;
+        fish -c 'type -q fisher; or curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source; and fisher update'
+      description: Installing fish plugins (fisher)
+      stdout: true
