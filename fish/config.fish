@@ -50,3 +50,7 @@ end
 # for file in /etc/profile.d/*.sh
 #     bass source $file
 # end
+
+function nvm
+   bass source $HOME/.nvm/nvm.sh --no-use ';' nvm $argv
+end
