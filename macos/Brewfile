@@ -1,5 +1,6 @@
 # Pacotes do macOS — instalados pelo ./install (brew bundle --file=macos/Brewfile)
 tap "nikitabobko/tap"
+tap "felixkratz/formulae"
 
 # Shell e terminal
 brew "fish"
@@ -22,5 +23,6 @@ brew "khal"
 
 # Janelas, teclado e launcher (equivalentes a Hyprland, xkb e rofi)
 cask "nikitabobko/tap/aerospace"
+brew "felixkratz/formulae/borders"
 cask "karabiner-elements"
 cask "raycast"
