@@ -5,6 +5,7 @@ tap "nikitabobko/tap"
 brew "fish"
 brew "starship"
 brew "eza"
+brew "bat"
 cask "kitty"
 cask "font-jetbrains-mono-nerd-font"
 
