@@ -6,7 +6,12 @@
     #wezterm start --cwd ${1:-$PWD} --class nvim-vo -- nvim &
 # }
 
-alias cat="batcat"
+# bat: "batcat" no Debian/Ubuntu, "bat" no macOS (Homebrew)
+if type -q batcat
+  alias cat="batcat"
+else if type -q bat
+  alias cat="bat"
+end
 alias vim="nvim"
 alias fif="$HOME/git/dotfiles/bin/fit"
 alias my-rclone="$HOME/git/dotfiles/bin/rclone.sh"
