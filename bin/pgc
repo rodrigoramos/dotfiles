@@ -1,0 +1,542 @@
+#!/usr/bin/env python3
+"""pgc - abre o pgcli num banco conhecido, resolvendo as credenciais no GCP Secret Manager.
+
+Uso tipico:
+    pgc proposal -e prod
+    pgc -a proposal -e prod
+    pgc --list
+    pgc -add
+    pgc -app orch-temporal -e dev -- --less-chatty --row-limit 0
+"""
+
+import argparse
+import json
+import os
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+from urllib.parse import unquote
+
+CONFIG_PATH = Path(os.environ.get("PGC_CONFIG", Path.home() / ".config" / "pgc" / "databases.toml"))
+
+# Cache proprio do pgc: guarda a conexao ja resolvida (inclusive senha) por app/ambiente.
+PGC_SERVICE = "pgc"
+# Servico e formato de chave que o proprio pgcli usa (pgcli/main.py: key = f"{user}@{host}").
+PGCLI_SERVICE = "pgcli"
+
+REEXEC_GUARD = "PGC_REEXEC"
+
+ENV_ALIASES = {
+    "dev": "dev", "develop": "dev", "development": "dev", "desenvolvimento": "dev",
+    "stage": "stage", "staging": "stage", "stg": "stage", "hml": "stage",
+    "homolog": "stage", "homologacao": "stage", "qa": "stage",
+    "prod": "prod", "prd": "prod", "production": "prod", "producao": "prod",
+}
+
+CONN_FIELDS = ("host", "port", "user", "dbname")
+
+
+def die(msg, *, hint=None):
+    print(f"pgc: {msg}", file=sys.stderr)
+    if hint:
+        print(f"     {hint}", file=sys.stderr)
+    raise SystemExit(2)
+
+
+def load_keyring():
+    """Importa o keyring, re-executando no interpretador do venv do pgcli se preciso."""
+    try:
+        import keyring
+        return keyring
+    except ImportError:
+        pass
+
+    if not os.environ.get(REEXEC_GUARD):
+        pgcli = shutil.which("pgcli")
+        if pgcli:
+            venv_python = Path(pgcli).resolve().parent / "python"
+            if venv_python.exists() and str(venv_python) != sys.executable:
+                os.environ[REEXEC_GUARD] = "1"
+                script = os.path.abspath(__file__)
+                os.execv(str(venv_python), [str(venv_python), script, *sys.argv[1:]])
+
+    die(
+        "o modulo Python `keyring` nao esta disponivel.",
+        hint="instale com: pipx inject pgcli keyring",
+    )
+
+
+def load_config():
+    try:
+        import tomllib
+    except ModuleNotFoundError:
+        die("este script precisa de Python 3.11+ (modulo tomllib).")
+    if not CONFIG_PATH.exists():
+        die(f"lista de bancos nao encontrada em {CONFIG_PATH}.")
+    try:
+        with CONFIG_PATH.open("rb") as fh:
+            return tomllib.load(fh)
+    except Exception as exc:
+        die(f"nao consegui ler {CONFIG_PATH}: {exc}")
+
+
+def app_envs(app_table):
+    return sorted(k for k, v in app_table.items() if isinstance(v, dict))
+
+
+def resolve_entry(cfg, app, env):
+    apps = cfg.get("app", {})
+    if not apps:
+        die(f"nenhuma aplicacao definida em {CONFIG_PATH}.")
+    if app not in apps:
+        die(f"aplicacao '{app}' desconhecida.", hint="disponiveis: " + ", ".join(sorted(apps)))
+
+    envs = app_envs(apps[app])
+    if env not in envs:
+        die(
+            f"ambiente '{env}' nao definido para a aplicacao '{app}'.",
+            hint="disponiveis: " + ", ".join(envs),
+        )
+
+    entry = {}
+    entry.update(cfg.get("defaults", {}))
+    entry.update(cfg.get("env_defaults", {}).get(env, {}))
+    entry.update({k: v for k, v in apps[app].items() if not isinstance(v, dict)})
+    entry.update(apps[app][env])
+
+    # Campos de conexao declarados na propria aplicacao/ambiente. Só estes podem
+    # sobrescrever o que vier de um secret; o que vem de [defaults] e so fallback.
+    explicitos = {
+        f for f in CONN_FIELDS
+        if f in apps[app] and not isinstance(apps[app][f], dict)
+    } | {f for f in CONN_FIELDS if f in apps[app][env]}
+
+    has_url = bool(entry.get("secret_url"))
+    has_pwd = bool(entry.get("secret_password"))
+    if has_url and has_pwd:
+        die(f"'{app}/{env}' define secret_url e secret_password ao mesmo tempo; escolha um.")
+    # Sem secret_url nem secret_password: conecta sem senha e o pgcli pede sozinho.
+    if uses_secrets(entry) and not entry.get("project"):
+        die(f"'{app}/{env}' nao define o projeto GCP do secret.")
+    if not has_url:
+        faltando = [
+            f for f in ("host", "user", "dbname")
+            if not entry.get(f) and not entry.get(f"secret_{f}")
+        ]
+        if faltando:
+            modo = "secret_password" if has_pwd else "o modo sem senha"
+            die(
+                f"'{app}/{env}' usa {modo} mas nao define: " + ", ".join(faltando),
+                hint="informe cada campo como valor literal ou como secret_<campo>.",
+            )
+    return entry, explicitos
+
+
+def uses_secrets(entry):
+    return any(entry.get(k) for k in ("secret_url", "secret_password", *(f"secret_{f}" for f in CONN_FIELDS)))
+
+
+def entry_mode(entry):
+    if entry.get("secret_url"):
+        return "secret_url"
+    if entry.get("secret_password"):
+        return "secret_password"
+    return "sem_senha"
+
+
+def parse_pg_url(raw, secret_name):
+    """Parser tolerante de connection string postgres.
+
+    Feito a mao (em vez de urlsplit) para nao quebrar com senhas contendo # ou ?.
+    """
+    s = raw.strip()
+    for scheme in ("postgresql://", "postgres://"):
+        if s.startswith(scheme):
+            rest = s[len(scheme):]
+            break
+    else:
+        die(f"o secret '{secret_name}' nao parece uma connection string postgres.")
+
+    slash = rest.find("/")
+    netloc, tail = (rest, "") if slash == -1 else (rest[:slash], rest[slash + 1:])
+
+    at = netloc.rfind("@")
+    if at == -1:
+        die(f"a connection string do secret '{secret_name}' nao traz usuario.")
+    userinfo, hostport = netloc[:at], netloc[at + 1:]
+
+    colon = userinfo.find(":")
+    user, password = (userinfo, "") if colon == -1 else (userinfo[:colon], userinfo[colon + 1:])
+
+    if hostport.startswith("["):          # IPv6
+        end = hostport.find("]")
+        host, port = hostport[1:end], hostport[end + 1:].lstrip(":")
+    else:
+        host, _, port = hostport.partition(":")
+
+    if not host:
+        die(f"a connection string do secret '{secret_name}' nao traz host.")
+
+    dbname = tail.split("?", 1)[0].split("#", 1)[0]
+    return {
+        "host": host,
+        "port": int(port) if port else 5432,
+        "user": unquote(user),
+        "password": unquote(password),
+        "dbname": unquote(dbname) or unquote(user),
+    }
+
+
+def fetch_secret(name, project):
+    if not shutil.which("gcloud"):
+        die("gcloud nao encontrado no PATH.")
+    proc = subprocess.run(
+        ["gcloud", "secrets", "versions", "access", "latest", "--secret", name, "--project", project],
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode != 0:
+        err = (proc.stderr or "").strip()
+        if "Reauthentication failed" in err or "gcloud auth login" in err:
+            die("credenciais do gcloud expiradas.", hint="rode: gcloud auth login")
+        if "NOT_FOUND" in err or "was not found" in err:
+            die(f"secret '{name}' nao encontrado no projeto '{project}'.")
+        if "PERMISSION_DENIED" in err or "does not have permission" in err:
+            die(f"sem permissao para ler o secret '{name}' em '{project}'.")
+        die(f"falha ao ler o secret '{name}' em '{project}':\n{err}")
+    value = proc.stdout
+    if value.endswith("\n"):
+        value = value[:-1]
+    if not value:
+        die(f"o secret '{name}' em '{project}' veio vazio.")
+    return value
+
+
+def resolve_connection(entry, app, env, keyring, *, refresh, explicitos):
+    """Devolve (conn, from_cache). conn tem host/port/user/dbname/password."""
+    cache_key = f"{app}/{env}"
+    # Sem nenhum secret nao ha o que cachear: tudo vem literal da lista fixa.
+    cacheavel = uses_secrets(entry)
+    if cacheavel and not refresh:
+        cached = keyring.get_password(PGC_SERVICE, cache_key)
+        if cached:
+            try:
+                conn = json.loads(cached)
+                if all(conn.get(f) for f in CONN_FIELDS) and "password" in conn:
+                    return conn, True
+            except (ValueError, AttributeError):
+                pass  # cache corrompido: refaz
+
+    if entry.get("secret_url"):
+        conn = parse_pg_url(fetch_secret(entry["secret_url"], entry["project"]), entry["secret_url"])
+        # So um campo declarado na propria aplicacao/ambiente vence a connection
+        # string; um valor herdado de [defaults] nao pode sobrescreve-la.
+        for field in CONN_FIELDS:
+            if field in explicitos and entry.get(field):
+                conn[field] = entry[field]
+    else:
+        # Sem secret_password a senha fica None e o proprio pgcli a solicita.
+        senha = entry.get("secret_password")
+        conn = {"password": fetch_secret(senha, entry["project"]) if senha else None}
+        for field in CONN_FIELDS:
+            ref = entry.get(f"secret_{field}")
+            if ref:                       # o campo tem secret proprio: ele vence
+                conn[field] = fetch_secret(ref, entry["project"])
+            elif entry.get(field):
+                conn[field] = entry[field]
+        conn.setdefault("port", 5432)
+
+    try:
+        conn["port"] = int(conn["port"])
+    except (TypeError, ValueError):
+        die(f"porta invalida para '{app}/{env}': {conn.get('port')!r}")
+
+    if cacheavel:
+        keyring.set_password(PGC_SERVICE, cache_key, json.dumps(conn))
+    return conn, False
+
+
+def cmd_list(cfg):
+    apps = cfg.get("app", {})
+    if not apps:
+        print("nenhuma aplicacao definida.")
+        return 0
+    width = max(len(a) for a in apps)
+    env_defaults = cfg.get("env_defaults", {})
+    tem_producao = False
+    print(f"{'APP'.ljust(width)}  AMBIENTES")
+    for name in sorted(apps):
+        marcados = []
+        for e in app_envs(apps[name]):
+            producao = env_defaults.get(e, {}).get("production") or apps[name].get(e, {}).get("production")
+            tem_producao = tem_producao or bool(producao)
+            marcados.append(e + "*" if producao else e)
+        print(f"{name.ljust(width)}  {', '.join(marcados)}")
+    if tem_producao:
+        print("\n* producao: pede confirmacao antes de conectar")
+    print(f"\nlista: {CONFIG_PATH}")
+    return 0
+
+
+def ask(label, default=None, *, obrigatorio=True, validar=None):
+    """Prompt interativo; Enter aceita o default. Ctrl-C/Ctrl-D cancela."""
+    sufixo = f" [{default}]" if default not in (None, "") else ""
+    while True:
+        try:
+            valor = input(f"  {label}{sufixo}: ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print("\ncancelado.")
+            raise SystemExit(1)
+        if not valor and default not in (None, ""):
+            valor = str(default)
+        if not valor:
+            if not obrigatorio:
+                return ""
+            print("    campo obrigatorio.")
+            continue
+        if validar:
+            erro = validar(valor)
+            if erro:
+                print(f"    {erro}")
+                continue
+        return valor
+
+
+def ask_yes(label, default=False):
+    resp = ask(f"{label} [{'S/n' if default else 's/N'}]", obrigatorio=False).lower()
+    if not resp:
+        return default
+    return resp in ("s", "sim", "y", "yes")
+
+
+def toml_key(k):
+    return k if k and all(c.isalnum() or c in "-_" for c in k) else json.dumps(k)
+
+
+def toml_value(v):
+    if isinstance(v, bool):
+        return "true" if v else "false"
+    if isinstance(v, int):
+        return str(v)
+    return json.dumps(v, ensure_ascii=False)   # string basica do TOML
+
+
+def cmd_add(cfg, app=None, env=None):
+    """Cadastra interativamente uma nova entrada app/ambiente no TOML."""
+    import tomllib
+
+    if not sys.stdin.isatty():
+        die("--add precisa de um terminal interativo.")
+    apps = cfg.get("app", {})
+    env_defaults = cfg.get("env_defaults", {})
+    print(f"Nova entrada em {CONFIG_PATH}  (Enter aceita o [default]; Ctrl-C cancela)\n")
+
+    def valida_nome(v):
+        if not all(c.isalnum() or c in "-_" for c in v):
+            return "use so letras, numeros, - e _."
+
+    app = ask("aplicacao", app, validar=valida_nome)
+    if app in apps:
+        print(f"    '{app}' ja existe com: {', '.join(app_envs(apps[app]))}")
+
+    conhecidos = sorted(set(ENV_ALIASES.values()) | set(env_defaults))
+
+    def valida_env(v):
+        e = ENV_ALIASES.get(v.lower(), v.lower())
+        if e not in conhecidos:
+            return "ambiente desconhecido; use: " + ", ".join(conhecidos)
+        if app in apps and e in app_envs(apps[app]):
+            return f"'{app}/{e}' ja existe."
+
+    env = ask("ambiente (dev | stage | prod)", env, validar=valida_env).lower()
+    env = ENV_ALIASES.get(env, env)
+    herdado = env_defaults.get(env, {})
+
+    print("\n  modos:  1) secret_url       o secret guarda a connection string inteira")
+    print("          2) secret_password  o secret guarda so a senha")
+    print("          3) sem senha        o pgcli pede a senha ao conectar")
+    modo = ask("modo", "1", validar=lambda v: None if v in ("1", "2", "3") else "escolha 1, 2 ou 3.")
+
+    campos = {}
+    if modo == "1":
+        campos["secret_url"] = ask("nome do secret com a connection string")
+    else:
+        if modo == "2":
+            campos["secret_password"] = ask("nome do secret com a senha")
+        print("\n  host/user/dbname/porta: valor literal, ou @NOME para ler do Secret Manager")
+        padrao_porta = cfg.get("defaults", {}).get("port", 5432)
+        def valida_campo(f):
+            def valida(v):
+                if v == "@":
+                    return "informe o nome do secret depois do @."
+                if f == "port" and not v.startswith("@") and not v.isdigit():
+                    return "porta deve ser numerica (ou @NOME)."
+            return valida
+
+        for f in ("host", "user", "dbname", "port"):
+            valor = ask(f, padrao_porta if f == "port" else None, validar=valida_campo(f))
+            if valor.startswith("@"):
+                campos[f"secret_{f}"] = valor[1:]
+            elif f == "port":
+                if int(valor) != padrao_porta:
+                    campos["port"] = int(valor)
+            else:
+                campos[f] = valor
+
+    if uses_secrets(campos):
+        projeto = ask("projeto GCP do secret", herdado.get("project"))
+        if projeto != herdado.get("project"):
+            campos["project"] = projeto
+
+    producao = ask_yes("e producao (pede confirmacao ao conectar)?", bool(herdado.get("production")))
+    if producao != bool(herdado.get("production")):
+        campos["production"] = producao
+
+    bloco = f"\n[app.{toml_key(app)}.{toml_key(env)}]\n" + "".join(
+        f"{toml_key(k)} = {toml_value(v)}\n" for k, v in campos.items()
+    )
+
+    # Valida o arquivo resultante inteiro antes de gravar.
+    texto = CONFIG_PATH.read_text()
+    novo = texto + ("" if texto.endswith("\n") else "\n") + bloco
+    try:
+        cfg_novo = tomllib.loads(novo)
+    except Exception as exc:
+        die(f"a entrada geraria um TOML invalido: {exc}")
+    resolve_entry(cfg_novo, app, env)   # die() se faltar algo
+
+    print("\n  entrada a acrescentar:\n")
+    print("".join(f"    {linha}\n" for linha in bloco.strip("\n").splitlines()))
+    if not ask_yes("gravar?", True):
+        print("cancelado.")
+        return 1
+    with CONFIG_PATH.open("a") as fh:
+        fh.write(novo[len(texto):])
+    print(f"gravado. teste com: pgc {app} -e {env} --dry-run")
+    return 0
+
+
+def confirm_production(app, env, conn):
+    alvo = f"{conn['user']}@{conn['host']}:{conn['port']}/{conn['dbname']}"
+    print(f"\n  *** PRODUCAO ***  {app}/{env}")
+    print(f"  {alvo}\n")
+    try:
+        resposta = input("  conectar? [s/N] ").strip().lower()
+    except EOFError:
+        resposta = ""
+    if resposta not in ("s", "sim", "y", "yes"):
+        print("cancelado.")
+        raise SystemExit(1)
+
+
+def main():
+    argv = sys.argv[1:]
+    if "--" in argv:
+        corte = argv.index("--")
+        argv, passthrough = argv[:corte], argv[corte + 1:]
+    else:
+        passthrough = []
+
+    parser = argparse.ArgumentParser(
+        prog="pgc",
+        allow_abbrev=False,
+        description="Abre o pgcli num banco conhecido, buscando a senha no GCP Secret Manager.",
+        epilog="Tudo depois de `--` e repassado ao pgcli.",
+    )
+    parser.add_argument("app_pos", nargs="?", metavar="APP", help="aplicacao na lista fixa (mesmo que -a)")
+    parser.add_argument("-app", "--app", "-a", dest="app", metavar="NOME", help="aplicacao na lista fixa")
+    parser.add_argument("-e", "--env", dest="env", metavar="AMBIENTE", help="dev | stage | prod")
+    parser.add_argument("--list", action="store_true", help="lista as aplicacoes e ambientes e sai")
+    parser.add_argument("-add", "--add", action="store_true", help="cadastra um novo banco com prompts interativos")
+    parser.add_argument("--refresh", action="store_true", help="ignora o cache e rebusca o secret no GCP")
+    parser.add_argument("--dry-run", action="store_true", help="mostra a conexao resolvida sem conectar")
+    parser.add_argument("-y", "--yes", action="store_true", help="pula a confirmacao de producao")
+    args = parser.parse_args(argv)
+    if args.app_pos:
+        if args.app and args.app != args.app_pos:
+            parser.error(f"aplicacao informada duas vezes: '{args.app_pos}' e '{args.app}'")
+        args.app = args.app_pos
+
+    cfg = load_config()
+    if args.add:
+        return cmd_add(cfg, args.app, args.env)
+    if args.list or not sys.argv[1:]:   # sem nenhum argumento: lista
+        return cmd_list(cfg)
+    if not args.app or not args.env:
+        parser.error("informe a aplicacao (ou -a) e -e (ou use --list)")
+
+    env = ENV_ALIASES.get(args.env.lower(), args.env.lower())
+    entry, explicitos = resolve_entry(cfg, args.app, env)
+    keyring = load_keyring()
+
+    if args.dry_run:
+        # Dry-run e offline por definicao: nunca chama o gcloud.
+        cached = keyring.get_password(PGC_SERVICE, f"{args.app}/{env}") if uses_secrets(entry) else None
+        origem = entry.get("secret_url") or entry.get("secret_password")
+        modo = entry_mode(entry)
+        por_campo = {f: entry[f"secret_{f}"] for f in CONN_FIELDS if entry.get(f"secret_{f}")}
+        print(f"app/ambiente : {args.app}/{env}")
+        print(f"modo         : {modo}")
+        if origem:
+            print(f"secret       : {origem}  (projeto {entry['project']})")
+        else:
+            print("senha        : nenhuma configurada; o pgcli pede ao conectar")
+        print(f"producao     : {'sim' if entry.get('production') else 'nao'}")
+        if not uses_secrets(entry):
+            conn = {f: entry.get(f, 5432 if f == "port" else None) for f in CONN_FIELDS}
+            print("origem       : lista fixa (sem chamar o gcloud)")
+            print(f"comando      : pgcli -h {conn['host']} -p {conn['port']} -U {conn['user']} -d {conn['dbname']}"
+                  + (" " + " ".join(passthrough) if passthrough else ""))
+        elif cached:
+            conn = json.loads(cached)
+            print(f"origem       : cache do keyring (sem chamar o gcloud)")
+            print(f"comando      : pgcli -h {conn['host']} -p {conn['port']} -U {conn['user']} -d {conn['dbname']}"
+                  + (" " + " ".join(passthrough) if passthrough else ""))
+        else:
+            aplicaveis = explicitos if modo == "secret_url" else set(CONN_FIELDS)
+            conhecido = {f: entry.get(f) for f in CONN_FIELDS
+                         if entry.get(f) and f in aplicaveis and f not in por_campo}
+            print("origem       : nao ha cache; a conexao viria do Secret Manager")
+            if conhecido:
+                print("da lista fixa: " + ", ".join(f"{k}={v}" for k, v in conhecido.items()))
+            if por_campo:
+                print("de secrets   : " + ", ".join(f"{k} <- {v}" for k, v in por_campo.items()))
+            if modo == "secret_url":
+                print("              host/porta/user/dbname sairiam da connection string do secret")
+        return 0
+
+    conn, from_cache = resolve_connection(
+        entry, args.app, env, keyring, refresh=args.refresh, explicitos=explicitos
+    )
+
+    if entry.get("production") and not args.yes:
+        if not sys.stdin.isatty():
+            die("entrada nao interativa num ambiente de producao.", hint="use -y para confirmar.")
+        confirm_production(args.app, env, conn)
+
+    # Entrega a senha ao pgcli pelo keyring, na chave exata que ele consulta.
+    # Sem senha configurada, nao mexe no keyring: o pgcli pede (e guarda) sozinho.
+    if conn.get("password") is not None:
+        keyring.set_password(PGCLI_SERVICE, f"{conn['user']}@{conn['host']}", conn["password"])
+
+    pgcli = shutil.which("pgcli")
+    if not pgcli:
+        die("pgcli nao encontrado no PATH.")
+
+    cmd = [
+        "pgcli",
+        "-h", str(conn["host"]),
+        "-p", str(conn["port"]),
+        "-U", str(conn["user"]),
+        "-d", str(conn["dbname"]),
+        *passthrough,
+    ]
+    env_filho = os.environ.copy()
+    env_filho.pop("PGPASSWORD", None)   # senao venceria o keyring
+    env_filho.pop(REEXEC_GUARD, None)
+    os.execvpe(pgcli, cmd, env_filho)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
