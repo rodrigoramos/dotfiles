@@ -26,6 +26,14 @@
         path: fish
         create: true
         force: true
+    # Claude Code: só a parte pública (settings.json e o que é interno ficam fora)
+    ~/.claude/CLAUDE.md:
+        path: claude/CLAUDE.md
+        create: true
+    ~/.claude/skills/:
+        path: 'claude/skills/*'
+        create: true
+        glob: true
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
@@ -34,3 +42,9 @@
         fish -c 'type -q fisher; or curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source; and fisher update'
       description: Installing fish plugins (fisher)
       stdout: true
+    # A pasta de memória do Claude leva o $HOME no nome (/home/a.b -> -home-a-b)
+    - command: >-
+        mem="$HOME/.claude/projects/$(printf %s "$HOME" | sed 's/[^A-Za-z0-9]/-/g')/memory";
+        mkdir -p "$mem";
+        for f in "$PWD"/claude/memory/*.md; do ln -sfn "$f" "$mem/"; done
+      description: Linking Claude memories
