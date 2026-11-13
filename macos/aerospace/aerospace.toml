@@ -104,6 +104,18 @@ alt-ctrl-0 = 'move-node-to-workspace 10'
 # Recarregar config
 alt-shift-r = 'reload-config'
 
+# Voltar ao workspace anterior (i3: $mod+b)
+alt-b = 'workspace-back-and-forth'
+
+# Mover janela estilo vim (i3: $mod+Shift+j/k/l/ç)
+alt-shift-j = 'move left'
+alt-shift-k = 'move down'
+alt-shift-l = 'move up'
+alt-shift-semicolon = 'move right'
+
+# Modo resize (i3: $mod+r)
+alt-r = 'mode resize'
+
 # Modo para mover o workspace atual entre monitores (i3: $mod+Shift+m)
 alt-shift-m = 'mode move-workspace'
 
@@ -115,3 +127,65 @@ l = ['move-workspace-to-monitor --wrap-around right', 'mode main']
 n = ['move-workspace-to-monitor "Built-in Retina Display"', 'mode main']
 enter = 'mode main'
 esc = 'mode main'
+
+# Modo resize (i3: mode "resize"; o ç do i3 vira semicolon no layout US)
+[mode.resize.binding]
+j = 'resize width -10'
+k = 'resize height +10'
+l = 'resize height -10'
+semicolon = 'resize width +10'
+left = 'resize width -10'
+down = 'resize height +10'
+up = 'resize height -10'
+right = 'resize width +10'
+enter = 'mode main'
+esc = 'mode main'
+alt-r = 'mode main'
+
+# Workspaces fixos por monitor (i3: `workspace "N" output ...`).
+# Aqui "secondary" é o monitor externo e "built-in" é a tela do MacBook.
+[workspace-to-monitor-force-assignment]
+1 = 'built-in'
+3 = ['secondary', 'built-in']
+4 = ['secondary', 'built-in']
+6 = ['secondary', 'built-in']
+
+# Regras por aplicativo (i3: assign / for_window).
+# Só a primeira regra que casa é executada, então as mais específicas vêm antes.
+[[on-window-detected]]
+if.app-id = 'com.tinyspeck.slackmacgap'
+if.window-title-regex-substring = 'Círculo|canal desconhecido'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'org.mozilla.firefox'
+run = 'move-node-to-workspace 3'
+
+[[on-window-detected]]
+if.app-id = 'com.tinyspeck.slackmacgap'
+run = 'move-node-to-workspace 4'
+
+[[on-window-detected]]
+if.app-id = 'com.microsoft.teams2'
+run = 'move-node-to-workspace 5'
+
+[[on-window-detected]]
+if.app-id = 'org.keepassxc.keepassxc'
+run = 'layout floating'
+
+# Apps ainda não instalados: os bundle IDs abaixo são os usuais e não foram confirmados.
+[[on-window-detected]]
+if.app-id = 'com.todesktop.230313mzl4w4u92' # Cursor
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-id = 'com.electron.logseq'
+run = 'move-node-to-workspace 6'
+
+[[on-window-detected]]
+if.app-id = 'md.obsidian'
+run = 'move-node-to-workspace 6'
+
+[[on-window-detected]]
+if.app-id = 'com.spotify.client'
+run = 'move-node-to-workspace 9'
