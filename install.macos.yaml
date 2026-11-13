@@ -7,6 +7,9 @@
     ~/.config/aerospace/aerospace.toml:
         path: macos/aerospace/aerospace.toml
         create: true
+    ~/.config/rill/config.toml:
+        path: macos/rill/config.toml
+        create: true
 
 - shell:
     - command: 'if command -v brew >/dev/null; then brew bundle --file=macos/Brewfile; else echo "Homebrew não encontrado: instale em https://brew.sh e rode ./install de novo"; fi'

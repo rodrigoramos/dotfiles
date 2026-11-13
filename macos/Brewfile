@@ -24,5 +24,7 @@ brew "khal"
 # Janelas, teclado e launcher (equivalentes a Hyprland, xkb e rofi)
 cask "nikitabobko/tap/aerospace"
 brew "felixkratz/formulae/borders"
+# Barra de workspaces (lê o AeroSpace); config em macos/rill/config.toml
+cask "aleckastan/rill/rill"
 cask "karabiner-elements"
 cask "raycast"

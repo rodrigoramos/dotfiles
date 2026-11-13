@@ -1,0 +1,86 @@
+schema_version = 1
+
+[theme]
+preset = "segmented"
+font = "SF Pro Text"
+font_size = 13
+foreground = "#F2F2F7FF"
+background = "#17171CDD"
+accent = "#89B4FAFF"
+corner_radius = 10
+padding = 8
+spacing = 10
+animation_ms = 160
+
+[[surfaces]]
+id = "main"
+kind = "bar"
+display = "all"
+edge = "top"
+top_placement = "menuBarArea"
+fullscreen = "hide"
+start = ["apple", "spaces"] 
+center = []
+end = ["cpu", "memory", "wifi", "microphone", "volume", "battery", "clock"]
+
+[[providers]]
+id = "aerospace"
+kind = "aerospace"
+executable = "/opt/homebrew/bin/aerospace"
+timeout_ms = 3000
+max_output_bytes = 262144
+
+[[modules]]
+id = "spaces"
+kind = "workspaces"
+provider = "aerospace"
+placeholder = "AeroSpace…"
+
+[[modules]]
+id = "apple"
+kind = "appleMenu"
+
+[[modules]]
+id = "frontmost"
+kind = "frontmostApp"
+
+[[modules]]
+id = "clock"
+kind = "clock"
+format = "HH:mm"
+
+[[modules]]
+id = "wifi"
+kind = "wifi"
+
+[[modules]]
+id = "status-separator"
+kind = "separator"
+
+[[modules]]
+id = "volume"
+kind = "volume"
+
+[[modules]]
+id = "battery"
+kind = "battery"
+
+[[modules]]
+id = "cpu"
+kind = "cpu"
+format = " {percent}%"
+show_icon = false
+style = { font = "JetBrainsMono Nerd Font", font_size = 11 }
+states.warning = { foreground = "#FAB387" }
+
+[[modules]]
+id = "memory"
+kind = "memory"
+format = "\U000F035B {percent}%"
+show_icon = false
+style = { font = "JetBrainsMono Nerd Font", font_size = 11 }
+
+[[modules]]
+id = "microphone"
+kind = "microphone"
+states.muted = { foreground = "#F38BA8" }
