@@ -1,0 +1,248 @@
+# Rift — espelha os atalhos do AeroSpace/Hyprland (ver keymap.md).
+# Modificador principal: Alt (Option), porque Cmd já é usado pelos apps do macOS.
+# Atenção: alt-e, alt-i, alt-n, alt-u e alt-` são teclas mortas de acento no layout US do macOS;
+# evite vinculá-las em atalhos sem Shift.
+# Índices de workspace e de display são 0-based; o nome mostrado na barra é "1".."10".
+
+[settings]
+animate = false
+animation_duration = 0.3
+animation_fps = 100.0
+
+# Tiling ligado por padrão em todos os Spaces (Alt+Z liga/desliga no Space atual).
+default_disable = false
+
+# i3: focus_follows_mouse off
+focus_follows_mouse = false
+mouse_follows_focus = true
+mouse_hides_on_focus = false
+
+auto_focus_blacklist = []
+
+# Bordas nas janelas (JankyBorders, instalado pelo macos/Brewfile).
+# Caminho absoluto: os comandos rodam sem shell e sem o PATH do Homebrew.
+#
+# SketchyBar: cada evento do Rift dispara `rift_workspace_changed` (ver macos/sketchybar).
+# Alterar esta lista exige reiniciar o Rift (`brew services restart rift`).
+run_on_start = [
+  "/opt/homebrew/bin/borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=5.0",
+  "/opt/homebrew/bin/rift-cli subscribe cli --event workspace_changed --command sh --args -c --args '/opt/homebrew/bin/sketchybar --trigger rift_workspace_changed'",
+  "/opt/homebrew/bin/rift-cli subscribe cli --event windows_changed --command sh --args -c --args '/opt/homebrew/bin/sketchybar --trigger rift_workspace_changed'",
+]
+
+hot_reload = true
+
+[settings.layout]
+mode = "traditional"
+window_insertion_point = "next_to_selection"
+
+[settings.layout.traditional]
+equalize_nodes = true
+
+[settings.layout.stack]
+stack_offset = 40.0
+default_orientation = "perpendicular"
+
+[settings.layout.gaps.outer]
+top = 8
+left = 8
+bottom = 8
+right = 8
+
+[settings.layout.gaps.inner]
+horizontal = 8
+vertical = 8
+
+# Monitor externo (LU28R55): sem barra de menus reservada, então o topo precisa
+# cobrir a SketchyBar (34 pt) + 8 pt de folga. O override substitui o grupo inteiro.
+[settings.layout.gaps.per_display."BD359D01-E7B2-4194-ACE9-22652CF322B1".outer]
+top = 42
+left = 8
+bottom = 8
+right = 8
+
+[settings.ui.mission_control]
+enabled = false
+
+# Indicadores nativos do Rift na barra de menus do macOS: desligados, a SketchyBar
+# (macos/sketchybar) mostra os workspaces. Para voltar à barra nativa, ligue isto e
+# deixe a barra de menus do macOS visível.
+[settings.ui.menu_bar]
+enabled = false
+# Esconde workspaces vazios.
+show_empty = false
+show_binding_mode = true
+mode = "all"
+active_label = "name"
+display_style = "label"
+show_fullscreen_indicator = false
+layout_folder = "~/.config/rift/layouts"
+
+[settings.ui.stack_line]
+enabled = true
+hover = "hover"
+horiz_placement = "top"
+vert_placement = "left"
+thickness = 28.0
+spacing = 0.0
+
+[settings.gestures]
+enabled = false
+
+[settings.drag_drop]
+enabled = true
+modifier = "fn"
+action1 = "move"
+drop_action = "swap"
+drop_zone_fraction = 0.25
+preview = true
+
+[virtual_workspaces]
+# global: workspaces numerados entre todos os monitores e presos a um monitor (como o i3).
+mode = "global"
+enabled = true
+default_workspace_count = 10
+auto_assign_windows = true
+preserve_focus_per_workspace = true
+# i3: alt-b = workspace back_and_forth (switch_to_last_workspace); aqui não troca ao repetir.
+workspace_auto_back_and_forth = false
+prevent_wrapping = false
+reapply_app_rules_on_title_change = false
+
+workspace_names = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+
+# Workspaces fixos por monitor (i3: `workspace "N" output ...`).
+# 1 fica no MacBook; 3, 4 e 6 preferem o monitor externo (LU28R55), com o MacBook de reserva.
+workspace_rules = [
+  { workspace = 0, display = "builtin" },
+  { workspace = 2, display = ["LU28R55", "builtin"] },
+  { workspace = 3, display = ["LU28R55", "builtin"] },
+  { workspace = 5, display = ["LU28R55", "builtin"] },
+]
+
+# Regras por aplicativo (i3: assign / for_window). `workspace` é 0-based.
+app_rules = [
+  # Slack: janelas "Círculo"/"canal desconhecido" flutuam na workspace atual (regra mais específica).
+  { app_id = "com.tinyspeck.slackmacgap", title_regex = "Círculo|canal desconhecido", floating = true },
+  { app_id = "com.tinyspeck.slackmacgap", workspace = 3 },
+  { app_id = "org.mozilla.firefox", workspace = 2 },
+  { app_id = "com.microsoft.teams2", workspace = 4 },
+  { app_id = "org.keepassxc.keepassxc", floating = true },
+  # Apps ainda não instalados: bundle IDs usuais, não confirmados.
+  { app_id = "com.todesktop.230313mzl4w4u92", workspace = 1 }, # Cursor
+  { app_id = "com.electron.logseq", workspace = 5 },
+  { app_id = "md.obsidian", workspace = 5 },
+  { app_id = "com.spotify.client", workspace = 8 },
+]
+
+[modifier_combinations]
+comb1 = "Alt + Shift"
+
+[keys]
+"Alt + Z" = "toggle_space_activated"
+
+# Apps (lançador geral: Raycast)
+"Alt + Enter" = { exec = ["/usr/bin/open", "-n", "-a", "kitty"] }
+
+# Janela
+"Alt + Q" = "close_window"
+"Alt + Shift + F" = "toggle_fullscreen"
+"Alt + Space" = "toggle_window_floating"
+"Alt + Shift + I" = "toggle_orientation"
+
+# Foco
+"Alt + Left" = { move_focus = "left" }
+"Alt + Right" = { move_focus = "right" }
+"Alt + Up" = { move_focus = "up" }
+"Alt + Down" = { move_focus = "down" }
+
+# Mover janela
+"Alt + Ctrl + Left" = { move_node = "left" }
+"Alt + Ctrl + Right" = { move_node = "right" }
+"Alt + Ctrl + Up" = { move_node = "up" }
+"Alt + Ctrl + Down" = { move_node = "down" }
+
+# Mover janela estilo vim (i3: $mod+Shift+j/k/l/ç)
+"Alt + Shift + J" = { move_node = "left" }
+"Alt + Shift + K" = { move_node = "down" }
+"Alt + Shift + L" = { move_node = "up" }
+"Alt + Shift + Semicolon" = { move_node = "right" }
+
+# Redimensionar
+"Alt + Shift + Left" = { resize_window_shrink = "horizontal" }
+"Alt + Shift + Right" = { resize_window_grow = "horizontal" }
+"Alt + Shift + Up" = { resize_window_shrink = "vertical" }
+"Alt + Shift + Down" = { resize_window_grow = "vertical" }
+
+# Workspaces (Alt+1..9, Alt+0 = workspace 10)
+"Alt + 1" = { switch_to_workspace = 0 }
+"Alt + 2" = { switch_to_workspace = 1 }
+"Alt + 3" = { switch_to_workspace = 2 }
+"Alt + 4" = { switch_to_workspace = 3 }
+"Alt + 5" = { switch_to_workspace = 4 }
+"Alt + 6" = { switch_to_workspace = 5 }
+"Alt + 7" = { switch_to_workspace = 6 }
+"Alt + 8" = { switch_to_workspace = 7 }
+"Alt + 9" = { switch_to_workspace = 8 }
+"Alt + 0" = { switch_to_workspace = 9 }
+"Alt + Tab" = "next_workspace"
+"Alt + Shift + Tab" = "prev_workspace"
+"Alt + B" = "switch_to_last_workspace"
+
+# Mover janela para workspace e seguir (Alt+Shift+N)
+"Alt + Shift + 1" = { move_window_to_workspace = { workspace = 0, follow = true } }
+"Alt + Shift + 2" = { move_window_to_workspace = { workspace = 1, follow = true } }
+"Alt + Shift + 3" = { move_window_to_workspace = { workspace = 2, follow = true } }
+"Alt + Shift + 4" = { move_window_to_workspace = { workspace = 3, follow = true } }
+"Alt + Shift + 5" = { move_window_to_workspace = { workspace = 4, follow = true } }
+"Alt + Shift + 6" = { move_window_to_workspace = { workspace = 5, follow = true } }
+"Alt + Shift + 7" = { move_window_to_workspace = { workspace = 6, follow = true } }
+"Alt + Shift + 8" = { move_window_to_workspace = { workspace = 7, follow = true } }
+"Alt + Shift + 9" = { move_window_to_workspace = { workspace = 8, follow = true } }
+"Alt + Shift + 0" = { move_window_to_workspace = { workspace = 9, follow = true } }
+
+# Mover janela sem seguir (Alt+Ctrl+N)
+"Alt + Ctrl + 1" = { move_window_to_workspace = { workspace = 0, follow = false } }
+"Alt + Ctrl + 2" = { move_window_to_workspace = { workspace = 1, follow = false } }
+"Alt + Ctrl + 3" = { move_window_to_workspace = { workspace = 2, follow = false } }
+"Alt + Ctrl + 4" = { move_window_to_workspace = { workspace = 3, follow = false } }
+"Alt + Ctrl + 5" = { move_window_to_workspace = { workspace = 4, follow = false } }
+"Alt + Ctrl + 6" = { move_window_to_workspace = { workspace = 5, follow = false } }
+"Alt + Ctrl + 7" = { move_window_to_workspace = { workspace = 6, follow = false } }
+"Alt + Ctrl + 8" = { move_window_to_workspace = { workspace = 7, follow = false } }
+"Alt + Ctrl + 9" = { move_window_to_workspace = { workspace = 8, follow = false } }
+"Alt + Ctrl + 0" = { move_window_to_workspace = { workspace = 9, follow = false } }
+
+# Recarregar config
+"Alt + Shift + R" = "reload_config"
+
+# Modos (i3: $mod+r e $mod+Shift+m)
+"Alt + R" = { binding_mode = "resize" }
+"Alt + Shift + M" = { binding_mode = "move_workspace" }
+
+# Atenção: todos os atalhos de [keys] ficam acima do primeiro [binding_modes.*].
+
+# Modo resize (o ç do i3 vira Semicolon no layout US)
+[binding_modes.resize]
+"J" = { resize_window_shrink = "horizontal" }
+"K" = { resize_window_grow = "vertical" }
+"L" = { resize_window_shrink = "vertical" }
+"Semicolon" = { resize_window_grow = "horizontal" }
+"Left" = { resize_window_shrink = "horizontal" }
+"Down" = { resize_window_grow = "vertical" }
+"Up" = { resize_window_shrink = "vertical" }
+"Right" = { resize_window_grow = "horizontal" }
+"Enter" = { binding_mode = "default" }
+"Escape" = { binding_mode = "default" }
+"Alt + R" = { binding_mode = "default" }
+
+# Mover o workspace atual entre monitores (i3: mode_move_workspaces_monitor).
+# "n" leva para o MacBook (eDP-1 no i3), pelo UUID do Built-in Retina Display.
+[binding_modes.move_workspace]
+"H" = [{ move_workspace_to_display = { selector = "left", wrap_around = true } }, { binding_mode = "default" }]
+"J" = [{ move_workspace_to_display = { selector = "down", wrap_around = true } }, { binding_mode = "default" }]
+"K" = [{ move_workspace_to_display = { selector = "up", wrap_around = true } }, { binding_mode = "default" }]
+"L" = [{ move_workspace_to_display = { selector = "right", wrap_around = true } }, { binding_mode = "default" }]
+"N" = [{ move_workspace_to_display = { selector = "37D8832A-2D66-02CA-B9F7-8F30A301B230" } }, { binding_mode = "default" }]
+"Enter" = { binding_mode = "default" }
+"Escape" = { binding_mode = "default" }

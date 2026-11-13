@@ -26,5 +26,10 @@ cask "nikitabobko/tap/aerospace"
 brew "felixkratz/formulae/borders"
 # Barra de workspaces (lê o AeroSpace); config em macos/rill/config.toml
 cask "aleckastan/rill/rill"
+# Gerenciador de janelas tiling (config em macos/rift/config.toml)
+brew "acsandmann/tap/rift"
+# Barra no estilo do Rill, com os workspaces do Rift (config em macos/sketchybar)
+brew "felixkratz/formulae/sketchybar"
+brew "jq"
 cask "karabiner-elements"
 cask "raycast"

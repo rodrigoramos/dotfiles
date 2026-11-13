@@ -3,7 +3,7 @@
 # Atenção: alt-e, alt-i, alt-n, alt-u e alt-` são teclas mortas de acento no layout US do macOS;
 # evite vinculá-las.
 
-start-at-login = true
+start-at-login = false
 # Borda na janela focada (JankyBorders, instalado pelo macos/Brewfile).
 # Caminho absoluto: no login o PATH herdado pelo AeroSpace não inclui o Homebrew.
 after-startup-command = [

@@ -1,0 +1,90 @@
+#!/bin/bash
+# SketchyBar no estilo do Rill (cápsulas translúcidas). Workspaces vêm do Rift.
+# Requer a barra de menus do macOS em auto-ocultar.
+
+source "$CONFIG_DIR/colors.sh"
+PLUGIN_DIR="$CONFIG_DIR/plugins"
+ICON_FONT="JetBrainsMono Nerd Font"
+TEXT_FONT="SF Pro"
+
+# --- Barra: transparente, as cápsulas é que têm fundo -------------------------
+sketchybar --bar \
+  position=top \
+  height=34 \
+  color=0x00000000 \
+  border_width=0 \
+  shadow=off \
+  sticky=on \
+  topmost=off \
+  padding_left=8 \
+  padding_right=8 \
+  display=all
+
+# --- Padrão de todos os itens (cápsula) ---------------------------------------
+sketchybar --default \
+  updates=when_shown \
+  icon.font="$ICON_FONT:Regular:14.0" \
+  icon.color=$FG \
+  icon.padding_left=10 \
+  icon.padding_right=4 \
+  label.font="$TEXT_FONT:Medium:13.0" \
+  label.color=$FG \
+  label.padding_left=0 \
+  label.padding_right=10 \
+  background.color=$BG \
+  background.corner_radius=10 \
+  background.height=26 \
+  padding_left=3 \
+  padding_right=3
+
+# --- Workspaces (esquerda) ----------------------------------------------------
+# Um item por workspace; o script mostra só os que têm janela (ou estão visíveis)
+# e coloca cada um na barra do monitor a que pertence.
+sketchybar --add event rift_workspace_changed
+
+for i in 1 2 3 4 5 6 7 8 9 10; do
+  sketchybar --add item "ws.$i" left \
+    --set "ws.$i" \
+      drawing=off \
+      icon.drawing=off \
+      label="$i" \
+      label.width=30 \
+      label.align=center \
+      label.padding_left=0 \
+      label.padding_right=0 \
+      click_script="/opt/homebrew/bin/rift-cli execute workspace switch $((i - 1))"
+done
+
+sketchybar --add item rift_events left \
+  --set rift_events \
+    drawing=off \
+    updates=on \
+    script="$PLUGIN_DIR/rift_workspaces.sh" \
+  --subscribe rift_events rift_workspace_changed display_change system_woke
+
+# --- Direita (o primeiro item adicionado fica mais à direita) -----------------
+sketchybar --add item clock right \
+  --set clock icon.drawing=off label.padding_left=10 update_freq=10 script="$PLUGIN_DIR/clock.sh" \
+  \
+  --add item battery right \
+  --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" \
+  --subscribe battery power_source_change system_woke \
+  \
+  --add item volume right \
+  --set volume script="$PLUGIN_DIR/volume.sh" \
+  --subscribe volume volume_change \
+  \
+  --add item wifi right \
+  --set wifi label.drawing=off icon.padding_right=10 update_freq=10 script="$PLUGIN_DIR/wifi.sh" \
+  --subscribe wifi system_woke \
+  \
+  --add item mic right \
+  --set mic label.drawing=off icon.padding_right=10 update_freq=3 script="$PLUGIN_DIR/mic.sh" \
+  \
+  --add item memory right \
+  --set memory update_freq=5 script="$PLUGIN_DIR/memory.sh" \
+  \
+  --add item cpu right \
+  --set cpu update_freq=3 script="$PLUGIN_DIR/cpu.sh"
+
+sketchybar --update
