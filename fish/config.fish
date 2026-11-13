@@ -1,3 +1,7 @@
+# The following lines were added by Docker Desktop to add commands to your PATH.
+export PATH="$PATH:/Users/rodrigo.silva/.docker/bin"
+# End of Docker Desktop section.
+
 function _node_version
     # Check if node is installed and return its version in a format you like
     if command -v node > /dev/null
