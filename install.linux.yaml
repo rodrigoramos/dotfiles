@@ -14,6 +14,14 @@
     ~/.config/waybar:
         path: waybar
         force: true
+    ~/.config/i3/config:
+        path: i3/config
+        create: true
+        force: true
+    ~/.config/i3/lock.sh:
+        path: i3/lock.sh
+        create: true
+        force: true
     ~/.config/systemd/user/:
         path: 'systemd-wrappers/*'
         create: true
