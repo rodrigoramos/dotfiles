@@ -22,6 +22,10 @@
         path: i3/lock.sh
         create: true
         force: true
+    ~/.config/quickshell/bar:
+        path: quickshell/bar
+        create: true
+        force: true
     ~/.config/systemd/user/:
         path: 'systemd-wrappers/*'
         create: true
