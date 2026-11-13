@@ -61,6 +61,13 @@ left = 8
 bottom = 8
 right = 8
 
+# Monitor em pé (27G64, rotação 270): mesmo caso do LU28R55.
+[settings.layout.gaps.per_display."5B26DAB4-B90E-4061-972E-4DBA082176E5".outer]
+top = 42
+left = 8
+bottom = 8
+right = 8
+
 [settings.ui.mission_control]
 enabled = false
 
@@ -112,12 +119,13 @@ reapply_app_rules_on_title_change = false
 workspace_names = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
 
 # Workspaces fixos por monitor (i3: `workspace "N" output ...`).
-# 1 fica no MacBook; 3, 4 e 6 preferem o monitor externo (LU28R55), com o MacBook de reserva.
+# 1 fica no MacBook; 3 prefere o monitor externo (LU28R55); 4 e 6 preferem o monitor
+# em pé (27G64). Cada lista cai para o próximo monitor se o preferido estiver desconectado.
 workspace_rules = [
   { workspace = 0, display = "builtin" },
   { workspace = 2, display = ["LU28R55", "builtin"] },
-  { workspace = 3, display = ["LU28R55", "builtin"] },
-  { workspace = 5, display = ["LU28R55", "builtin"] },
+  { workspace = 3, display = ["27G64", "LU28R55", "builtin"] },
+  { workspace = 5, display = ["27G64", "LU28R55", "builtin"] },
 ]
 
 # Regras por aplicativo (i3: assign / for_window). `workspace` é 0-based.
