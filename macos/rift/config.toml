@@ -43,8 +43,10 @@ equalize_nodes = true
 stack_offset = 40.0
 default_orientation = "perpendicular"
 
+# Padrão: monitores sem barra de menus reservada (externos). O topo precisa cobrir a
+# SketchyBar (34 pt) + 8 pt de folga.
 [settings.layout.gaps.outer]
-top = 8
+top = 42
 left = 8
 bottom = 8
 right = 8
@@ -53,17 +55,10 @@ right = 8
 horizontal = 8
 vertical = 8
 
-# Monitor externo (LU28R55): sem barra de menus reservada, então o topo precisa
-# cobrir a SketchyBar (34 pt) + 8 pt de folga. O override substitui o grupo inteiro.
-[settings.layout.gaps.per_display."BD359D01-E7B2-4194-ACE9-22652CF322B1".outer]
-top = 42
-left = 8
-bottom = 8
-right = 8
-
-# Monitor em pé (27G64, rotação 270): mesmo caso do LU28R55.
-[settings.layout.gaps.per_display."5B26DAB4-B90E-4061-972E-4DBA082176E5".outer]
-top = 42
+# MacBook: a barra de menus do macOS já reserva 32 pt no topo, então basta a folga.
+# O override substitui o grupo inteiro. O UUID vem de `rift-cli query displays`.
+[settings.layout.gaps.per_display."37D8832A-2D66-02CA-B9F7-8F30A301B230".outer]
+top = 8
 left = 8
 bottom = 8
 right = 8
