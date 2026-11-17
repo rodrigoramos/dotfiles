@@ -5,7 +5,7 @@
 source "$CONFIG_DIR/colors.sh"
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 ICON_FONT="JetBrainsMono Nerd Font"
-TEXT_FONT="SF Pro"
+TEXT_FONT="JetBrainsMono Nerd Font"
 
 # --- Barra: transparente, as cápsulas é que têm fundo -------------------------
 sketchybar --bar \
@@ -63,8 +63,8 @@ sketchybar --add item rift_events left \
   --subscribe rift_events rift_workspace_changed display_change system_woke
 
 # --- Direita (o primeiro item adicionado fica mais à direita) -----------------
-sketchybar --add item clock right \
-  --set clock icon.drawing=off label.padding_left=10 update_freq=10 script="$PLUGIN_DIR/clock.sh" \
+sketchybar --add item clock_right right \
+  --set clock_right icon.drawing=off label.padding_left=10 update_freq=10 script="$PLUGIN_DIR/clock_short.sh" \
   \
   --add item battery right \
   --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" \
@@ -86,5 +86,9 @@ sketchybar --add item clock right \
   \
   --add item cpu right \
   --set cpu update_freq=3 script="$PLUGIN_DIR/cpu.sh"
+
+# --- Centro: data e hora ------------------------------------------------------
+sketchybar --add item clock center \
+  --set clock icon.drawing=off label.padding_left=10 update_freq=10 script="$PLUGIN_DIR/clock.sh"
 
 sketchybar --update
