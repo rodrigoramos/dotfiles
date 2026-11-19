@@ -517,8 +517,11 @@ def main():
 
     # Entrega a senha ao pgcli pelo keyring, na chave exata que ele consulta.
     # Sem senha configurada, nao mexe no keyring: o pgcli pede (e guarda) sozinho.
+    # pgcli >= 4.4 usa "user@host@port"; versoes antigas usavam "user@host". Grava as duas.
     if conn.get("password") is not None:
-        keyring.set_password(PGCLI_SERVICE, f"{conn['user']}@{conn['host']}", conn["password"])
+        base = f"{conn['user']}@{conn['host']}"
+        for chave in (base, f"{base}@{conn['port']}"):
+            keyring.set_password(PGCLI_SERVICE, chave, conn["password"])
 
     pgcli = shutil.which("pgcli")
     if not pgcli:

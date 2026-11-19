@@ -171,6 +171,27 @@ comb1 = "Alt + Shift"
 "Alt + Shift + L" = { move_node = "up" }
 "Alt + Shift + Semicolon" = { move_node = "right" }
 
+# Janela dentro do workspace (i3: split/layout/focus parent). O rift não tem "split h/v":
+# o equivalente é juntar (join) a janela com a vizinha, o que cria um container.
+"Alt + Ctrl + Shift + Left" = { join_window = "left" }
+"Alt + Ctrl + Shift + Right" = { join_window = "right" }
+"Alt + Ctrl + Shift + Up" = { join_window = "up" }
+"Alt + Ctrl + Shift + Down" = { join_window = "down" }
+"Alt + Ctrl + Comma" = "unjoin_windows"
+"Alt + S" = "toggle_stack"                      # i3: $mod+s layout stacking / $mod+w tabbed
+"Alt + A" = "ascend"                            # i3: $mod+a focus parent
+"Alt + Shift + A" = "descend"                   # i3: $mod+Shift+a focus child
+"Alt + Shift + Equal" = "balance"               # igualar tamanhos dos splits
+"Alt + Shift + Enter" = "toggle_focus_floating" # i3: $mod+space focus mode_toggle
+
+# Monitores/displays (i3: $mod+Shift+m + mode_move_workspaces_monitor)
+# Foco entre monitores
+"Alt + Comma" = { focus_display = "left" }
+"Alt + Period" = { focus_display = "right" }
+# Levar a janela focada para outro monitor: modo move_window_display (espelho do
+# modo move_workspace, que move o workspace inteiro).
+"Alt + Ctrl + M" = { binding_mode = "move_window_display" }
+
 # Redimensionar
 "Alt + Shift + Left" = { resize_window_shrink = "horizontal" }
 "Alt + Shift + Right" = { resize_window_grow = "horizontal" }
@@ -191,6 +212,10 @@ comb1 = "Alt + Shift"
 "Alt + Tab" = "next_workspace"
 "Alt + Shift + Tab" = "prev_workspace"
 "Alt + B" = "switch_to_last_workspace"
+# i3: $mod+j / $mod+k = workspace next/prev_on_output. Em modo global o rift navega
+# entre os workspaces visíveis de todos os monitores (não só do atual).
+"Alt + J" = "next_workspace"
+"Alt + K" = "prev_workspace"
 
 # Mover janela para workspace e seguir (Alt+Shift+N)
 "Alt + Shift + 1" = { move_window_to_workspace = { workspace = 0, follow = true } }
@@ -247,5 +272,21 @@ comb1 = "Alt + Shift"
 "K" = [{ move_workspace_to_display = { selector = "up", wrap_around = true } }, { binding_mode = "default" }]
 "L" = [{ move_workspace_to_display = { selector = "right", wrap_around = true } }, { binding_mode = "default" }]
 "N" = [{ move_workspace_to_display = { selector = "37D8832A-2D66-02CA-B9F7-8F30A301B230" } }, { binding_mode = "default" }]
+# "p" leva para o monitor em pé (DP1-3 no i3 = 27G64), pelo UUID de `rift-cli query displays`.
+"P" = [{ move_workspace_to_display = { selector = "5B26DAB4-B90E-4061-972E-4DBA082176E5" } }, { binding_mode = "default" }]
+# "m" leva para o LU28R55 (monitor externo principal).
+"M" = [{ move_workspace_to_display = { selector = "11716D2A-B7AB-422E-BF1F-84E7A15B321B" } }, { binding_mode = "default" }]
+"Enter" = { binding_mode = "default" }
+"Escape" = { binding_mode = "default" }
+
+# Mover a JANELA focada entre monitores (mesmas teclas do modo acima).
+[binding_modes.move_window_display]
+"H" = [{ move_window_to_display = { selector = "left" } }, { binding_mode = "default" }]
+"J" = [{ move_window_to_display = { selector = "down" } }, { binding_mode = "default" }]
+"K" = [{ move_window_to_display = { selector = "up" } }, { binding_mode = "default" }]
+"L" = [{ move_window_to_display = { selector = "right" } }, { binding_mode = "default" }]
+"N" = [{ move_window_to_display = { selector = "37D8832A-2D66-02CA-B9F7-8F30A301B230" } }, { binding_mode = "default" }]
+"P" = [{ move_window_to_display = { selector = "5B26DAB4-B90E-4061-972E-4DBA082176E5" } }, { binding_mode = "default" }]
+"M" = [{ move_window_to_display = { selector = "11716D2A-B7AB-422E-BF1F-84E7A15B321B" } }, { binding_mode = "default" }]
 "Enter" = { binding_mode = "default" }
 "Escape" = { binding_mode = "default" }

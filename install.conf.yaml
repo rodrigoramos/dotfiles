@@ -26,6 +26,9 @@
         path: fish
         create: true
         force: true
+    ~/.local/bin/pgc:
+        path: bin/pgc
+        create: true
     # Claude Code: só a parte pública (settings.json e o que é interno ficam fora)
     ~/.claude/CLAUDE.md:
         path: claude/CLAUDE.md
