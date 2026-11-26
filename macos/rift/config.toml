@@ -1,4 +1,4 @@
-# Rift — espelha os atalhos do AeroSpace/Hyprland (ver keymap.md).
+# Rift — espelha os atalhos do Hyprland (ver keymap.md).
 # Modificador principal: Alt (Option), porque Cmd já é usado pelos apps do macOS.
 # Atenção: alt-e, alt-i, alt-n, alt-u e alt-` são teclas mortas de acento no layout US do macOS;
 # evite vinculá-las em atalhos sem Shift.

@@ -4,17 +4,15 @@
       relink: true
 
 - link:
-    ~/.config/aerospace/aerospace.toml:
-        path: macos/aerospace/aerospace.toml
-        create: true
-    ~/.config/rill/config.toml:
-        path: macos/rill/config.toml
-        create: true
     ~/.config/rift/config.toml:
         path: macos/rift/config.toml
         create: true
     ~/.config/sketchybar:
         path: macos/sketchybar
+        create: true
+    # Diretório inteiro: o Karabiner regrava o karabiner.json e quebraria um link só do arquivo.
+    ~/.config/karabiner:
+        path: macos/karabiner
         create: true
 
 - shell:

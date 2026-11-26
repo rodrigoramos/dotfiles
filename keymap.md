@@ -3,9 +3,9 @@
 Os dois gerenciadores usam o mesmo esquema. Ao mudar um atalho, atualize os dois arquivos e esta tabela.
 
 - Linux: `hypr/configs/Keybinds.conf` e `hypr/UserConfigs/UserKeybinds.conf` — modificador **Super**
-- macOS: `macos/aerospace/aerospace.toml` — modificador **Alt (Option)**
+- macOS: `macos/rift/config.toml` — modificador **Alt (Option)**
 
-| Ação | Hyprland | AeroSpace |
+| Ação | Hyprland | Rift |
 |---|---|---|
 | Terminal | Super+Enter | Alt+Enter |
 | Fechar janela | Super+Q | Alt+Q |

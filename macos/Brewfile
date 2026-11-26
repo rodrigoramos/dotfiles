@@ -1,5 +1,4 @@
 # Pacotes do macOS — instalados pelo ./install (brew bundle --file=macos/Brewfile)
-tap "nikitabobko/tap"
 tap "felixkratz/formulae"
 
 # Shell e terminal
@@ -17,19 +16,28 @@ brew "fd"
 brew "git"
 brew "git-delta"
 
+# Trabalho: GitHub, Postgres (libpq + pgcli via pipx), GCP, APIs e bancos
+brew "gh"
+brew "libpq"
+brew "pipx"
+cask "gcloud-cli"
+cask "insomnia"
+cask "mongodb-compass"
+
+# Notas
+cask "logseq"
+
 # Calendário (aliases/khal, equivalentes ao vdirsyncer do Linux)
 brew "vdirsyncer"
 brew "khal"
 
 # Janelas, teclado e launcher (equivalentes a Hyprland, xkb e rofi)
-cask "nikitabobko/tap/aerospace"
 brew "felixkratz/formulae/borders"
-# Barra de workspaces (lê o AeroSpace); config em macos/rill/config.toml
-cask "aleckastan/rill/rill"
 # Gerenciador de janelas tiling (config em macos/rift/config.toml)
 brew "acsandmann/tap/rift"
 # Barra no estilo do Rill, com os workspaces do Rift (config em macos/sketchybar)
 brew "felixkratz/formulae/sketchybar"
 brew "jq"
+# Caps Lock -> Esc (config em macos/karabiner)
 cask "karabiner-elements"
 cask "raycast"

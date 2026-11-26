@@ -18,20 +18,21 @@ O `./install` detecta o sistema e aplica:
 |---|---|
 | `install.conf.yaml` | comum: nvim, vim, ideavim, git, fish, kitty |
 | `install.linux.yaml` | Hyprland, Waybar, Sway, systemd, xkb, Xresources |
-| `install.macos.yaml` | AeroSpace + `brew bundle` com `macos/Brewfile` |
+| `install.macos.yaml` | Rift, SketchyBar, Karabiner + `brew bundle` com `macos/Brewfile` |
 
 Diferenças por sistema dentro de uma mesma config ficam no próprio arquivo:
 - fish: blocos `if test (uname) = Linux`
 - kitty: `kitty.conf` comum + `linux.conf` / `macos.conf` (via `include ${KITTY_OS}.conf`)
 
-Atalhos de janela compartilhados entre Hyprland e AeroSpace: ver `keymap.md`.
+Atalhos de janela compartilhados entre Hyprland e Rift: ver `keymap.md`.
 
 ### Primeira vez no macOS
 
 1. Instalar o [Homebrew](https://brew.sh) e rodar `./install`.
 2. Tornar o fish o shell padrão: `echo /opt/homebrew/bin/fish | sudo tee -a /etc/shells && chsh -s /opt/homebrew/bin/fish`.
-3. Instalar os plugins do fish (o fisher já vem no repo): `fisher update`.
-4. Abrir o AeroSpace e dar permissão de Acessibilidade.
+3. Instalar o fisher e os plugins do fish (o `fisher.fish` não é versionado): `fish -c 'curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher update'`.
+   O `pgcli` vem do pipx: `pipx install pgcli`.
+4. Dar permissão de Acessibilidade ao Rift.
 
 ## Manual Fixes
 
