@@ -20,3 +20,8 @@
       description: Installing Homebrew packages (macos/Brewfile)
       stdout: true
       stderr: true
+    # LaunchAgent do brew services: sobe no login e o launchd reinicia se cair.
+    - command: 'if command -v brew >/dev/null && brew list sketchybar >/dev/null 2>&1; then brew services start sketchybar; fi'
+      description: Starting SketchyBar (brew services)
+      stdout: true
+      stderr: true
